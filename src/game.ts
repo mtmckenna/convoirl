@@ -19,7 +19,7 @@ import Player from "./player";
 import Text from "./text";
 
 const MIN_SQUARE_SIZE = SQUARE_SIZE;
-const MAX_SQUARE_SIZE = 75 * SQUARE_SIZE;
+const MAX_SQUARE_SIZE = 10 * SQUARE_SIZE;
 const NUM_ZINDICES = 3;
 
 export default class Game {
