@@ -44,6 +44,8 @@ export default class Game {
     this.context = canvas.getContext("2d");
     this.context.mozImageSmoothingEnabled = false;
     this.context.webkitImageSmoothingEnabled = false;
+
+    // @ts-ignore
     this.context.msImageSmoothingEnabled = false; // tslint:disable-line
     this.context.imageSmoothingEnabled = false;
 
