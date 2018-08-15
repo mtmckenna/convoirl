@@ -51,6 +51,26 @@ function randomElementFromArray(arrayToPullFrom: any[]) {
   return arrayToPullFrom[Math.floor(Math.random() * arrayToPullFrom.length)];
 }
 
+function twoPhaseClerp(t: number, min: number, max: number, reverse = false): number {
+  let start = max;
+  let end = min;
+
+  if (reverse) {
+    start = min;
+    end = max;
+  }
+
+  // if in second half of animation
+  if (t >= 0.5) {
+    const t2 = (t - 0.5) / 0.5;
+    return clerp(start, end, min, max, t2);
+  // else if in the first half of animation
+  } else {
+    const t2 = t / 0.5;
+    return clerp(end, start, min, max, t2);
+  }
+}
+
 export {
   canThingMoveToPosition,
   clerp,
@@ -60,4 +80,5 @@ export {
   oneOrMinusOne,
   randomElementFromArray,
   shouldDoAnimation,
+  twoPhaseClerp,
 };

@@ -1,8 +1,6 @@
 /* TODO
-  - start menu
   - dedupe two-phase animation
   - center energy bar
-  - move overlay stuff into drawables on transition
   - put tinymusic in
   - move color palette to a constant
   - animate trees/flowers
@@ -11,6 +9,7 @@
   - add NPCs
   - add battle level
   - add menu on battle
+  - move overlay stuff into drawables on transition
   - color effects
   - floaty things
   - clouds

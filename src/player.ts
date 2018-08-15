@@ -7,6 +7,7 @@ import {
   lerp,
   randomElementFromArray,
   shouldDoAnimation,
+  twoPhaseClerp,
 } from "./helpers";
 
 import {
@@ -178,21 +179,8 @@ export default class Player implements IDrawable {
   }
 
   private runBlinkingAnimation(blinking, timestamp) {
-    // t is the entire blinking animation duration
     const t = (timestamp - blinking.startTime) / blinking.duration;
-
-    if (blinking.running) {
-      // if in the second half of the blinking animation, open the eyes
-      if (t >= 0.5) {
-        const t2 = (t - 0.5) / 0.5;
-        blinking.openness = clerp(0.0, 1.0, 0.0, 1.0, t2);
-        // else if in the first half of the blinking interval, close the eyes
-      } else {
-        const t2 = t / 0.5;
-        blinking.openness = clerp(1.0, 0.0, 0.0, 1.0, t2);
-      }
-    }
-
+    blinking.openness = twoPhaseClerp(t, 0, 1, true);
     if (t >= 1.0) blinking.running = false;
   }
 

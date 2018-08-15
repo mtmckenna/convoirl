@@ -8,7 +8,7 @@ import {
 } from "./common";
 
 import { transition } from "./animations";
-import { clerp } from "./helpers";
+import { clerp, twoPhaseClerp } from "./helpers";
 
 import Camera from "./camera";
 
@@ -119,36 +119,11 @@ export default class Game {
   private updateTransition(timestamp) {
     const t = (timestamp - this.transition.startTime) / this.transition.duration;
 
-    // TODO: dedupe this in runBlinkingAnimation
-    // if in the second half animation
-    if (t >= 0.5) {
-      this.switchLevel(this.nextLevel);
-      const t2 = (t - 0.5) / 0.5;
-      this.squareSize = clerp(
-        MAX_SQUARE_SIZE,
-        MIN_SQUARE_SIZE,
-        MIN_SQUARE_SIZE,
-        MAX_SQUARE_SIZE,
-        t2,
-      );
-
-      this.context.globalAlpha = clerp(0, 1, 0, 1, t2);
-
-      // else if in the first half of animation
-    } else {
-      const t2 = t / 0.5;
-      this.squareSize = clerp(
-        MIN_SQUARE_SIZE,
-        MAX_SQUARE_SIZE,
-        MIN_SQUARE_SIZE,
-        MAX_SQUARE_SIZE,
-        t2,
-      );
-
-      this.context.globalAlpha = clerp(1, 0, 0, 1, t2);
-    }
-
+    if (t >= 0.5) this.switchLevel(this.nextLevel);
     if (t >= 1.0) this.transition.running = false;
+
+    this.squareSize = twoPhaseClerp(t, MIN_SQUARE_SIZE, MAX_SQUARE_SIZE);
+    this.context.globalAlpha = Math.min(SQUARE_SIZE / this.squareSize, 1.0);
   }
 
   private switchLevel(nextLevel) {
