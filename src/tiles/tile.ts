@@ -1,10 +1,10 @@
 import Game from "../game";
 import tileCache from "./tile-cache";
 
-import { TILE_SIZE } from "../common";
+import { IDrawable, TILE_SIZE } from "../common";
 import { flatten } from "../helpers";
 
-export default abstract class Tile {
+export default abstract class Tile implements IDrawable {
   public drawingSize = { width: TILE_SIZE, height: TILE_SIZE };
   public pos = { x: 0, y: 0 };
   public size = { width: TILE_SIZE, height: TILE_SIZE };
@@ -30,6 +30,10 @@ export default abstract class Tile {
     context.drawImage(this.offscreenCanvas, 0, 0);
   }
 
+  public resize() {
+    return;
+  }
+
   public update() {
     if (tileCache[this.name].squareSize === this.game.squareSize) return;
     this.drawingSize.width = TILE_SIZE * this.game.squareSize
@@ -52,7 +56,7 @@ export default abstract class Tile {
       offscreenContext.fillRect(x, y, this.game.squareSize, this.game.squareSize);
     });
 
-    tileCache[this.name].squareSize = this.game.squareSize; 
+    tileCache[this.name].squareSize = this.game.squareSize;
     tileCache[this.name].canvas = offscreenCanvas;
   }
 }

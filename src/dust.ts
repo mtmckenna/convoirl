@@ -36,6 +36,10 @@ export default class Dust implements IDrawable {
     this.visible = true;
   }
 
+  public resize() {
+    return;
+  }
+
   public update(timestamp: number) {
       if (!this.visible) return;
       this.drawingSize.width = this.size.width * this.game.squareSize;

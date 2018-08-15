@@ -8,7 +8,7 @@ import {
 } from "./common";
 
 import { transition } from "./animations";
-import { clerp, twoPhaseClerp } from "./helpers";
+import { twoPhaseClerp } from "./helpers";
 
 import Camera from "./camera";
 
@@ -16,7 +16,6 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 import Player from "./player";
-import Text from "./text";
 
 const MIN_SQUARE_SIZE = SQUARE_SIZE;
 const MAX_SQUARE_SIZE = 10 * SQUARE_SIZE;
@@ -51,7 +50,8 @@ export default class Game {
     this.levels = { startScreen: new StartScreen(this), world: new World(this) };
     this.transition = Object.assign({}, transition);
 
-    this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.startScreen);
   }
 
   get transitioning(): boolean {
@@ -80,6 +80,15 @@ export default class Game {
 
   public resize() {
     this.currentLevel.resize();
+
+    // TODO: dry this up
+    this.drawables.forEach((drawablesAtZIndex) => {
+      drawablesAtZIndex.forEach((drawable) => {
+        drawable.resize();
+      });
+    });
+
+    this.overlayDrawables.forEach((drawable) => drawable.resize());
   }
 
   public walk(direction: Direction) {

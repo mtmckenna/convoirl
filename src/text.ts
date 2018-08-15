@@ -3,8 +3,6 @@ import letters from "./letters";
 
 import { IDrawable, IPoint, ISize, SQUARE_SIZE } from "./common";
 
-const LETTER_SIZE = SQUARE_SIZE;
-
 // Text from https://github.com/PaulBGD/PixelFont
 export default class Text implements IDrawable {
   public game: Game;
@@ -22,14 +20,14 @@ export default class Text implements IDrawable {
     this.color = color;
     this.pos = pos;
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
-    this.size = { width: LETTER_SIZE * this.pixelLetters.length, height: LETTER_SIZE };
+    this.updateSize();
     this.drawingSize = {
       height: this.size.height * this.game.squareSize,
       width: this.size.width * this.game.squareSize,
     };
   }
 
-  public draw(context, timestamp) {
+  public draw(context) {
     context.fillStyle = this.color;
     let currX = this.pos.x;
 
@@ -52,8 +50,30 @@ export default class Text implements IDrawable {
     });
   }
 
-  public update(timestamp) {
+  public resize() {
     this.drawingSize.width = this.size.width * this.game.squareSize;
     this.drawingSize.height = this.size.height * this.game.squareSize;
+  }
+
+  public update() {
+    return;
+  }
+
+  // TODO: this can be so much better
+  private updateSize() {
+    let currX = this.pos.x;
+
+    this.pixelLetters.forEach((letter) => {
+      let maxX = 0;
+
+      for (let y = 0; y < letter.length; y++) {
+        const row = letter[y];
+        maxX = Math.max(maxX, row.length);
+      }
+
+      currX += maxX;
+    });
+
+    this.size = { width: currX, height: SQUARE_SIZE };
   }
 }

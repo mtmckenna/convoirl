@@ -155,6 +155,10 @@ export default class Player implements IDrawable {
     context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
+  public resize() {
+    return;
+  }
+
   private maybeDoEyeAnimations(timestamp) {
     const { blinking, lookAway } = this.animations;
 

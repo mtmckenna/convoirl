@@ -40,6 +40,7 @@ export interface IDrawable extends IPositionable {
   game: Game;
   draw(context: CanvasRenderingContext2D, timestamp: number): void;
   update(timestamp: number): void;
+  resize(): void;
 }
 
 export interface ITileMap {

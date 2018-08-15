@@ -4,11 +4,13 @@ import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
-import Text from "../text";
+import EnergyBar from "../energy-bar";
 
-import { SQUARE_SIZE, Direction } from "../common";
+import { Direction, SQUARE_SIZE } from "../common";
 
 export default class World extends Level {
+  energyBar: EnergyBar;
+
   protected tileTypeMap = [Green, Flowers, Grass, Tree];
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
@@ -36,6 +38,7 @@ export default class World extends Level {
   constructor(game: Game) {
     super(game);
     this.generateTiles();
+    this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
   }
 
   public handleInput(key) {
@@ -55,14 +58,19 @@ export default class World extends Level {
     }
   }
 
-  public resize() {}
+  public resize() {
+    const energyBarX = Math.floor(
+      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2
+    );
+
+    this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
+  }
 
   public configureDrawables() {
     this.game.addDrawables(this.tiles, 0);
     this.game.addDrawables(this.game.player.dusts, 1);
     this.game.addDrawables([this.game.player], 1);
 
-    const cat = new Text(this.game, "ENERGY", "#000000", { x: SQUARE_SIZE, y: SQUARE_SIZE });
-    this.game.addOverlayDrawables([cat]);
+    this.game.addOverlayDrawables([this.energyBar]);
   }
 }

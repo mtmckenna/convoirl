@@ -1,13 +1,12 @@
 /* TODO
-  - dedupe two-phase animation
   - center energy bar
-  - put tinymusic in
   - move color palette to a constant
+  - add NPCs
+  - add battle level
+  - put tinymusic in
   - animate trees/flowers
   - favicon
   - add house
-  - add NPCs
-  - add battle level
   - add menu on battle
   - move overlay stuff into drawables on transition
   - color effects
@@ -23,7 +22,7 @@ import Camera from "./camera";
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import { Direction, HALF_TILE_SIZE, MS_PER_UPDATE, SQUARE_SIZE  } from "./common";
+import { HALF_TILE_SIZE, MS_PER_UPDATE, SQUARE_SIZE  } from "./common";
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
