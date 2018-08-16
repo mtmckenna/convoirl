@@ -59,21 +59,13 @@ export default class Text implements IDrawable {
     return;
   }
 
-  // TODO: this can be so much better
   private updateSize() {
-    let currX = this.pos.x;
+    // Get the longest row per letter
+    const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));
 
-    this.pixelLetters.forEach((letter) => {
-      let maxX = 0;
+    // Add up the widths of all the letters + spaces
+    const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
 
-      for (let y = 0; y < letter.length; y++) {
-        const row = letter[y];
-        maxX = Math.max(maxX, row.length);
-      }
-
-      currX += maxX;
-    });
-
-    this.size = { width: currX, height: SQUARE_SIZE };
+    this.size = { width, height: SQUARE_SIZE };
   }
 }

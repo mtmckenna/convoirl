@@ -68,6 +68,8 @@ export default class Game {
       });
     });
 
+    this.overlayDrawables.forEach((drawable) => drawable.update(timestamp));
+
     if (this.transitioning) this.updateTransition(timestamp);
   }
 
@@ -175,6 +177,7 @@ export default class Game {
 
   private drawOverlayDrawables(timestamp: number) {
     this.overlayDrawables.forEach((drawable) => {
+      if (!drawable.visible) return;
       drawable.draw(this.context, timestamp);
     });
   }
