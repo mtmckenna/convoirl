@@ -16,6 +16,8 @@ export default class EnergyBar implements IDrawable {
   public percentFull: number = 0.60;
   public lastBlinkAt: number = 0;
 
+  private strokePos: IPoint = { x: 0, y: 0 };
+
   constructor(game: Game, pos: IPoint) {
     this.game = game;
     this.pos = pos;
@@ -27,6 +29,10 @@ export default class EnergyBar implements IDrawable {
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
+
+    // https://stackoverflow.com/questions/28057881/javascript-either-strokerect-or-fillrect-blurry-depending-on-translation
+    this.strokePos.x = Math.floor(this.pos.x) + 0.5;
+    this.strokePos.y = Math.floor(this.pos.y) + 0.5;
     this.energyText.pos.x = updatedPos.x + SQUARE_SIZE;
     this.energyText.pos.y = updatedPos.y + SQUARE_SIZE;
   }
@@ -41,7 +47,7 @@ export default class EnergyBar implements IDrawable {
     context.fillStyle = "#ffffff";
     context.lineWidth = SQUARE_SIZE;
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
-    context.strokeRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
+    context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);
     this.energyText.draw(context);
   }
 
