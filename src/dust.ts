@@ -1,3 +1,4 @@
+import colorMap from "./colors";
 import Game from "./game";
 
 import { IDrawable } from "./common";
@@ -14,7 +15,7 @@ export default class Dust implements IDrawable {
   public drawingSize;
   public size = { width: 1, height: 1 };
   public pos = { x: 0, y: 0};
-  public color: string = "#ffffff";
+  public color: string = colorMap.W;
   public visible: boolean = false;
 
   private percentGrown: number = 0.0;

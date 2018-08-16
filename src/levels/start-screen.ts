@@ -1,10 +1,13 @@
+import colorMap from "../colors";
 import Game from "../game";
 import Level from "./level";
+
+import Text from "../text";
+
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
-import Text from "../text";
 
 const TITLE = "CONVO IRL";
 const TAP_TO_PLAY = "TAP TO PLAY";
@@ -50,7 +53,7 @@ export default class StartScreen extends Level {
 
   public handleInput() {
     if (this.game.transitioning) return;
-    this.game.queueNextLevel(this.game.levels["world"]);
+    this.game.queueNextLevel(this.game.levels.world);
   }
 
   private addText() {
@@ -60,11 +63,11 @@ export default class StartScreen extends Level {
     const instructionsPos =  { x: 53, y: 70 };
     const instructionsShadowPos = { x: instructionsPos.x + shadowOffset, y: instructionsPos.y + shadowOffset };
 
-    const title1 = new Text(this.game, TITLE, "#FFFFFF", title1Pos);
-    const title1Shadow = new Text(this.game, TITLE, "#000000", title1ShadowPos);
+    const title1 = new Text(this.game, TITLE, colorMap.W, title1Pos);
+    const title1Shadow = new Text(this.game, TITLE, colorMap.B, title1ShadowPos);
 
-    const instructions = new Text(this.game, TAP_TO_PLAY, "#FFFFFF", instructionsPos);
-    const instructionsShadow = new Text(this.game, TAP_TO_PLAY, "#000000", instructionsShadowPos);
+    const instructions = new Text(this.game, TAP_TO_PLAY, colorMap.W, instructionsPos);
+    const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap.B, instructionsShadowPos);
 
     this.game.addDrawables([
       title1Shadow,

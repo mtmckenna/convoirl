@@ -1,6 +1,4 @@
 /* TODO
-  - center energy bar
-  - move color palette to a constant
   - add NPCs
   - add battle level
   - put tinymusic in

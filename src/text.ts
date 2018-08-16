@@ -1,3 +1,4 @@
+import colorMap from "./colors";
 import Game from "./game";
 import letters from "./letters";
 
@@ -14,7 +15,7 @@ export default class Text implements IDrawable {
   public color: string;
   public visible: boolean = true;
 
-  constructor(game: Game, words: string, color: string = "#ffffff", pos: IPoint = { x: 0, y: 0 }) {
+  constructor(game: Game, words: string, color: string = colorMap.W, pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;
     this.words = words.toUpperCase();
     this.color = color;

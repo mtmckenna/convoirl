@@ -35,6 +35,9 @@ const NUM_DUSTS = 100;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
 
+const LEFT = "left";
+const RIGHT = "right";
+
 export default class Player implements IDrawable {
   public game: Game;
 
@@ -138,8 +141,8 @@ export default class Player implements IDrawable {
 
     this.maybeDoEyeAnimations(timestamp);
 
-    this.drawEye(context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
-    this.drawEye(context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
+    this.drawEye(context, LEFT, this.animations.blinking.openness, this.animations.lookAway.offset);
+    this.drawEye(context, RIGHT, this.animations.blinking.openness, this.animations.lookAway.offset);
 
     if (this.walking) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
@@ -155,9 +158,7 @@ export default class Player implements IDrawable {
     context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-  public resize() {
-    return;
-  }
+  public resize() { return; }
 
   private maybeDoEyeAnimations(timestamp) {
     const { blinking, lookAway } = this.animations;
@@ -189,7 +190,7 @@ export default class Player implements IDrawable {
   }
 
   private drawEye(context, whichOne, openness, lookAwayOffset) {
-    const leftRightOffset = whichOne === "left" ? 0 : (RIGHT_EYE_OFFSET * this.game.squareSize);
+    const leftRightOffset = whichOne === LEFT ? 0 : (RIGHT_EYE_OFFSET * this.game.squareSize);
 
     context.fillStyle = EYE_COLOR;
 

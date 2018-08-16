@@ -1,3 +1,4 @@
+import colorMap from "../colors";
 import Game from "../game";
 import tileCache from "./tile-cache";
 
@@ -13,7 +14,6 @@ export default abstract class Tile implements IDrawable {
   public game: Game;
   public abstract name: string;
 
-  protected abstract colorMap: string[];
   protected abstract colorMatrix: number[][];
 
   constructor(game: Game, rowIndex: number, columnIndex: number) {
@@ -36,7 +36,7 @@ export default abstract class Tile implements IDrawable {
 
   public update() {
     if (tileCache[this.name].squareSize === this.game.squareSize) return;
-    this.drawingSize.width = TILE_SIZE * this.game.squareSize
+    this.drawingSize.width = TILE_SIZE * this.game.squareSize;
     this.drawingSize.height = TILE_SIZE * this.game.squareSize;
     this.cacheOffscreenContext();
   }
@@ -48,7 +48,7 @@ export default abstract class Tile implements IDrawable {
     offscreenCanvas.width = this.drawingSize.width;
     offscreenCanvas.height = this.drawingSize.height;
     const offscreenContext = offscreenCanvas.getContext("2d");
-    const colors = flatten(this.colorMatrix).map((colorIndex) => this.colorMap[colorIndex]);
+    const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);
     colors.forEach((color, index) => {
       offscreenContext.fillStyle = color;
       const x = this.game.squareSize * (index % TILE_SIZE);

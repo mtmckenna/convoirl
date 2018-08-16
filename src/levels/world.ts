@@ -1,15 +1,16 @@
+import EnergyBar from "../energy-bar";
 import Game from "../game";
 import Level from "./level";
+
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
-import EnergyBar from "../energy-bar";
 
 import { Direction, SQUARE_SIZE } from "../common";
 
 export default class World extends Level {
-  energyBar: EnergyBar;
+  public energyBar: EnergyBar;
 
   protected tileTypeMap = [Green, Flowers, Grass, Tree];
   protected tileIndexes = [
@@ -72,5 +73,6 @@ export default class World extends Level {
     this.game.addDrawables([this.game.player], 1);
 
     this.game.addOverlayDrawables([this.energyBar]);
+    this.resize();
   }
 }
