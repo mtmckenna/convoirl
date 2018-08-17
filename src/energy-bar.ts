@@ -22,7 +22,7 @@ export default class EnergyBar implements IDrawable {
   constructor(game: Game, pos: IPoint) {
     this.game = game;
     this.pos = pos;
-    this.energyText = new Text(this.game, "ENERGY", colorMap[5], { x: this.pos.x, y: this.pos.y });
+    this.energyText = new Text(this.game, "ENERGY", colorMap[7], { x: this.pos.x, y: this.pos.y });
     this.size = Object.assign({}, this.energyText.size);
     this.drawingSize = Object.assign({}, this.energyText.drawingSize);
   }
@@ -46,8 +46,10 @@ export default class EnergyBar implements IDrawable {
 
   public draw(context) {
     this.resize();
-    context.strokeStyle = colorMap.W;
-    context.fillStyle = colorMap.W;
+    context.fillStyle = colorMap[2];
+    context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
+    context.strokeStyle = colorMap[1];
+    context.fillStyle = colorMap[1];
     context.lineWidth = SQUARE_SIZE;
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
     context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);

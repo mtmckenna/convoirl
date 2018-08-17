@@ -1,5 +1,6 @@
 import { IAnimation, IPoint, TILE_SIZE } from "./common";
-import Level from "./level";
+
+import Level from "./levels/level";
 
 function moveThingToPositionIfPossible(thing, position, level): void {
   if (canThingMoveToPosition(thing, position, level)) thing.pos = position;

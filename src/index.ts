@@ -1,10 +1,11 @@
 /* TODO
+  - add house
   - add NPCs
   - add battle level
   - put tinymusic in
   - animate trees/flowers
   - favicon
-  - add house
+  - house recharges energy
   - add menu on battle
   - move overlay stuff into drawables on transition
   - color effects

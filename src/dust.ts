@@ -15,7 +15,7 @@ export default class Dust implements IDrawable {
   public drawingSize;
   public size = { width: 1, height: 1 };
   public pos = { x: 0, y: 0};
-  public color: string = colorMap.W;
+  public color: string = colorMap[1];
   public visible: boolean = false;
 
   private percentGrown: number = 0.0;

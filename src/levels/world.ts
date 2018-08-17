@@ -5,6 +5,7 @@ import Level from "./level";
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
+import House from "../tiles/house";
 import Tree from "../tiles/tree";
 
 import { Direction, SQUARE_SIZE } from "../common";
@@ -12,12 +13,12 @@ import { Direction, SQUARE_SIZE } from "../common";
 export default class World extends Level {
   public energyBar: EnergyBar;
 
-  protected tileTypeMap = [Green, Flowers, Grass, Tree];
+  protected tileTypeMap = [Green, Flowers, Grass, Tree, House];
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3],
-    [3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+    [3, 0, 0, 4, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 3],
     [3, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],

@@ -63,11 +63,11 @@ export default class StartScreen extends Level {
     const instructionsPos =  { x: 53, y: 70 };
     const instructionsShadowPos = { x: instructionsPos.x + shadowOffset, y: instructionsPos.y + shadowOffset };
 
-    const title1 = new Text(this.game, TITLE, colorMap.W, title1Pos);
-    const title1Shadow = new Text(this.game, TITLE, colorMap.B, title1ShadowPos);
+    const title1 = new Text(this.game, TITLE, colorMap[1], title1Pos);
+    const title1Shadow = new Text(this.game, TITLE, colorMap[0], title1ShadowPos);
 
-    const instructions = new Text(this.game, TAP_TO_PLAY, colorMap.W, instructionsPos);
-    const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap.B, instructionsShadowPos);
+    const instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1], instructionsPos);
+    const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap[0], instructionsShadowPos);
 
     this.game.addDrawables([
       title1Shadow,
