@@ -14,12 +14,16 @@ export default abstract class Tile implements IDrawable {
   public game: Game;
   public abstract name: string;
 
+  protected tileLength: number = TILE_SIZE;
   protected abstract colorMatrix: number[][];
 
   constructor(game: Game, rowIndex: number, columnIndex: number) {
     this.game = game;
     this.pos = { x: rowIndex * TILE_SIZE, y: columnIndex * TILE_SIZE };
-    this.drawingSize = { width: TILE_SIZE * this.game.squareSize, height: TILE_SIZE * this.game.squareSize };
+    this.drawingSize = {
+      height: this.tileLength * this.game.squareSize,
+      width: this.tileLength * this.game.squareSize,
+    };
   }
 
   get offscreenCanvas(): HTMLCanvasElement {
@@ -36,8 +40,8 @@ export default abstract class Tile implements IDrawable {
 
   public update() {
     if (tileCache[this.name].squareSize === this.game.squareSize) return;
-    this.drawingSize.width = TILE_SIZE * this.game.squareSize;
-    this.drawingSize.height = TILE_SIZE * this.game.squareSize;
+    this.drawingSize.width = this.tileLength * this.game.squareSize;
+    this.drawingSize.height = this.tileLength * this.game.squareSize;
     this.cacheOffscreenContext();
   }
 
@@ -51,8 +55,8 @@ export default abstract class Tile implements IDrawable {
     const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);
     colors.forEach((color, index) => {
       offscreenContext.fillStyle = color;
-      const x = this.game.squareSize * (index % TILE_SIZE);
-      const y = this.game.squareSize * (Math.floor(index / TILE_SIZE));
+      const x = this.game.squareSize * (index % this.tileLength);
+      const y = this.game.squareSize * (Math.floor(index / this.tileLength));
       offscreenContext.fillRect(x, y, this.game.squareSize, this.game.squareSize);
     });
 

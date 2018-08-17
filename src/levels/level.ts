@@ -25,9 +25,9 @@ export default abstract class Level {
     this.drawingSize.height = this.size.height * this.game.squareSize;
   }
 
-  public abstract configureDrawables()
-  public abstract resize()
-  public abstract handleInput(key: string)
+  public abstract configureDrawables();
+  public abstract resize();
+  public abstract handleInput(key: string);
 
   protected generateTiles() {
     const width = this.tileIndexes[0].length * TILE_SIZE;

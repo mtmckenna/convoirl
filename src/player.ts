@@ -3,7 +3,6 @@ import Game from "./game";
 
 import {
   canThingMoveToPosition,
-  clerp,
   lerp,
   randomElementFromArray,
   shouldDoAnimation,
