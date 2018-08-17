@@ -41,7 +41,7 @@ export default class Player implements IDrawable {
   public game: Game;
 
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
-  public pos: IPoint = { x: 8 * 10, y: 8 * 10 };
+  public pos: IPoint = { x: 8 * 5, y: 8 * 7 };
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public visible: boolean = true;
   public dusts: Dust[];
