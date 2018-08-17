@@ -41,13 +41,13 @@ export default class Player implements IDrawable {
   public game: Game;
 
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
-  public pos: IPoint = { x: 8 * 5, y: 8 * 7 };
+  public pos: IPoint = { x: TILE_SIZE * 5, y: TILE_SIZE * 7 };
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public visible: boolean = true;
   public dusts: Dust[];
 
   private animations: IAnimations = {};
-  private rot: number = 0;
+  private rot: number = Math.PI;
   private color: string;
 
   constructor(game) {

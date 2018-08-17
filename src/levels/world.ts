@@ -1,6 +1,8 @@
+import Level from "./level";
+
 import EnergyBar from "../energy-bar";
 import Game from "../game";
-import Level from "./level";
+import Player from "../player";
 
 import Blank from "../tiles/blank";
 import Flowers from "../tiles/flowers";
@@ -9,7 +11,7 @@ import Green from "../tiles/green";
 import House from "../tiles/house";
 import Tree from "../tiles/tree";
 
-import { Direction, SQUARE_SIZE } from "../common";
+import { Direction, SQUARE_SIZE, TILE_SIZE } from "../common";
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -38,10 +40,17 @@ export default class World extends Level {
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   ];
 
+  private buddies: Player[];
+
   constructor(game: Game) {
     super(game);
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
+
+    const buddy = new Player(game);
+    buddy.pos.y = TILE_SIZE * 10;
+    buddy.pos.x = TILE_SIZE * 10;
+    this.buddies = [buddy];
   }
 
   public handleInput(key) {
@@ -63,7 +72,7 @@ export default class World extends Level {
 
   public resize() {
     const energyBarX = Math.floor(
-      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2
+      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2,
     );
 
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
@@ -73,6 +82,7 @@ export default class World extends Level {
     this.game.addDrawables(this.tiles, 0);
     this.game.addDrawables(this.game.player.dusts, 1);
     this.game.addDrawables([this.game.player], 1);
+    this.game.addDrawables(this.buddies, 1);
 
     this.game.addOverlayDrawables([this.energyBar]);
     this.resize();
