@@ -52,7 +52,7 @@ export default class Game {
     this.levels = { startScreen: new StartScreen(this), world: new World(this) };
     this.transition = Object.assign({}, transition);
 
-    //this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.world);
     this.switchLevel(this.levels.startScreen);
   }
 
