@@ -14,6 +14,10 @@
   - gamepad
   - birds
   - shadows
+  - change green into empty tiles
+  - if blocked, have mouse go other direction
+  - fix text centering
+  - change from scaling squares to screenshot plus zoom
 */
 
 import Camera from "./camera";

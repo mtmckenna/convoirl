@@ -4,19 +4,19 @@ import EnergyBar from "../energy-bar";
 import Game from "../game";
 import Player from "../player";
 
-import Blank from "../tiles/blank";
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import House from "../tiles/house";
 import Tree from "../tiles/tree";
+import Unwalkable from "../tiles/unwalkable";
 
 import { Direction, SQUARE_SIZE, TILE_SIZE } from "../common";
 
 export default class World extends Level {
   public energyBar: EnergyBar;
 
-  protected tileTypeMap = [Green, Flowers, Grass, Tree, House, Blank];
+  protected tileTypeMap = [Green, Flowers, Grass, Tree, House, Unwalkable];
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3],

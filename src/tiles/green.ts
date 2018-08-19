@@ -2,16 +2,8 @@ import Tile from "./tile";
 
 export default class Green extends Tile {
   public name = "green";
-  protected colorMatrix = [
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 2, 2, 2],
-  ];
+  public visible = false;
+  protected colorMatrix = [[]];
 
   constructor(green, rowIndex, columnIndex) {
     super(green, rowIndex, columnIndex);

@@ -1,10 +1,8 @@
-import Tile from "./tile";
+import Green from "./green";
 
-export default class Blank extends Tile {
-  public name = "blank";
+export default class Unwalkable extends Green {
+  public name = "unwalkable";
   public walkable = false;
-
-  protected colorMatrix = [[]];
 
   constructor(game, rowIndex, columnIndex) {
     super(game, rowIndex, columnIndex);
