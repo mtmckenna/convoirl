@@ -85,6 +85,7 @@ export default class Player implements IDrawable {
       y -= this.game.tileSize;
     }
 
+    // Todo: avoid recreating objects
     const endPos = { x, y };
     const canMove = canThingMoveToPosition(this, endPos, this.game.currentLevel);
     if (canMove) this.configureWalkingAnimation(endPos);

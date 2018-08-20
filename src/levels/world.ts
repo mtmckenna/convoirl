@@ -11,7 +11,15 @@ import House from "../tiles/house";
 import Tree from "../tiles/tree";
 import Unwalkable from "../tiles/unwalkable";
 
-import { Direction, SQUARE_SIZE, TILE_SIZE } from "../common";
+import {
+  Direction,
+  HALF_TILE_SIZE,
+  IPositionable,
+  SQUARE_SIZE,
+  TILE_SIZE
+} from "../common";
+
+import { canThingMoveToPosition } from "../helpers";
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -70,6 +78,61 @@ export default class World extends Level {
     }
   }
 
+  public handleTouch(touch) {
+    if (this.game.player.walking) return;
+
+    const { camera } = this.game;
+    const { height, width } = camera.size;
+    const offset = camera.offset;
+
+    // TODO: totally forgot how this works...
+    const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
+    const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
+    const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.squareSize;
+    const verticalDistance = tapYInCameraSpace - this.game.player.pos.y * this.game.squareSize;
+    const absHorizontalDistance = Math.abs(horizontalDistance);
+    const absVerticalDistance = Math.abs(verticalDistance);
+    const minMoveTheshold = this.game.squareSize * HALF_TILE_SIZE;
+
+    if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
+
+    if (absHorizontalDistance > absVerticalDistance) {
+      const couldMoveHorizontally = this.movePlayerHorizontally(horizontalDistance);
+      if (!couldMoveHorizontally) this.movePlayerVertically(verticalDistance);
+    } else {
+      const couldMoveVertically = this.movePlayerVertically(verticalDistance);
+      if (!couldMoveVertically) this.movePlayerHorizontally(horizontalDistance);
+    }
+  }
+
+  private movePlayerVertically(touchDistance: number): boolean {
+    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, Direction.Up)) {
+      this.handleInput("ArrowUp");
+      return true;
+    }
+
+    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, Direction.Down)) {
+      this.handleInput("ArrowDown");
+      return true;
+    }
+
+    return false;
+  }
+
+  private movePlayerHorizontally(touchDistance: number): boolean {
+    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, Direction.Right)) {
+      this.handleInput("ArrowRight");
+      return true;
+    }
+
+    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, Direction.Left)) {
+      this.handleInput("ArrowLeft");
+      return true;
+    }
+
+    return false;
+  }
+
   public resize() {
     const energyBarX = Math.floor(
       (this.game.canvas.width - this.energyBar.drawingSize.width) / 2,
@@ -86,5 +149,30 @@ export default class World extends Level {
 
     this.game.addOverlayDrawables([this.energyBar]);
     this.resize();
+  }
+
+  private canThingMoveInDirection(thing: IPositionable, direction: Direction) {
+    const pos = Object.assign({}, thing.pos);
+    switch (direction) {
+      case Direction.Up:
+      pos.y -= this.game.tileSize;
+      break;
+      case Direction.Down:
+      pos.y += this.game.tileSize;
+      break;
+      case Direction.Left:
+      pos.x -= this.game.tileSize;
+      break;
+      case Direction.Right:
+      pos.x += this.game.tileSize;
+      break;
+    }
+
+    // Make sure we're on a tile boundary by subtracting the remainder
+    pos.x = pos.x - pos.x % this.game.tileSize;
+    pos.y = pos.y - pos.y % this.game.tileSize;
+
+    // console.log(thing.pos.y, pos.y, this.tilesGrid[pos.y / this.game.tileSize][this.game.tileSize]);
+    return canThingMoveToPosition(thing, pos, this);
   }
 }

@@ -1,12 +1,8 @@
-import { IAnimation, IPoint, TILE_SIZE } from "./common";
+import { IAnimation, IPoint, IPositionable, TILE_SIZE } from "./common";
 
 import Level from "./levels/level";
 
-function moveThingToPositionIfPossible(thing, position, level): void {
-  if (canThingMoveToPosition(thing, position, level)) thing.pos = position;
-}
-
-function canThingMoveToPosition(thing, position: IPoint, level: Level): boolean {
+function canThingMoveToPosition(thing: IPositionable, position: IPoint, level: Level): boolean {
   const inMap = position.x >= 0 &&
     position.x <= level.size.width - thing.size.width &&
     position.y >= 0 &&
@@ -77,7 +73,6 @@ export {
   clerp,
   flatten,
   lerp,
-  moveThingToPositionIfPossible,
   oneOrMinusOne,
   randomElementFromArray,
   shouldDoAnimation,

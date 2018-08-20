@@ -56,6 +56,10 @@ export default class StartScreen extends Level {
     this.game.queueNextLevel(this.game.levels.world);
   }
 
+  public handleTouch(){
+    this.handleInput();
+  }
+
   private addText() {
     const shadowOffset = 0.4;
     const title1Pos = { x: 55, y: 50 };

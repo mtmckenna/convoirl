@@ -1,30 +1,30 @@
-/* TODO
-  - add NPCs
+/*
+TODO
   - add battle level
   - put tinymusic in
-  - animate trees/flowers
+  - animate trees
   - house recharges energy
   - make house look nicer
   - add menu on battle
-  - move overlay stuff into drawables on transition
   - color effects
   - floaty things
   - clouds
   - add day/night
   - gamepad
-  - birds
   - shadows
-  - change green into empty tiles
-  - if blocked, have mouse go other direction
   - fix text centering
   - change from scaling squares to screenshot plus zoom
+  - rename player->buddy
+  - npcs can walk around
+  - have input keys be an enum
+  - fix weird stretchy bug + dust floating on top
 */
 
 import Camera from "./camera";
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import { HALF_TILE_SIZE, MS_PER_UPDATE, SQUARE_SIZE  } from "./common";
+import { MS_PER_UPDATE, SQUARE_SIZE } from "./common";
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
@@ -69,7 +69,7 @@ function update(timestamp: number): void {
 
 function animate(timestamp: number): void {
   game.timestamp = timestamp;
-  if (currentTouch && touchDown) walkBasedOnTouch(currentTouch);
+  if (currentTouch && touchDown) game.handleTouch(currentTouch);
   gameLoop(timestamp);
   game.draw(timestamp);
   requestAnimationFrame(animate);
@@ -90,33 +90,6 @@ function handleTouchMove(event) {
 function handleTouchUp() {
   currentTouch = null;
   touchDown = false;
-}
-
-function walkBasedOnTouch(touch: Touch) {
-  const offset = camera.offset;
-  const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
-  const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
-  const horizontalDistance = tapXInCameraSpace - game.player.pos.x * game.squareSize;
-  const verticalDistance = tapYInCameraSpace - game.player.pos.y * game.squareSize;
-  const absHorizontalDistance = Math.abs(horizontalDistance);
-  const absVerticalDistance = Math.abs(verticalDistance);
-  const minMoveTheshold = game.squareSize * HALF_TILE_SIZE;
-
-  if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
-
-  if (absHorizontalDistance > absVerticalDistance) {
-    if (horizontalDistance > 0) {
-      game.handleInput("ArrowRight");
-    } else {
-      game.handleInput("ArrowLeft");
-    }
-  } else {
-    if (verticalDistance > 0 ) {
-      game.handleInput("ArrowDown");
-    } else {
-      game.handleInput("ArrowUp");
-    }
-  }
 }
 
 resize();

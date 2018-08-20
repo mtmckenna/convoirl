@@ -28,6 +28,7 @@ export default abstract class Level {
   public abstract configureDrawables();
   public abstract resize();
   public abstract handleInput(key: string);
+  public abstract handleTouch(touch: Touch);
 
   protected generateTiles() {
     const width = this.tileIndexes[0].length * TILE_SIZE;

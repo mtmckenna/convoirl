@@ -120,8 +120,12 @@ export default class Game {
     this.startTransition();
   }
 
-  public handleInput(key) {
+  public handleInput(key: string) {
     this.currentLevel.handleInput(key);
+  }
+
+  public handleTouch(touch: Touch) {
+    this.currentLevel.handleTouch(touch);
   }
 
   private startTransition() {
