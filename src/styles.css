@@ -20,7 +20,3 @@ html, body {
   image-rendering:pixelated;                 /* CSS4 Proposed  */
   -ms-interpolation-mode:nearest-neighbor;   /* IE8+           */
 }
-
-#game-background {
-  z-index: 1;
-}

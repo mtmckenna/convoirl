@@ -30,7 +30,8 @@ const EYE_REFLECTION_COLOR = "rgb(255, 255, 255)";
 const EYE_COLOR = "rgb(0, 0, 0)";
 const RIGHT_EYE_OFFSET = 4;
 const EYE_OFFSET = 1;
-const NUM_DUSTS = 100;
+const NUM_DUSTS = 50;
+const TIME_BETWEEN_DUSTS = 30;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
 
@@ -49,6 +50,7 @@ export default class Player implements IDrawable {
   private animations: IAnimations = {};
   private rot: number = Math.PI;
   private color: string;
+  private lastDustAt: number = 0;
 
   constructor(game) {
     this.game = game;
@@ -144,7 +146,7 @@ export default class Player implements IDrawable {
     this.drawEye(context, LEFT, this.animations.blinking.openness, this.animations.lookAway.offset);
     this.drawEye(context, RIGHT, this.animations.blinking.openness, this.animations.lookAway.offset);
 
-    if (this.walking) {
+    if (this.walking && (timestamp - this.lastDustAt) > TIME_BETWEEN_DUSTS) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
       if (dust) {
         const xOffset = this.size.width / 2 * Math.random() + this.size.width / 4;
@@ -152,6 +154,7 @@ export default class Player implements IDrawable {
         const x = this.pos.x + xOffset;
         const y = this.pos.y + yOffset;
         dust.reJuice(timestamp, x, y);
+        this.lastDustAt = timestamp;
       }
     }
 

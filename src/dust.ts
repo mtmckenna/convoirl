@@ -4,7 +4,7 @@ import Game from "./game";
 import { IDrawable } from "./common";
 import { clerp } from "./helpers";
 
-const GROW_DURATION = 750;
+const GROW_DURATION = 1400;
 const MIN_SIZE = 1.0;
 const MAX_SIZE = 3.0;
 const INITIAL_ALPHA = 0.3;
