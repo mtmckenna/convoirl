@@ -16,10 +16,11 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 import Player from "./player";
+import colorMap from "./colors";
 
 const MIN_SQUARE_SIZE = SQUARE_SIZE;
 const MAX_SQUARE_SIZE = 10 * SQUARE_SIZE;
-const NUM_ZINDICES = 3;
+const NUM_ZINDICES = 5;
 
 export default class Game {
   public camera: Camera;
@@ -41,7 +42,7 @@ export default class Game {
     this.player = new Player(this);
 
     this.canvas = canvas;
-    this.context = canvas.getContext("2d");
+    this.context = canvas.getContext("2d", { alpha: true });
     this.context.mozImageSmoothingEnabled = false;
     this.context.webkitImageSmoothingEnabled = false;
 
@@ -188,5 +189,11 @@ export default class Game {
 
   private clearCanvasContext(): void {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Let's see if fillRect is noticeably slower...
+    // It'd be nice if this was about as fast because it means my transparent
+    // tiles are easier to handle
+    // this.context.fillStyle = colorMap[2];
+    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }

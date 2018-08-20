@@ -144,8 +144,8 @@ export default class World extends Level {
   public configureDrawables() {
     this.game.addDrawables(this.tiles, 0);
     this.game.addDrawables(this.game.player.dusts, 1);
-    this.game.addDrawables([this.game.player], 1);
-    this.game.addDrawables(this.buddies, 1);
+    this.game.addDrawables([this.game.player], 2);
+    this.game.addDrawables(this.buddies, 2);
 
     this.game.addOverlayDrawables([this.energyBar]);
     this.resize();

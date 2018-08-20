@@ -4,20 +4,21 @@ TODO
   - put tinymusic in
   - animate trees
   - house recharges energy
+  - animate energy bar
   - make house look nicer
   - add menu on battle
+  - change from scaling squares to screenshot plus zoom
+  - npcs can walk around
+  - have input keys be an enum
+  - fix text centering
+  - rename player->buddy
+  - gamepad
   - color effects
   - floaty things
   - clouds
+  - perf pass
   - add day/night
-  - gamepad
   - shadows
-  - fix text centering
-  - change from scaling squares to screenshot plus zoom
-  - rename player->buddy
-  - npcs can walk around
-  - have input keys be an enum
-  - fix weird stretchy bug + dust floating on top
 */
 
 import Camera from "./camera";
