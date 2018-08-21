@@ -34,12 +34,15 @@ export interface IPositionable {
   size: ISize;
 }
 
+export interface IUpdateable {
+  update(timestamp: number): void;
+}
+
 export interface IDrawable extends IPositionable {
   drawingSize: ISize;
   visible: boolean;
   game: Game;
   draw(context: CanvasRenderingContext2D, timestamp: number): void;
-  update(timestamp: number): void;
   resize(): void;
 }
 

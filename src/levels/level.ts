@@ -25,7 +25,7 @@ export default abstract class Level {
     this.drawingSize.height = this.size.height * this.game.squareSize;
   }
 
-  public abstract configureDrawables();
+  public abstract configureDrawablesAndUpdateables();
   public abstract resize();
   public abstract handleInput(key: string);
   public abstract handleTouch(touch: Touch);

@@ -112,8 +112,7 @@ export default class Player implements IDrawable {
     }
   }
 
-  public update(timestamp) {
-    this.dusts.forEach((dust) => dust.update(timestamp));
+  public update() {
     this.drawingSize.width = TILE_SIZE * this.game.squareSize;
     this.drawingSize.height = TILE_SIZE * this.game.squareSize;
   }

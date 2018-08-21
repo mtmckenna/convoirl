@@ -16,7 +16,7 @@ import {
   HALF_TILE_SIZE,
   IPositionable,
   SQUARE_SIZE,
-  TILE_SIZE
+  TILE_SIZE,
 } from "../common";
 
 import { canThingMoveToPosition } from "../helpers";
@@ -105,6 +105,31 @@ export default class World extends Level {
     }
   }
 
+  public resize() {
+    const energyBarX = Math.floor(
+      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2,
+    );
+
+    this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
+  }
+
+  public configureDrawablesAndUpdateables() {
+    this.game.addDrawables(this.tiles, 0);
+    this.game.addDrawables(this.game.player.dusts, 1);
+    this.game.addDrawables([this.game.player], 2);
+    this.game.addDrawables(this.buddies, 2);
+    this.game.addOverlayDrawables([this.energyBar]);
+
+    this.game.addUpdateables([
+      this.game.player,
+      ...this.game.player.dusts,
+      this.energyBar,
+      ...this.buddies,
+    ]);
+
+    this.resize();
+  }
+
   private movePlayerVertically(touchDistance: number): boolean {
     if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, Direction.Up)) {
       this.handleInput("ArrowUp");
@@ -131,24 +156,6 @@ export default class World extends Level {
     }
 
     return false;
-  }
-
-  public resize() {
-    const energyBarX = Math.floor(
-      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2,
-    );
-
-    this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
-  }
-
-  public configureDrawables() {
-    this.game.addDrawables(this.tiles, 0);
-    this.game.addDrawables(this.game.player.dusts, 1);
-    this.game.addDrawables([this.game.player], 2);
-    this.game.addDrawables(this.buddies, 2);
-
-    this.game.addOverlayDrawables([this.energyBar]);
-    this.resize();
   }
 
   private canThingMoveInDirection(thing: IPositionable, direction: Direction) {

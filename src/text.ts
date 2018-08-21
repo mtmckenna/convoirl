@@ -56,10 +56,6 @@ export default class Text implements IDrawable {
     this.drawingSize.height = this.size.height * this.game.squareSize;
   }
 
-  public update() {
-    return;
-  }
-
   private updateSize() {
     // Get the longest row per letter
     const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));

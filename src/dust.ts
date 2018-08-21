@@ -1,7 +1,7 @@
 import colorMap from "./colors";
 import Game from "./game";
 
-import { IDrawable } from "./common";
+import { IDrawable, IUpdateable } from "./common";
 import { clerp } from "./helpers";
 
 const GROW_DURATION = 1400;
@@ -9,7 +9,7 @@ const MIN_SIZE = 1.0;
 const MAX_SIZE = 3.0;
 const INITIAL_ALPHA = 0.3;
 
-export default class Dust implements IDrawable {
+export default class Dust implements IDrawable, IUpdateable {
   public game: Game;
 
   public drawingSize;

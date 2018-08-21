@@ -1,8 +1,6 @@
 /*
 TODO
   - add battle level
-  - put tinymusic in
-  - animate trees
   - house recharges energy
   - animate energy bar
   - make house look nicer
@@ -13,12 +11,10 @@ TODO
   - fix text centering
   - rename player->buddy
   - gamepad
-  - color effects
-  - floaty things
   - clouds
   - perf pass
-  - add day/night
-  - shadows
+  - put drawables/updateable on level instead of game
+  - put tinymusic in
 */
 
 import Camera from "./camera";

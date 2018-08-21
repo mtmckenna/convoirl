@@ -32,17 +32,13 @@ export default abstract class Tile implements IDrawable {
 
   public draw(context) {
     context.drawImage(this.offscreenCanvas, 0, 0);
+    if (tileCache[this.name].squareSize === this.game.squareSize) return;
+    this.drawingSize.width = this.tileLength * this.game.squareSize;
+    this.drawingSize.height = this.tileLength * this.game.squareSize;
   }
 
   public resize() {
     return;
-  }
-
-  public update() {
-    if (tileCache[this.name].squareSize === this.game.squareSize) return;
-    this.drawingSize.width = this.tileLength * this.game.squareSize;
-    this.drawingSize.height = this.tileLength * this.game.squareSize;
-    this.cacheOffscreenContext();
   }
 
   // It's faster to draw the tile as an image from an offscreen

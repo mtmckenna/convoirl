@@ -42,7 +42,7 @@ export default class StartScreen extends Level {
     this.generateTiles();
   }
 
-  public configureDrawables() {
+  public configureDrawablesAndUpdateables() {
     this.game.addDrawables(this.tiles, 0);
     this.resize();
   }
@@ -56,7 +56,7 @@ export default class StartScreen extends Level {
     this.game.queueNextLevel(this.game.levels.world);
   }
 
-  public handleTouch(){
+  public handleTouch() {
     this.handleInput();
   }
 

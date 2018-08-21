@@ -3,6 +3,7 @@ import {
   IAnimation,
   IDrawable,
   ISize,
+  IUpdateable,
   SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
@@ -16,7 +17,6 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 import Player from "./player";
-import colorMap from "./colors";
 
 const MIN_SQUARE_SIZE = SQUARE_SIZE;
 const MAX_SQUARE_SIZE = 10 * SQUARE_SIZE;
@@ -31,7 +31,8 @@ export default class Game {
   public levels: { [key: string]: Level; };
   public player: Player;
   public drawables: IDrawable[][];
-  public overlayDrawables: IDrawable[];
+  public overlayDrawables: IDrawable[] = [];
+  public updateables: IUpdateable[] = [];
   public squareSize: number = SQUARE_SIZE;
 
   private context: CanvasRenderingContext2D;
@@ -62,15 +63,7 @@ export default class Game {
   }
 
   public update(timestamp) {
-    this.player.update(timestamp);
-    this.drawables.forEach((drawablesAtZIndex) => {
-      drawablesAtZIndex.forEach((drawable) => {
-        drawable.update(timestamp);
-      });
-    });
-
-    this.overlayDrawables.forEach((drawable) => drawable.update(timestamp));
-
+    this.updateables.forEach((updateable) => updateable.update(timestamp));
     if (this.transitioning) this.updateTransition(timestamp);
   }
 
@@ -108,12 +101,20 @@ export default class Game {
     this.overlayDrawables.push(...drawables);
   }
 
+  public addUpdateables(updateables: IUpdateable[]) {
+    this.updateables.push(...updateables);
+  }
+
   public clearDrawables() {
     this.drawables = new Array(NUM_ZINDICES).fill([]);
   }
 
   public clearOverlayDrawables() {
     this.overlayDrawables = [];
+  }
+
+  public clearUpdateables() {
+    this.updateables = [];
   }
 
   public queueNextLevel(nextLevel: Level) {
@@ -148,7 +149,8 @@ export default class Game {
     this.currentLevel = nextLevel;
     this.clearDrawables();
     this.clearOverlayDrawables();
-    nextLevel.configureDrawables();
+    this.clearUpdateables();
+    nextLevel.configureDrawablesAndUpdateables();
   }
 
   private drawDrawables(timestamp: number) {
