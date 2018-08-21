@@ -64,9 +64,9 @@ export default class StartScreen extends Level {
 
   private addText() {
     const shadowOffset = 0.4;
-    const title1Pos = { x: 0, y: SQUARE_SIZE };
+    const title1Pos = { x: SQUARE_SIZE, y: SQUARE_SIZE };
     const title1ShadowPos = { x: title1Pos.x + shadowOffset, y: title1Pos.y + shadowOffset };
-    const instructionsPos =  { x: 0, y: 50 };
+    const instructionsPos =  { x: SQUARE_SIZE, y: 50 };
     const instructionsShadowPos = { x: instructionsPos.x + shadowOffset, y: instructionsPos.y + shadowOffset };
 
     const title1 = new Text(this.game, TITLE, colorMap[1], title1Pos);

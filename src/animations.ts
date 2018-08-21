@@ -19,7 +19,7 @@ const lookAway: IAnimation = {
 };
 
 const walking: IAnimation = {
-  duration: 300.0,
+  duration: 400.0,
   endPos: { x: 0, y: 0 },
   running: false,
   startTime: 0,
