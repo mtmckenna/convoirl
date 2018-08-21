@@ -9,7 +9,7 @@ import {
 } from "./common";
 
 import { transition } from "./animations";
-import { twoPhaseClerp } from "./helpers";
+import { clerp } from "./helpers";
 
 import Camera from "./camera";
 
@@ -18,8 +18,7 @@ import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 import Player from "./player";
 
-const MIN_SQUARE_SIZE = SQUARE_SIZE;
-const MAX_SQUARE_SIZE = 10 * SQUARE_SIZE;
+const MAX_PREV_IMAGE_SIZE = 5;
 const NUM_ZINDICES = 5;
 
 export default class Game {
@@ -38,18 +37,21 @@ export default class Game {
   private context: CanvasRenderingContext2D;
   private transition: IAnimation;
   private nextLevel: null | Level = null;
+  private imageOfPreviousLevel: HTMLImageElement = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.player = new Player(this);
 
     this.canvas = canvas;
-    this.context = canvas.getContext("2d", { alpha: true });
+    this.context = canvas.getContext("2d", { alpha: false });
     this.context.mozImageSmoothingEnabled = false;
     this.context.webkitImageSmoothingEnabled = false;
 
     // @ts-ignore
     this.context.msImageSmoothingEnabled = false; // tslint:disable-line
     this.context.imageSmoothingEnabled = false;
+    this.context.webkitImageSmoothingEnabled = false;
+    this.context.mozImageSmoothingEnabled = false;
 
     this.levels = { startScreen: new StartScreen(this), world: new World(this) };
     this.transition = Object.assign({}, transition);
@@ -79,7 +81,6 @@ export default class Game {
   public resize() {
     this.currentLevel.resize();
 
-    // TODO: dry this up
     this.drawables.forEach((drawablesAtZIndex) => {
       drawablesAtZIndex.forEach((drawable) => {
         drawable.resize();
@@ -133,16 +134,22 @@ export default class Game {
   private startTransition() {
     this.transition.startTime = this.timestamp;
     this.transition.running = true;
+    this.imageOfPreviousLevel = new Image();
+    this.imageOfPreviousLevel.src = this.canvas.toDataURL("png");
+    this.switchLevel(this.nextLevel);
   }
 
   private updateTransition(timestamp) {
     const t = (timestamp - this.transition.startTime) / this.transition.duration;
 
-    if (t >= 0.5) this.switchLevel(this.nextLevel);
-    if (t >= 1.0) this.transition.running = false;
+    this.transition.prevLevelScale = clerp(1.0, MAX_PREV_IMAGE_SIZE, 1.0, MAX_PREV_IMAGE_SIZE, t);
+    this.transition.prevLevelAlpha = clerp(1.0, 0.0, 0.0, 1.0, t);
+    this.transition.nextLevelAlpha = clerp(0.0, 1.0, 0.0, 1.0, t);
 
-    this.squareSize = twoPhaseClerp(t, MIN_SQUARE_SIZE, MAX_SQUARE_SIZE);
-    this.context.globalAlpha = Math.min(SQUARE_SIZE / this.squareSize, 1.0);
+    if (t >= 1.0) {
+      this.transition = Object.assign({}, transition);
+      this.imageOfPreviousLevel = null;
+    }
   }
 
   private switchLevel(nextLevel) {
@@ -155,6 +162,10 @@ export default class Game {
 
   private drawDrawables(timestamp: number) {
     const offset = this.camera.offset;
+
+    if (this.transitioning) {
+      this.context.globalAlpha = this.transition.nextLevelAlpha;
+    }
 
     this.drawables.forEach((drawablesAtZIndex) => {
       drawablesAtZIndex.forEach((drawable) => {
@@ -173,6 +184,20 @@ export default class Game {
         this.context.setTransform(1, 0, 0, 1, 0, 0);
       });
     });
+
+    this.context.globalAlpha = 1.0;
+
+    if (this.imageOfPreviousLevel) {
+      this.context.globalAlpha = this.transition.prevLevelAlpha;
+      this.context.drawImage(
+        this.imageOfPreviousLevel,
+        0,
+        0,
+        this.canvas.width * this.transition.prevLevelScale,
+        this.canvas.height * this.transition.prevLevelScale,
+      );
+      this.context.globalAlpha = 1.0;
+    }
   }
 
   private isOffScreen(x: number, y: number, drawingSize: ISize) {

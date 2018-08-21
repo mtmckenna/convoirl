@@ -1,11 +1,11 @@
 /*
 TODO
   - add battle level
+  - add js13k tag
   - house recharges energy
   - animate energy bar
   - make house look nicer
   - add menu on battle
-  - change from scaling squares to screenshot plus zoom
   - npcs can walk around
   - have input keys be an enum
   - fix text centering
@@ -15,6 +15,7 @@ TODO
   - perf pass
   - put drawables/updateable on level instead of game
   - put tinymusic in
+  - use diff easing function for level transition
 */
 
 import Camera from "./camera";

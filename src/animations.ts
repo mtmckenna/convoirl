@@ -27,6 +27,9 @@ const walking: IAnimation = {
 
 const transition: IAnimation = {
   duration: 1500.0,
+  nextLevelAlpha: 0.0,
+  prevLevelAlpha: 1.0,
+  prevLevelScale: 1.0,
   running: false,
   startTime: 0.0,
 };

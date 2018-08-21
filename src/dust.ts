@@ -43,8 +43,6 @@ export default class Dust implements IDrawable, IUpdateable {
 
   public update(timestamp: number) {
       if (!this.visible) return;
-      this.drawingSize.width = this.size.width * this.game.squareSize;
-      this.drawingSize.height = this.size.height * this.game.squareSize;
       this.percentGrown = (timestamp - this.startTime) / GROW_DURATION;
       this.visible = this.percentGrown >= 1.0 ? false : true;
   }

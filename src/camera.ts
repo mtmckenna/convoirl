@@ -51,8 +51,6 @@ export default class Camera implements IPositionable {
       drawable.pos.y * this.game.squareSize -
       drawable.drawingSize.height / 2.0;
 
-    if (this.game.transitioning) return;
-
     // Stop camera at edges of level size
     const leftStop = 0;
     const rightStop = -1 * (this.game.currentLevel.drawingSize.width - this.size.width);
