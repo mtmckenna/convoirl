@@ -9,6 +9,8 @@ import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
 
+import { SQUARE_SIZE } from "../common";
+
 const TITLE = "CONVO IRL";
 const TAP_TO_PLAY = "TAP TO PLAY";
 
@@ -62,9 +64,9 @@ export default class StartScreen extends Level {
 
   private addText() {
     const shadowOffset = 0.4;
-    const title1Pos = { x: 55, y: 50 };
+    const title1Pos = { x: 0, y: SQUARE_SIZE };
     const title1ShadowPos = { x: title1Pos.x + shadowOffset, y: title1Pos.y + shadowOffset };
-    const instructionsPos =  { x: 53, y: 70 };
+    const instructionsPos =  { x: 0, y: 50 };
     const instructionsShadowPos = { x: instructionsPos.x + shadowOffset, y: instructionsPos.y + shadowOffset };
 
     const title1 = new Text(this.game, TITLE, colorMap[1], title1Pos);
@@ -73,12 +75,12 @@ export default class StartScreen extends Level {
     const instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1], instructionsPos);
     const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap[0], instructionsShadowPos);
 
-    this.game.addDrawables([
+    this.game.addOverlayDrawables([
       title1Shadow,
       instructionsShadow,
       title1,
       instructions,
-    ], 1);
+    ]);
 
   }
 }

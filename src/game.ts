@@ -75,7 +75,7 @@ export default class Game {
 
     this.clearCanvasContext();
     this.drawDrawables(timestamp);
-    if (!this.transitioning) this.drawOverlayDrawables(timestamp);
+    this.drawOverlayDrawables(timestamp);
   }
 
   public resize() {
@@ -163,9 +163,7 @@ export default class Game {
   private drawDrawables(timestamp: number) {
     const offset = this.camera.offset;
 
-    if (this.transitioning) {
-      this.context.globalAlpha = this.transition.nextLevelAlpha;
-    }
+    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
 
     this.drawables.forEach((drawablesAtZIndex) => {
       drawablesAtZIndex.forEach((drawable) => {
@@ -208,10 +206,13 @@ export default class Game {
   }
 
   private drawOverlayDrawables(timestamp: number) {
+    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
     this.overlayDrawables.forEach((drawable) => {
       if (!drawable.visible) return;
       drawable.draw(this.context, timestamp);
     });
+
+    this.context.globalAlpha = 1.0;
   }
 
   private clearCanvasContext(): void {
