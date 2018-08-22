@@ -1,7 +1,7 @@
 /*
 TODO
   - add battle level
-  - add js13k tag
+  - put drawables/updateable on level instead of game (clean up convo level where clear is repeated)
   - house recharges energy
   - animate energy bar
   - make house look nicer
@@ -13,23 +13,26 @@ TODO
   - gamepad
   - clouds
   - perf pass
-  - put drawables/updateable on level instead of game
+  - avoid drawing offscreen tiles for perf reasons
   - put tinymusic in
   - use diff easing function for level transition
+  - add color effects on transition
+  - see if the image on transition can scale from the middle?
+  - input buffering
 */
 
 import Camera from "./camera";
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import { MS_PER_UPDATE, SQUARE_SIZE } from "./common";
+import { MS_PER_UPDATE, SQUARE_SIZE, TILE_SIZE } from "./common";
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 
 const game: Game = new Game(canvas);
 const camera: Camera = new Camera(game);
-const sideLength: number = 128 * SQUARE_SIZE;
+const sideLength: number = 16 * TILE_SIZE * SQUARE_SIZE;
 
 let width: number = sideLength;
 let height: number = sideLength;

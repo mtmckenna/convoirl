@@ -13,6 +13,7 @@ import { clerp } from "./helpers";
 
 import Camera from "./camera";
 
+import Convo from "./levels/convo";
 import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
@@ -53,11 +54,17 @@ export default class Game {
     this.context.webkitImageSmoothingEnabled = false;
     this.context.mozImageSmoothingEnabled = false;
 
-    this.levels = { startScreen: new StartScreen(this), world: new World(this) };
+    this.levels = {
+      convo: new Convo(this),
+      startScreen: new StartScreen(this),
+      world: new World(this),
+    };
+
     this.transition = Object.assign({}, transition);
 
     // this.switchLevel(this.levels.world);
     this.switchLevel(this.levels.startScreen);
+    // this.switchLevel(this.levels.convo);
   }
 
   get transitioning(): boolean {

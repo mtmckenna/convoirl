@@ -48,6 +48,10 @@ function randomElementFromArray(arrayToPullFrom: any[]) {
   return arrayToPullFrom[Math.floor(Math.random() * arrayToPullFrom.length)];
 }
 
+function randomIndexFromArray(arrayToPullFrom: any[]) {
+  return Math.floor(Math.random() * arrayToPullFrom.length);
+}
+
 function twoPhaseClerp(t: number, min: number, max: number, reverse = false): number {
   let start = max;
   let end = min;
@@ -75,6 +79,7 @@ export {
   lerp,
   oneOrMinusOne,
   randomElementFromArray,
+  randomIndexFromArray,
   shouldDoAnimation,
   twoPhaseClerp,
 };
