@@ -12,7 +12,7 @@ import { transition } from "./animations";
 import { clerp } from "./helpers";
 
 import Camera from "./camera";
-
+import colorMap from "./colors";
 import Convo from "./levels/convo";
 import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
@@ -83,6 +83,8 @@ export default class Game {
     this.clearCanvasContext();
     this.drawDrawables(timestamp);
     this.drawOverlayDrawables(timestamp);
+    if (this.transitioning) this.updateTransition(timestamp);
+
   }
 
   public resize() {
@@ -101,7 +103,7 @@ export default class Game {
     this.player.walk(direction);
   }
 
-  public addDrawables(drawables: IDrawable[], zIndex) {
+  public addDrawables(drawables: IDrawable[], zIndex: number) {
     this.drawables[zIndex].push(...drawables);
   }
 
@@ -114,7 +116,7 @@ export default class Game {
   }
 
   public clearDrawables() {
-    this.drawables = new Array(NUM_ZINDICES).fill([]);
+    this.drawables = new Array(NUM_ZINDICES).fill(null).map(() => new Array().fill(null));
   }
 
   public clearOverlayDrawables() {
@@ -223,12 +225,12 @@ export default class Game {
   }
 
   private clearCanvasContext(): void {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Let's see if fillRect is noticeably slower...
     // It'd be nice if this was about as fast because it means my transparent
     // tiles are easier to handle
-    // this.context.fillStyle = colorMap[2];
-    // this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = colorMap[2];
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }

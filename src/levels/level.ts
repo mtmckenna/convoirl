@@ -18,11 +18,11 @@ export default abstract class Level {
 
   constructor(game: Game) {
     this.game = game;
+
   }
 
   public update() {
-    this.drawingSize.width = this.size.width * this.game.squareSize;
-    this.drawingSize.height = this.size.height * this.game.squareSize;
+    return;
   }
 
   public abstract configureDrawablesAndUpdateables();

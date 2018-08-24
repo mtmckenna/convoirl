@@ -59,6 +59,8 @@ export default class Player implements IDrawable {
     this.animations.lookAway = Object.assign({}, lookAwayAnimation);
     this.color = randomElementFromArray(COLORS);
     this.dusts = Array.from(Array(NUM_DUSTS).keys()).map(() => new Dust(this.game));
+    this.drawingSize.width = TILE_SIZE * this.game.squareSize;
+    this.drawingSize.height = TILE_SIZE * this.game.squareSize;
   }
 
   get blinking() {
@@ -112,11 +114,6 @@ export default class Player implements IDrawable {
     }
   }
 
-  public update() {
-    this.drawingSize.width = TILE_SIZE * this.game.squareSize;
-    this.drawingSize.height = TILE_SIZE * this.game.squareSize;
-  }
-
   public draw(context, timestamp) {
     this.updateWalkingPosition(timestamp);
 
@@ -160,7 +157,9 @@ export default class Player implements IDrawable {
     context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-  public resize() { return; }
+  public resize() {
+    return;
+  }
 
   private maybeDoEyeAnimations(timestamp) {
     const { blinking, lookAway } = this.animations;

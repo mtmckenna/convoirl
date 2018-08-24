@@ -121,10 +121,8 @@ export default class World extends Level {
     this.game.addOverlayDrawables([this.energyBar]);
 
     this.game.addUpdateables([
-      this.game.player,
       ...this.game.player.dusts,
       this.energyBar,
-      ...this.buddies,
     ]);
 
     this.resize();
@@ -179,7 +177,6 @@ export default class World extends Level {
     pos.x = pos.x - pos.x % this.game.tileSize;
     pos.y = pos.y - pos.y % this.game.tileSize;
 
-    // console.log(thing.pos.y, pos.y, this.tilesGrid[pos.y / this.game.tileSize][this.game.tileSize]);
     return canThingMoveToPosition(thing, pos, this);
   }
 }

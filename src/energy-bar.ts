@@ -25,6 +25,8 @@ export default class EnergyBar implements IDrawable {
     this.energyText = new Text(this.game, "ENERGY", colorMap[7], { x: this.pos.x, y: this.pos.y });
     this.size = Object.assign({}, this.energyText.size);
     this.drawingSize = Object.assign({}, this.energyText.drawingSize);
+    this.drawingSize.width = (this.size.width + 1) * this.game.squareSize;
+    this.drawingSize.height = (this.size.height + 1) * this.game.squareSize;
   }
 
   public move(updatedPos: IPoint) {
@@ -40,8 +42,7 @@ export default class EnergyBar implements IDrawable {
   }
 
   public resize() {
-    this.drawingSize.width = (this.size.width + 1) * this.game.squareSize;
-    this.drawingSize.height = (this.size.height + 1) * this.game.squareSize;
+    return;
   }
 
   public draw(context) {

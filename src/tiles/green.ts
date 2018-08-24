@@ -2,11 +2,10 @@ import Tile from "./tile";
 
 export default class Green extends Tile {
   public name = "green";
-  public visible = true;
+  public visible = false;
   protected colorMatrix = [];
-
-  constructor(green, rowIndex, columnIndex) {
-    super(green, rowIndex, columnIndex);
+  constructor(game, rowIndex, columnIndex) {
+    super(game, rowIndex, columnIndex);
     this.cacheOffscreenContext();
   }
 }
