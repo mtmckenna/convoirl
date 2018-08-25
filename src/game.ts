@@ -1,9 +1,7 @@
 import {
   Direction,
   IAnimation,
-  IDrawable,
   ISize,
-  IUpdateable,
   SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
@@ -11,29 +9,27 @@ import {
 import { transition } from "./animations";
 import { clerp } from "./helpers";
 
+import Buddy from "./buddy";
 import Camera from "./camera";
 import colorMap from "./colors";
 import Convo from "./levels/convo";
 import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
-import Player from "./player";
 
 const MAX_PREV_IMAGE_SIZE = 5;
-const NUM_ZINDICES = 5;
 
 export default class Game {
   public camera: Camera;
   public canvas: HTMLCanvasElement;
   public currentLevel: Level;
+  public drawingSize: ISize;
   public timestamp: number = 0;
   public tileSize: number = TILE_SIZE;
   public levels: { [key: string]: Level; };
-  public player: Player;
-  public drawables: IDrawable[][];
-  public overlayDrawables: IDrawable[] = [];
-  public updateables: IUpdateable[] = [];
+  public player: Buddy;
   public squareSize: number = SQUARE_SIZE;
+  public size: ISize;
 
   private context: CanvasRenderingContext2D;
   private transition: IAnimation;
@@ -41,9 +37,10 @@ export default class Game {
   private imageOfPreviousLevel: HTMLImageElement = null;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.player = new Player(this);
+    this.player = new Buddy(this);
 
     this.canvas = canvas;
+    this.setSize();
     this.context = canvas.getContext("2d", { alpha: false });
     this.context.mozImageSmoothingEnabled = false;
     this.context.webkitImageSmoothingEnabled = false;
@@ -72,7 +69,7 @@ export default class Game {
   }
 
   public update(timestamp) {
-    this.updateables.forEach((updateable) => updateable.update(timestamp));
+    this.currentLevel.updateables.forEach((updateable) => updateable.update(timestamp));
     if (this.transitioning) this.updateTransition(timestamp);
   }
 
@@ -88,43 +85,12 @@ export default class Game {
   }
 
   public resize() {
+    this.setSize();
     this.currentLevel.resize();
-
-    this.drawables.forEach((drawablesAtZIndex) => {
-      drawablesAtZIndex.forEach((drawable) => {
-        drawable.resize();
-      });
-    });
-
-    this.overlayDrawables.forEach((drawable) => drawable.resize());
   }
 
   public walk(direction: Direction) {
     this.player.walk(direction);
-  }
-
-  public addDrawables(drawables: IDrawable[], zIndex: number) {
-    this.drawables[zIndex].push(...drawables);
-  }
-
-  public addOverlayDrawables(drawables: IDrawable[]) {
-    this.overlayDrawables.push(...drawables);
-  }
-
-  public addUpdateables(updateables: IUpdateable[]) {
-    this.updateables.push(...updateables);
-  }
-
-  public clearDrawables() {
-    this.drawables = new Array(NUM_ZINDICES).fill(null).map(() => new Array().fill(null));
-  }
-
-  public clearOverlayDrawables() {
-    this.overlayDrawables = [];
-  }
-
-  public clearUpdateables() {
-    this.updateables = [];
   }
 
   public queueNextLevel(nextLevel: Level) {
@@ -148,6 +114,18 @@ export default class Game {
     this.switchLevel(this.nextLevel);
   }
 
+  private setSize() {
+    this.size = {
+      height: this.canvas.height / this.squareSize,
+      width: this.canvas.width / this.squareSize,
+    };
+
+    this.drawingSize = {
+      height: this.canvas.height,
+      width: this.canvas.width,
+    };
+  }
+
   private updateTransition(timestamp) {
     const t = (timestamp - this.transition.startTime) / this.transition.duration;
 
@@ -163,18 +141,15 @@ export default class Game {
 
   private switchLevel(nextLevel) {
     this.currentLevel = nextLevel;
-    this.clearDrawables();
-    this.clearOverlayDrawables();
-    this.clearUpdateables();
     nextLevel.configureDrawablesAndUpdateables();
   }
 
   private drawDrawables(timestamp: number) {
-    const offset = this.camera.offset;
-
     if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
 
-    this.drawables.forEach((drawablesAtZIndex) => {
+    const offset = this.camera.offset;
+
+    this.currentLevel.drawables.forEach((drawablesAtZIndex) => {
       drawablesAtZIndex.forEach((drawable) => {
         if (!drawable.visible) return;
         const x = drawable.pos.x * this.squareSize + offset.x;
@@ -216,7 +191,7 @@ export default class Game {
 
   private drawOverlayDrawables(timestamp: number) {
     if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
-    this.overlayDrawables.forEach((drawable) => {
+    this.currentLevel.overlayDrawables.forEach((drawable) => {
       if (!drawable.visible) return;
       drawable.draw(this.context, timestamp);
     });
@@ -225,11 +200,6 @@ export default class Game {
   }
 
   private clearCanvasContext(): void {
-    // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // Let's see if fillRect is noticeably slower...
-    // It'd be nice if this was about as fast because it means my transparent
-    // tiles are easier to handle
     this.context.fillStyle = colorMap[2];
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }

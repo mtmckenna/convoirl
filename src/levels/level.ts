@@ -1,8 +1,15 @@
 import Game from "../game";
 import Tile from "../tiles/tile";
 
-import { ISize, TILE_SIZE } from "../common";
+import {
+  IDrawable,
+  ISize,
+  IUpdateable,
+  TILE_SIZE,
+ } from "../common";
 import { flatten } from "../helpers";
+
+const NUM_ZINDICES = 5;
 
 export default abstract class Level {
   public game: Game;
@@ -13,6 +20,10 @@ export default abstract class Level {
   public tiles: Tile[];
   public tilesGrid: Tile[][];
 
+  public drawables: IDrawable[][];
+  public overlayDrawables: IDrawable[] = [];
+  public updateables: IUpdateable[] = [];
+
   protected abstract tileIndexes: number[][];
   protected abstract tileTypeMap: any[]; // <-- what's the right way to do this?
 
@@ -21,14 +32,19 @@ export default abstract class Level {
 
   }
 
+  public abstract resize();
+  public abstract handleInput(key: string);
+  public abstract handleTouch(touch: Touch);
+
   public update() {
     return;
   }
 
-  public abstract configureDrawablesAndUpdateables();
-  public abstract resize();
-  public abstract handleInput(key: string);
-  public abstract handleTouch(touch: Touch);
+  public configureDrawablesAndUpdateables() {
+    this.clearDrawables();
+    this.clearOverlayDrawables();
+    this.clearUpdateables();
+  }
 
   protected generateTiles() {
     const width = this.tileIndexes[0].length * TILE_SIZE;
@@ -42,5 +58,29 @@ export default abstract class Level {
     );
 
     this.tiles = flatten(this.tilesGrid);
+  }
+
+  protected addDrawables(drawables: IDrawable[], zIndex: number) {
+    this.drawables[zIndex].push(...drawables);
+  }
+
+  protected addOverlayDrawables(drawables: IDrawable[]) {
+    this.overlayDrawables.push(...drawables);
+  }
+
+  protected addUpdateables(updateables: IUpdateable[]) {
+    this.updateables.push(...updateables);
+  }
+
+  protected clearDrawables() {
+    this.drawables = new Array(NUM_ZINDICES).fill(null).map(() => new Array().fill(null));
+  }
+
+  protected clearOverlayDrawables() {
+    this.overlayDrawables = [];
+  }
+
+  protected clearUpdateables() {
+    this.updateables = [];
   }
 }

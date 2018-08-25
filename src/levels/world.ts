@@ -1,8 +1,8 @@
 import Level from "./level";
 
+import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
-import Player from "../player";
 
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
@@ -48,14 +48,14 @@ export default class World extends Level {
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   ];
 
-  private buddies: Player[];
+  private buddies: Buddy[];
 
   constructor(game: Game) {
     super(game);
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
 
-    const buddy = new Player(game);
+    const buddy = new Buddy(game);
     buddy.pos.y = TILE_SIZE * 10;
     buddy.pos.x = TILE_SIZE * 10;
     this.buddies = [buddy];
@@ -114,13 +114,14 @@ export default class World extends Level {
   }
 
   public configureDrawablesAndUpdateables() {
-    this.game.addDrawables(this.tiles, 0);
-    this.game.addDrawables(this.game.player.dusts, 1);
-    this.game.addDrawables([this.game.player], 2);
-    this.game.addDrawables(this.buddies, 2);
-    this.game.addOverlayDrawables([this.energyBar]);
+    super.configureDrawablesAndUpdateables();
+    this.addDrawables(this.tiles, 0);
+    this.addDrawables(this.game.player.dusts, 1);
+    this.addDrawables([this.game.player], 2);
+    this.addDrawables(this.buddies, 2);
+    this.addOverlayDrawables([this.energyBar]);
 
-    this.game.addUpdateables([
+    this.addUpdateables([
       ...this.game.player.dusts,
       this.energyBar,
     ]);

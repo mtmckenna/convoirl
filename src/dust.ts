@@ -37,10 +37,6 @@ export default class Dust implements IDrawable, IUpdateable {
     this.visible = true;
   }
 
-  public resize() {
-    return;
-  }
-
   public update(timestamp: number) {
       if (!this.visible) return;
       this.percentGrown = (timestamp - this.startTime) / GROW_DURATION;

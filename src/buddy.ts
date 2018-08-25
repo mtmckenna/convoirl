@@ -30,6 +30,7 @@ const EYE_REFLECTION_COLOR = "rgb(255, 255, 255)";
 const EYE_COLOR = "rgb(0, 0, 0)";
 const RIGHT_EYE_OFFSET = 4;
 const EYE_OFFSET = 1;
+const EYE_OFFSET_CONVO = 4;
 const NUM_DUSTS = 50;
 const TIME_BETWEEN_DUSTS = 30;
 
@@ -51,6 +52,8 @@ export default class Player implements IDrawable {
   private rot: number = Math.PI;
   private color: string;
   private lastDustAt: number = 0;
+  private inConvoMode: boolean = false;
+  private convoLookLeft: boolean = true;
 
   constructor(game) {
     this.game = game;
@@ -69,6 +72,18 @@ export default class Player implements IDrawable {
 
   get walking() {
     return this.animations.walking.running;
+  }
+
+  public setConvoMode(inConvoMode: boolean) {
+    this.inConvoMode = inConvoMode;
+  }
+
+  public convoLook(direction) {
+    if (direction === Direction.Left) {
+      this.convoLookLeft = true;
+    } else if (direction === Direction.Right) {
+      this.convoLookLeft = false;
+    }
   }
 
   public walk(direction) {
@@ -117,6 +132,8 @@ export default class Player implements IDrawable {
   public draw(context, timestamp) {
     this.updateWalkingPosition(timestamp);
 
+    const horizontalScale = this.convoLookLeft ? 1 : -1;
+
     context.translate(
       this.drawingSize.width / 2.0,
       this.drawingSize.height / 2.0,
@@ -157,10 +174,6 @@ export default class Player implements IDrawable {
     context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
-  public resize() {
-    return;
-  }
-
   private maybeDoEyeAnimations(timestamp) {
     const { blinking, lookAway } = this.animations;
 
@@ -195,7 +208,10 @@ export default class Player implements IDrawable {
 
     context.fillStyle = EYE_COLOR;
 
-    const scaledEyeOffset = EYE_OFFSET * this.game.squareSize;
+    let offset = EYE_OFFSET;
+    if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
+
+    const scaledEyeOffset = offset * this.game.squareSize;
     const scaledEyeSize = EYE_SIZE * this.game.squareSize;
     const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.game.squareSize;
 

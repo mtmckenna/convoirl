@@ -7,4 +7,5 @@ export default [
   "#dec26d",
   "#6e4c49",
   "#3e625e",
+  "#4c547a",
 ];

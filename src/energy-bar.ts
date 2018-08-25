@@ -33,20 +33,13 @@ export default class EnergyBar implements IDrawable {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
 
-    // tslint:disable-next-line
-    // https://stackoverflow.com/questions/28057881/javascript-either-strokerect-or-fillrect-blurry-depending-on-translation
     this.strokePos.x = Math.floor(this.pos.x) + 0.5;
     this.strokePos.y = Math.floor(this.pos.y) + 0.5;
     this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5;
     this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5;
   }
 
-  public resize() {
-    return;
-  }
-
   public draw(context) {
-    this.resize();
     context.fillStyle = colorMap[2];
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
     context.strokeStyle = colorMap[1];

@@ -45,7 +45,8 @@ export default class StartScreen extends Level {
   }
 
   public configureDrawablesAndUpdateables() {
-    this.game.addDrawables(this.tiles, 0);
+    super.configureDrawablesAndUpdateables();
+    this.addDrawables(this.tiles, 0);
     this.resize();
   }
 
@@ -75,7 +76,7 @@ export default class StartScreen extends Level {
     const instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1], instructionsPos);
     const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap[0], instructionsShadowPos);
 
-    this.game.addOverlayDrawables([
+    this.addOverlayDrawables([
       title1Shadow,
       instructionsShadow,
       title1,

@@ -1,38 +1,46 @@
 /*
 TODO
+  - player look left/right
+  - use box for energy box
   - add battle level
-  - put drawables/updateable on level instead of game (clean up convo level where clear is repeated)
   - house recharges energy
+  - remove updateables?
   - animate energy bar
   - make house look nicer
   - add menu on battle
   - npcs can walk around
   - have input keys be an enum
-  - fix text centering
   - rename player->buddy
   - gamepad
   - clouds
-  - perf pass
   - avoid drawing offscreen tiles for perf reasons
   - put tinymusic in
   - use diff easing function for level transition
   - add color effects on transition
   - see if the image on transition can scale from the middle?
   - input buffering
+  - readme
+  - transition effect should zoom from center
+  - center text on main menu
 */
 
 import Camera from "./camera";
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import { MS_PER_UPDATE, SQUARE_SIZE, TILE_SIZE } from "./common";
+import {
+  MS_PER_UPDATE,
+  NUM_TILES_ON_LONG_SIDE,
+  SQUARE_SIZE,
+  TILE_SIZE,
+} from "./common";
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 
 const game: Game = new Game(canvas);
 const camera: Camera = new Camera(game);
-const sideLength: number = 16 * TILE_SIZE * SQUARE_SIZE;
+const sideLength: number = NUM_TILES_ON_LONG_SIDE * TILE_SIZE * SQUARE_SIZE;
 
 let width: number = sideLength;
 let height: number = sideLength;

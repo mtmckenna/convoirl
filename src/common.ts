@@ -43,7 +43,6 @@ export interface IDrawable extends IPositionable {
   visible: boolean;
   game: Game;
   draw(context: CanvasRenderingContext2D, timestamp: number): void;
-  resize(): void;
 }
 
 export interface ITileMap {
@@ -54,3 +53,4 @@ export const TILE_SIZE: number = 8;
 export const HALF_TILE_SIZE: number = TILE_SIZE / 2;
 export const SQUARE_SIZE = 5;
 export const MS_PER_UPDATE = 1.0 / 60.0;
+export const NUM_TILES_ON_LONG_SIDE = 16;

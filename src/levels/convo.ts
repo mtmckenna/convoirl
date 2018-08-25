@@ -1,29 +1,46 @@
 import Level from "./level";
 
-import EnergyBar from "../energy-bar";
+import Box from "../box";
+import Buddy from "../buddy";
 import Game from "../game";
-import Player from "../player";
+import Text from "../text";
 
 import Flowers from "../tiles/flowers";
 import Green from "../tiles/green";
 
-import {
-  SQUARE_SIZE,
-  TILE_SIZE,
-} from "../common";
+import { Direction, TILE_SIZE } from "../common";
 
 import { randomIndexFromArray } from "../helpers";
 
 export default class Convo extends Level {
-  public energyBar: EnergyBar;
 
   protected tileTypeMap = [Green, Flowers];
   protected tileIndexes = [[]];
 
+  private box: Box;
+  private boxSelectHeight: number;
+  private buddies: Buddy[];
+
   constructor(game: Game) {
     super(game);
     this.generateTiles();
-    this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
+
+    this.boxSelectHeight = this.game.squareSize * 5;
+    this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
+
+    const buddy1 = new Buddy(game);
+    buddy1.pos.y = TILE_SIZE * 2;
+    buddy1.pos.x = TILE_SIZE * 2;
+    buddy1.setConvoMode(true);
+    buddy1.convoLook(Direction.Right);
+
+    const buddy2 = new Buddy(game);
+    buddy2.pos.y = TILE_SIZE * 5;
+    buddy2.pos.x = TILE_SIZE * 5;
+    buddy2.setConvoMode(true);
+    buddy1.convoLook(Direction.Left);
+
+    this.buddies = [buddy1, buddy2];
   }
 
   public handleInput(key) {
@@ -31,7 +48,7 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
-  return;
+    return;
   }
 
   public resize() {
@@ -44,12 +61,22 @@ export default class Convo extends Level {
         () => randomIndexFromArray(this.tileTypeMap)),
     );
 
+    this.updateBoxes();
     this.generateTiles();
     this.configureDrawablesAndUpdateables();
   }
 
   public configureDrawablesAndUpdateables() {
-    this.game.clearDrawables();
-    this.game.addDrawables(this.tiles, 0);
+    super.configureDrawablesAndUpdateables();
+    this.addDrawables(this.tiles, 0);
+    this.addDrawables(this.buddies, 1);
+    this.addOverlayDrawables([this.box]);
+  }
+
+  private updateBoxes() {
+    const width = this.game.canvas.width / this.game.squareSize - this.game.squareSize / 2;
+    const y = this.game.canvas.height - this.boxSelectHeight * this.game.squareSize - this.game.squareSize * 2;
+    this.box.move({ x: this.game.squareSize, y });
+    this.box.updateSize({ height: this.boxSelectHeight, width });
   }
 }

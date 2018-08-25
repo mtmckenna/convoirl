@@ -49,6 +49,10 @@ export default abstract class Tile implements IDrawable {
     offscreenCanvas.height = this.drawingSize.height;
     const offscreenContext = offscreenCanvas.getContext("2d");
 
+    // Fill the background with green first
+    // offscreenContext.fillStyle = colorMap[3];
+    // offscreenContext.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+
     const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);
     colors.forEach((color, index) => {
       offscreenContext.fillStyle = color;

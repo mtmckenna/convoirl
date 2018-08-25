@@ -1,5 +1,5 @@
+import Buddy from "./buddy";
 import Game from "./game";
-import Player from "./player";
 
 import {
   IDrawable,
@@ -21,7 +21,7 @@ export default class Camera implements IPositionable {
   public size: ISize = { width: 0, height: 0 };
 
   private game: Game;
-  private player: Player;
+  private player: Buddy;
   private shake: IScreenShakeProps;
 
   constructor(game) {
