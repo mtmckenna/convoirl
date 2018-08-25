@@ -174,12 +174,15 @@ export default class Game {
 
     if (this.imageOfPreviousLevel) {
       this.context.globalAlpha = this.transition.prevLevelAlpha;
+      const scaleFactor = this.transition.prevLevelScale;
+      const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
+      const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
       this.context.drawImage(
         this.imageOfPreviousLevel,
-        0,
-        0,
-        this.canvas.width * this.transition.prevLevelScale,
-        this.canvas.height * this.transition.prevLevelScale,
+        -x,
+        -y,
+        this.canvas.width * scaleFactor,
+        this.canvas.height * scaleFactor,
       );
       this.context.globalAlpha = 1.0;
     }

@@ -1,10 +1,7 @@
 /*
 TODO
-  - transition effect should zoom from center
   - player look left/right
-  - add battle level
   - house recharges energy
-  - remove updateables?
   - animate energy bar
   - make house look nicer
   - add menu on battle
