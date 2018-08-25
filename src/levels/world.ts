@@ -14,6 +14,7 @@ import Unwalkable from "../tiles/unwalkable";
 import {
   Direction,
   HALF_TILE_SIZE,
+  IPoint,
   IPositionable,
   SQUARE_SIZE,
   TILE_SIZE,
@@ -49,6 +50,7 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
+  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 5, y: TILE_SIZE * 7 };
 
   constructor(game: Game) {
     super(game);
@@ -64,16 +66,16 @@ export default class World extends Level {
   public handleInput(key) {
     switch (key) {
       case "ArrowUp":
-        this.game.walk(Direction.Up);
+        this.walk(Direction.Up);
         break;
       case "ArrowDown":
-        this.game.walk(Direction.Down);
+        this.walk(Direction.Down);
         break;
       case "ArrowRight":
-        this.game.walk(Direction.Right);
+        this.walk(Direction.Right);
         break;
       case "ArrowLeft":
-        this.game.walk(Direction.Left);
+        this.walk(Direction.Left);
         break;
     }
   }
@@ -126,7 +128,17 @@ export default class World extends Level {
       this.energyBar,
     ]);
 
+    this.configurePlayer();
     this.resize();
+  }
+
+  private walk(direction: Direction) {
+    this.game.player.walk(direction);
+  }
+
+  private configurePlayer() {
+    this.game.player.setConvoMode(false);
+    this.game.player.pos = this.playerSpawnPosition;
   }
 
   private movePlayerVertically(touchDistance: number): boolean {

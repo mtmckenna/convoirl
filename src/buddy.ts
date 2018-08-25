@@ -43,10 +43,11 @@ export default class Player implements IDrawable {
   public game: Game;
 
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
-  public pos: IPoint = { x: TILE_SIZE * 5, y: TILE_SIZE * 7 };
+  public pos: IPoint = { x: TILE_SIZE, y: TILE_SIZE };
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public visible: boolean = true;
   public dusts: Dust[];
+  public skills: string[] = ["weather"];
 
   private animations: IAnimations = {};
   private rot: number = Math.PI;
@@ -88,7 +89,8 @@ export default class Player implements IDrawable {
 
   public walk(direction) {
     if (this.game.timestamp < this.animations.walking.startTime + this.animations.walking.duration) return;
-    let { x, y } = this.animations.walking.endPos;
+    // let { x, y } = this.animations.walking.endPos;
+    let { x, y } = this.pos;
 
     if (direction === Direction.Left) {
       this.rot = -Math.PI / 2.0;
@@ -131,8 +133,6 @@ export default class Player implements IDrawable {
 
   public draw(context, timestamp) {
     this.updateWalkingPosition(timestamp);
-
-    const horizontalScale = this.convoLookLeft ? 1 : -1;
 
     context.translate(
       this.drawingSize.width / 2.0,

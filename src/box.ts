@@ -5,12 +5,13 @@ import {
   IDrawable,
   IPoint,
   ISize,
+  SQUARE_SIZE,
  } from "./common";
 
 export default class Box implements IDrawable {
   public game: Game;
-  public pos: IPoint;
-  public size: ISize;
+  public pos: IPoint = { x: 0, y: 0 };
+  public size: ISize = { height: SQUARE_SIZE, width: SQUARE_SIZE };
   public drawingSize: ISize;
   public visible: boolean = true;
 

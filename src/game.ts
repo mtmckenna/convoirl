@@ -61,7 +61,7 @@ export default class Game {
 
     // this.switchLevel(this.levels.world);
     this.switchLevel(this.levels.startScreen);
-    // this.switchLevel(this.levels.convo);
+    //this.switchLevel(this.levels.convo);
   }
 
   get transitioning(): boolean {
@@ -87,10 +87,6 @@ export default class Game {
   public resize() {
     this.setSize();
     this.currentLevel.resize();
-  }
-
-  public walk(direction: Direction) {
-    this.player.walk(direction);
   }
 
   public queueNextLevel(nextLevel: Level) {

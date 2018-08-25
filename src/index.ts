@@ -1,7 +1,6 @@
 /*
 TODO
   - player look left/right
-  - use box for energy box
   - add battle level
   - house recharges energy
   - remove updateables?
@@ -10,7 +9,7 @@ TODO
   - add menu on battle
   - npcs can walk around
   - have input keys be an enum
-  - rename player->buddy
+  - have player be an instance on every level
   - gamepad
   - clouds
   - avoid drawing offscreen tiles for perf reasons

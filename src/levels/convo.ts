@@ -28,19 +28,23 @@ export default class Convo extends Level {
     this.boxSelectHeight = this.game.squareSize * 5;
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
 
-    const buddy1 = new Buddy(game);
-    buddy1.pos.y = TILE_SIZE * 2;
-    buddy1.pos.x = TILE_SIZE * 2;
-    buddy1.setConvoMode(true);
-    buddy1.convoLook(Direction.Right);
+    // const buddy1 = new Buddy(game);
+    // buddy1.pos.y = TILE_SIZE * 2;
+    // buddy1.pos.x = TILE_SIZE * 2;
+    // buddy1.setConvoMode(true);
+    // buddy1.convoLook(Direction.Right);
+
+    this.game.player.setConvoMode(true);
+    this.game.player.convoLook(Direction.Right);
+    this.game.player.pos.x = TILE_SIZE * 2;
+    this.game.player.pos.y = TILE_SIZE * 2;
 
     const buddy2 = new Buddy(game);
     buddy2.pos.y = TILE_SIZE * 5;
     buddy2.pos.x = TILE_SIZE * 5;
     buddy2.setConvoMode(true);
-    buddy1.convoLook(Direction.Left);
 
-    this.buddies = [buddy1, buddy2];
+    this.buddies = [this.game.player, buddy2];
   }
 
   public handleInput(key) {
