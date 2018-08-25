@@ -3,14 +3,11 @@ import Level from "./level";
 import Box from "../box";
 import Buddy from "../buddy";
 import Game from "../game";
-import Text from "../text";
 
 import Flowers from "../tiles/flowers";
 import Green from "../tiles/green";
 
 import { Direction, TILE_SIZE } from "../common";
-
-import { randomIndexFromArray } from "../helpers";
 
 const BOX_HEIGHT = 5;
 
@@ -51,27 +48,17 @@ export default class Convo extends Level {
   }
 
   public resize() {
-    this.generateTileIndexes();
-    this.generateTiles();
-    this.updateBoxes();
+    this.configureDrawablesAndUpdateables();
   }
 
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
-    this.resize();
+    this.generateTileIndexes();
+    this.generateTiles();
+    this.updateBoxes();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.buddies, 1);
     this.addOverlayDrawables([this.box]);
-  }
-
-  private generateTileIndexes() {
-    // The tiles should fit the screen size since we don't scroll in convo
-    const TILES_WIDE = Math.ceil(this.game.canvas.width / this.game.squareSize / TILE_SIZE);
-    const TILES_TALL = Math.ceil(this.game.canvas.height / this.game.squareSize / TILE_SIZE);
-
-    this.tileIndexes = new Array(TILES_TALL)
-    .fill(null).map(() => new Array(TILES_WIDE)
-    .fill(null).map(() => randomIndexFromArray(this.tileTypeMap)));
   }
 
   private updateBoxes() {

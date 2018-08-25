@@ -4,6 +4,9 @@ import letters from "./letters";
 
 import { IDrawable, IPoint, ISize, SQUARE_SIZE } from "./common";
 
+const SHADOW_COLOR = colorMap[0];
+const SHADOW_OFFSET = 2;
+
 // Text from https://github.com/PaulBGD/PixelFont
 export default class Text implements IDrawable {
   public game: Game;
@@ -29,7 +32,6 @@ export default class Text implements IDrawable {
   }
 
   public draw(context) {
-    context.fillStyle = this.color;
     let currX = this.pos.x;
 
     this.pixelLetters.forEach((letter) => {
@@ -41,6 +43,12 @@ export default class Text implements IDrawable {
 
         for (let x = 0; x < row.length; x++) {
           if (!row[x]) continue;
+          context.fillStyle = SHADOW_COLOR;
+          context.fillRect(
+            currX + x * this.game.squareSize + SHADOW_OFFSET,
+            currY + SHADOW_OFFSET, this.game.squareSize, this.game.squareSize,
+          );
+          context.fillStyle = this.color;
           context.fillRect(currX + x * this.game.squareSize, currY, this.game.squareSize, this.game.squareSize);
         }
 
@@ -49,6 +57,11 @@ export default class Text implements IDrawable {
       }
       currX += this.game.squareSize + maxX;
     });
+  }
+
+  public move(updatedPos: IPoint) {
+    this.pos.x = updatedPos.x;
+    this.pos.y = updatedPos.y;
   }
 
   public resize() {

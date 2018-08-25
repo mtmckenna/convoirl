@@ -9,49 +9,36 @@ import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
 
-import { SQUARE_SIZE } from "../common";
+import { BLINK_DURATION } from "../common";
 
 const TITLE = "CONVO IRL";
 const TAP_TO_PLAY = "TAP TO PLAY";
+const LINE_HEIGHT = 10;
 
 export default class StartScreen extends Level {
   protected tileTypeMap = [Green, Flowers, Grass, Tree];
-  protected tileIndexes = [
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 3],
-    [3, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 3],
-    [3, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 3],
-    [3, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3],
-    [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-  ];
+  protected tileIndexes = [[]];
+  protected title: Text;
+  protected instructions: Text;
+  protected lastBlinkAt: number = 0;
 
   constructor(game: Game) {
     super(game);
-    this.generateTiles();
+    this.title = new Text(this.game, TITLE, colorMap[1]);
+    this.instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1]);
+  }
+
+  public resize() {
+    this.configureDrawablesAndUpdateables();
   }
 
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
+    this.generateTileIndexes();
+    this.generateTiles();
+    this.moveText();
     this.addDrawables(this.tiles, 0);
-    this.resize();
-  }
-
-  public resize() {
-    this.addText();
+    this.addOverlayDrawables([this.title, this.instructions]);
   }
 
   public handleInput() {
@@ -63,24 +50,29 @@ export default class StartScreen extends Level {
     this.handleInput();
   }
 
-  private addText() {
-    const shadowOffset = 0.4;
-    const title1Pos = { x: SQUARE_SIZE, y: SQUARE_SIZE };
-    const title1ShadowPos = { x: title1Pos.x + shadowOffset, y: title1Pos.y + shadowOffset };
-    const instructionsPos =  { x: SQUARE_SIZE, y: 50 };
-    const instructionsShadowPos = { x: instructionsPos.x + shadowOffset, y: instructionsPos.y + shadowOffset };
+  public update(timestamp) {
+    if (timestamp - this.lastBlinkAt > BLINK_DURATION) {
+      this.instructions.visible = !this.instructions.visible;
+      this.lastBlinkAt = timestamp;
+    }
+  }
 
-    const title1 = new Text(this.game, TITLE, colorMap[1], title1Pos);
-    const title1Shadow = new Text(this.game, TITLE, colorMap[0], title1ShadowPos);
+  private moveText() {
+    const canvasWidth = this.game.canvas.width;
+    const canvasHeight = this.game.canvas.height;
 
-    const instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1], instructionsPos);
-    const instructionsShadow = new Text(this.game, TAP_TO_PLAY, colorMap[0], instructionsShadowPos);
+    const totalHeight =
+    this.title.drawingSize.height +
+    this.instructions.drawingSize.height +
+    LINE_HEIGHT * this.game.squareSize;
 
-    this.addOverlayDrawables([
-      title1Shadow,
-      instructionsShadow,
-      title1,
-      instructions,
-    ]);
+    const titlePosX = Math.floor((canvasWidth - this.title.drawingSize.width) / 2);
+    const titlePosY = Math.floor((canvasHeight - totalHeight) / 2);
+
+    const instructionsPosX = Math.floor((canvasWidth - this.instructions.drawingSize.width) / 2);
+    const instructionsPosY = titlePosY + LINE_HEIGHT * this.game.squareSize;
+
+    this.title.move({ x: titlePosX, y: titlePosY });
+    this.instructions.move({ x: instructionsPosX, y: instructionsPosY });
   }
 }

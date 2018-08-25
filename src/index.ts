@@ -1,5 +1,6 @@
 /*
 TODO
+  - transition effect should zoom from center
   - player look left/right
   - add battle level
   - house recharges energy
@@ -12,15 +13,12 @@ TODO
   - have player be an instance on every level
   - gamepad
   - clouds
-  - avoid drawing offscreen tiles for perf reasons
   - put tinymusic in
   - use diff easing function for level transition
   - add color effects on transition
   - see if the image on transition can scale from the middle?
   - input buffering
   - readme
-  - transition effect should zoom from center
-  - center text on main menu
   - can probably consolidate a lot of the code around walking
   - right side of box is blurry
 */

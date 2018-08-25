@@ -9,7 +9,8 @@ import {
   IUpdateable,
   TILE_SIZE,
  } from "../common";
-import { flatten } from "../helpers";
+
+import { flatten, randomIndexFromArray } from "../helpers";
 
 const NUM_ZINDICES = 5;
 
@@ -97,5 +98,15 @@ export default abstract class Level {
 
   protected clearInteractables() {
     this.interactables = [];
+  }
+
+  protected generateTileIndexes() {
+    // The tiles should fit the screen size since we don't scroll in convo
+    const TILES_WIDE = Math.ceil(this.game.canvas.width / this.game.squareSize / TILE_SIZE);
+    const TILES_TALL = Math.ceil(this.game.canvas.height / this.game.squareSize / TILE_SIZE);
+
+    this.tileIndexes = new Array(TILES_TALL)
+      .fill(null).map(() => new Array(TILES_WIDE)
+        .fill(null).map(() => randomIndexFromArray(this.tileTypeMap)));
   }
 }

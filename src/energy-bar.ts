@@ -3,10 +3,15 @@ import colorMap from "./colors";
 import Game from "./game";
 import Text from "./text";
 
-import { IDrawable, IPoint, ISize, SQUARE_SIZE } from "./common";
+import {
+  BLINK_DURATION,
+  IDrawable,
+  IPoint,
+  ISize,
+  SQUARE_SIZE,
+} from "./common";
 
 const BLINK_THRESHOLD = 0.2;
-const BLINK_DURATION = 500;
 
 export default class EnergyBar implements IDrawable {
   public energyText: Text;
@@ -38,8 +43,8 @@ export default class EnergyBar implements IDrawable {
     this.pos.y = updatedPos.y;
 
     this.box.move(this.pos);
-    this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5;
-    this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5;
+    this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5 - 1;
+    this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5 - 1;
   }
 
   public draw(context) {
