@@ -17,6 +17,7 @@ export default class Text implements IDrawable {
   public pos: IPoint;
   public color: string;
   public visible: boolean = true;
+  public shadow: boolean = true;
 
   constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;
@@ -43,11 +44,14 @@ export default class Text implements IDrawable {
 
         for (let x = 0; x < row.length; x++) {
           if (!row[x]) continue;
-          context.fillStyle = SHADOW_COLOR;
-          context.fillRect(
-            currX + x * this.game.squareSize + SHADOW_OFFSET,
-            currY + SHADOW_OFFSET, this.game.squareSize, this.game.squareSize,
-          );
+
+          if (this.shadow) {
+            context.fillStyle = SHADOW_COLOR;
+            context.fillRect(
+              currX + x * this.game.squareSize + SHADOW_OFFSET,
+              currY + SHADOW_OFFSET, this.game.squareSize, this.game.squareSize,
+            );
+          }
           context.fillStyle = this.color;
           context.fillRect(currX + x * this.game.squareSize, currY, this.game.squareSize, this.game.squareSize);
         }

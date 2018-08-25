@@ -20,7 +20,7 @@ export default class EnergyBar implements IDrawable {
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
-  public percentFull: number = 0.60;
+  public percentFull: number = 1.0;
   public lastBlinkAt: number = 0;
 
   private box: Box;
@@ -29,13 +29,14 @@ export default class EnergyBar implements IDrawable {
     this.game = game;
     this.pos = pos;
     this.energyText = new Text(this.game, "ENERGY", colorMap[7], { x: this.pos.x, y: this.pos.y });
+    this.energyText.shadow = false;
     this.size = Object.assign({}, this.energyText.size);
     this.drawingSize = Object.assign({}, this.energyText.drawingSize);
     this.drawingSize.width = (this.size.width + 1) * this.game.squareSize;
     this.drawingSize.height = (this.size.height + 1) * this.game.squareSize;
 
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
-    this.box = new Box(game, this.pos, boxSize, colorMap[2]);
+    this.box = new Box(game, this.pos, boxSize, colorMap[7]);
   }
 
   public move(updatedPos: IPoint) {
@@ -43,8 +44,8 @@ export default class EnergyBar implements IDrawable {
     this.pos.y = updatedPos.y;
 
     this.box.move(this.pos);
-    this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5 - 1;
-    this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5 - 1;
+    this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5;
+    this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5;
   }
 
   public draw(context) {
