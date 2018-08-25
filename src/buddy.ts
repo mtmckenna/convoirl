@@ -13,6 +13,8 @@ import {
   Direction,
   IAnimations,
   IDrawable,
+  IInteractable,
+  InteractableType,
   IPoint,
   ISize,
   TILE_SIZE,
@@ -39,7 +41,7 @@ const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"
 const LEFT = "left";
 const RIGHT = "right";
 
-export default class Player implements IDrawable {
+export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
 
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
@@ -48,6 +50,8 @@ export default class Player implements IDrawable {
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather"];
+  public tileIndex: IPoint = { x: 0, y: 0 };
+  public interactableType: InteractableType = InteractableType.Buddy;
 
   private animations: IAnimations = {};
   private rot: number = Math.PI;
@@ -87,9 +91,16 @@ export default class Player implements IDrawable {
     }
   }
 
+  public move(updatedPos: IPoint) {
+    this.pos.x = updatedPos.x;
+    this.pos.y = updatedPos.y;
+    this.tileIndex.x = Math.ceil(this.pos.x / TILE_SIZE);
+    this.tileIndex.y = Math.ceil(this.pos.y / TILE_SIZE);
+  }
+
   public walk(direction) {
-    if (this.game.timestamp < this.animations.walking.startTime + this.animations.walking.duration) return;
-    // let { x, y } = this.animations.walking.endPos;
+    const animationEndTime = this.animations.walking.startTime + this.animations.walking.duration;
+    if (this.game.timestamp < animationEndTime) return;
     let { x, y } = this.pos;
 
     if (direction === Direction.Left) {
@@ -121,14 +132,17 @@ export default class Player implements IDrawable {
   public updateWalkingPosition(timestamp) {
     if (!this.walking) return;
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
-    this.pos.x = lerp(this.pos.x, this.animations.walking.endPos.x, t);
-    this.pos.y = lerp(this.pos.y, this.animations.walking.endPos.y, t);
+    let x = lerp(this.pos.x, this.animations.walking.endPos.x, t);
+    let y = lerp(this.pos.y, this.animations.walking.endPos.y, t);
 
     if (t >= 1.0) {
-      this.pos.x = this.animations.walking.endPos.x;
-      this.pos.y = this.animations.walking.endPos.y;
+      x = this.animations.walking.endPos.x;
+      y = this.animations.walking.endPos.y;
       this.animations.walking.running = false;
     }
+
+    // TODO: avoid creating new objects
+    this.move({ x, y });
   }
 
   public draw(context, timestamp) {

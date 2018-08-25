@@ -21,6 +21,8 @@ TODO
   - readme
   - transition effect should zoom from center
   - center text on main menu
+  - can probably consolidate a lot of the code around walking
+  - right side of box is blurry
 */
 
 import Camera from "./camera";

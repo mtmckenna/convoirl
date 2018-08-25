@@ -3,6 +3,8 @@ import Tile from "../tiles/tile";
 
 import {
   IDrawable,
+  IInteractable,
+  IPoint,
   ISize,
   IUpdateable,
   TILE_SIZE,
@@ -23,27 +25,32 @@ export default abstract class Level {
   public drawables: IDrawable[][];
   public overlayDrawables: IDrawable[] = [];
   public updateables: IUpdateable[] = [];
+  public interactables: IInteractable[] = [];
 
   protected abstract tileIndexes: number[][];
   protected abstract tileTypeMap: any[]; // <-- what's the right way to do this?
 
   constructor(game: Game) {
     this.game = game;
-
   }
 
   public abstract resize();
   public abstract handleInput(key: string);
   public abstract handleTouch(touch: Touch);
 
-  public update() {
-    return;
+  public update(timestamp: number) {
+    this.updateables.forEach((updateable) => updateable.update(timestamp));
   }
 
   public configureDrawablesAndUpdateables() {
     this.clearDrawables();
     this.clearOverlayDrawables();
     this.clearUpdateables();
+    this.clearInteractables();
+  }
+
+  public tileAtIndex(tileIndex: IPoint) {
+    return this.tilesGrid[tileIndex.y][tileIndex.x];
   }
 
   protected generateTiles() {
@@ -72,6 +79,10 @@ export default abstract class Level {
     this.updateables.push(...updateables);
   }
 
+  protected addInteractables(interactables: IInteractable[]) {
+    this.interactables.push(...interactables);
+  }
+
   protected clearDrawables() {
     this.drawables = new Array(NUM_ZINDICES).fill(null).map(() => new Array().fill(null));
   }
@@ -82,5 +93,9 @@ export default abstract class Level {
 
   protected clearUpdateables() {
     this.updateables = [];
+  }
+
+  protected clearInteractables() {
+    this.interactables = [];
   }
 }

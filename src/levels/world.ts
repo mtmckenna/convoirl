@@ -4,6 +4,7 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
+import Door from "../tiles/door";
 import Flowers from "../tiles/flowers";
 import Grass from "../tiles/grass";
 import Green from "../tiles/green";
@@ -25,14 +26,14 @@ import { canThingMoveToPosition } from "../helpers";
 export default class World extends Level {
   public energyBar: EnergyBar;
 
-  protected tileTypeMap = [Green, Flowers, Grass, Tree, House, Unwalkable];
+  protected tileTypeMap = [Green, Flowers, Grass, Tree, House, Unwalkable, Door];
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3, 2, 0, 0, 3, 3, 3, 3, 0, 1, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 3, 3],
     [3, 3, 3, 4, 5, 5, 3, 0, 0, 2, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 3, 3],
     [3, 3, 3, 5, 5, 5, 3, 0, 1, 0, 0, 3, 3, 2, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 3, 3, 3],
-    [3, 3, 3, 5, 5, 5, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3],
+    [3, 3, 3, 5, 6, 5, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3, 3, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
     [3, 3, 3, 3, 0, 0, 0, 0, 3, 3, 3, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
@@ -44,13 +45,13 @@ export default class World extends Level {
     [3, 0, 0, 3, 3, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 2, 3, 3, 3, 3],
     [3, 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 3, 3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 4, 5, 5, 3],
     [3, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 1, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 5, 5, 5, 3],
-    [3, 0, 0, 3, 3, 3, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 5, 5, 5, 3],
+    [3, 0, 0, 3, 3, 3, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 0, 0, 5, 6, 5, 3],
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 0, 2, 1, 1, 1, 3],
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   ];
 
   private buddies: Buddy[];
-  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 5, y: TILE_SIZE * 7 };
+  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 8, y: TILE_SIZE * 10 };
 
   constructor(game: Game) {
     super(game);
@@ -58,8 +59,7 @@ export default class World extends Level {
     this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
 
     const buddy = new Buddy(game);
-    buddy.pos.y = TILE_SIZE * 10;
-    buddy.pos.x = TILE_SIZE * 10;
+    buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
     this.buddies = [buddy];
   }
 
@@ -122,6 +122,7 @@ export default class World extends Level {
     this.addDrawables([this.game.player], 2);
     this.addDrawables(this.buddies, 2);
     this.addOverlayDrawables([this.energyBar]);
+    this.addInteractables(this.buddies);
 
     this.addUpdateables([
       ...this.game.player.dusts,
@@ -133,12 +134,47 @@ export default class World extends Level {
   }
 
   private walk(direction: Direction) {
+    // Get the tile index that we'd be walking onto
+    const tileIndex = Object.assign({}, this.game.player.tileIndex);
+    switch (direction) {
+      case Direction.Up:
+      tileIndex.y -= 1;
+      break;
+      case Direction.Down:
+      tileIndex.y += 1;
+      break;
+      case Direction.Left:
+      tileIndex.x -= 1;
+      break;
+      case Direction.Right:
+      tileIndex.x += 1;
+      break;
+    }
+
+    // Check if we're overlapping interactables like buddies
+    const overlappedInteractable = this.interactables.find((interactable) => {
+      return interactable.tileIndex.x === tileIndex.x &&
+      interactable.tileIndex.y === tileIndex.y;
+    });
+
+    if (overlappedInteractable) {
+      this.game.playerInteractedWithObject(overlappedInteractable);
+      return;
+    }
+
+    // Check if we're overlapping an interactable tile
+    const proposedTile = this.tileAtIndex(tileIndex);
+    if (proposedTile.interactable) {
+      return;
+    }
+
+    // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
   }
 
   private configurePlayer() {
     this.game.player.setConvoMode(false);
-    this.game.player.pos = this.playerSpawnPosition;
+    this.game.player.move(this.playerSpawnPosition);
   }
 
   private movePlayerVertically(touchDistance: number): boolean {

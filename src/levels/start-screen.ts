@@ -82,6 +82,5 @@ export default class StartScreen extends Level {
       title1,
       instructions,
     ]);
-
   }
 }

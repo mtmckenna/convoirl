@@ -1,6 +1,7 @@
 import {
-  Direction,
   IAnimation,
+  IInteractable,
+  InteractableType,
   ISize,
   SQUARE_SIZE,
   TILE_SIZE,
@@ -61,7 +62,7 @@ export default class Game {
 
     // this.switchLevel(this.levels.world);
     this.switchLevel(this.levels.startScreen);
-    //this.switchLevel(this.levels.convo);
+    // this.switchLevel(this.levels.convo);
   }
 
   get transitioning(): boolean {
@@ -69,7 +70,7 @@ export default class Game {
   }
 
   public update(timestamp) {
-    this.currentLevel.updateables.forEach((updateable) => updateable.update(timestamp));
+    this.currentLevel.update(timestamp);
     if (this.transitioning) this.updateTransition(timestamp);
   }
 
@@ -100,6 +101,12 @@ export default class Game {
 
   public handleTouch(touch: Touch) {
     this.currentLevel.handleTouch(touch);
+  }
+
+  public playerInteractedWithObject(interactedObject: IInteractable) {
+    if (interactedObject.interactableType === InteractableType.Buddy) {
+      this.queueNextLevel(this.levels.convo);
+    }
   }
 
   private startTransition() {

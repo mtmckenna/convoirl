@@ -2,16 +2,25 @@ import colorMap from "../colors";
 import Game from "../game";
 import tileCache from "./tile-cache";
 
-import { IDrawable, TILE_SIZE } from "../common";
+import {
+  IDrawable,
+  IInteractable,
+  InteractableType,
+  IPoint,
+  TILE_SIZE,
+} from "../common";
 import { flatten } from "../helpers";
 
-export default abstract class Tile implements IDrawable {
+export default abstract class Tile implements IDrawable, IInteractable {
   public drawingSize = { width: TILE_SIZE, height: TILE_SIZE };
   public pos = { x: 0, y: 0 };
   public size = { width: TILE_SIZE, height: TILE_SIZE };
   public walkable: boolean = true;
   public visible: boolean = true;
   public game: Game;
+  public tileIndex: IPoint;
+  public interactable: boolean = false;
+  public interactableType: InteractableType = InteractableType.Tile;
   public abstract name: string;
 
   protected tileLength: number = TILE_SIZE;
@@ -20,6 +29,7 @@ export default abstract class Tile implements IDrawable {
   constructor(game: Game, rowIndex: number, columnIndex: number) {
     this.game = game;
     this.pos = { x: rowIndex * TILE_SIZE, y: columnIndex * TILE_SIZE };
+    this.tileIndex = { x: rowIndex, y: columnIndex };
     this.drawingSize = {
       height: this.tileLength * this.game.squareSize,
       width: this.tileLength * this.game.squareSize,
@@ -35,10 +45,6 @@ export default abstract class Tile implements IDrawable {
     if (tileCache[this.name].squareSize === this.game.squareSize) return;
     this.drawingSize.width = this.tileLength * this.game.squareSize;
     this.drawingSize.height = this.tileLength * this.game.squareSize;
-  }
-
-  public resize() {
-    return;
   }
 
   // It's faster to draw the tile as an image from an offscreen

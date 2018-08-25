@@ -8,6 +8,11 @@ export enum Direction {
   Right,
 }
 
+export enum InteractableType {
+  Buddy,
+  Tile,
+}
+
 export interface IPoint {
   x: number;
   y: number;
@@ -36,6 +41,11 @@ export interface IPositionable {
 
 export interface IUpdateable {
   update(timestamp: number): void;
+}
+
+export interface IInteractable {
+  tileIndex: IPoint;
+  interactableType: InteractableType;
 }
 
 export interface IDrawable extends IPositionable {
