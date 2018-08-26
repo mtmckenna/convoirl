@@ -1,7 +1,5 @@
 import {
   IAnimation,
-  IInteractable,
-  InteractableType,
   ISize,
   SQUARE_SIZE,
   TILE_SIZE,
@@ -105,12 +103,6 @@ export default class Game {
 
   public handleTouch(touch: Touch) {
     this.currentLevel.handleTouch(touch);
-  }
-
-  public playerInteractedWithObject(interactedObject: IInteractable) {
-    if (interactedObject.interactableType === InteractableType.Buddy) {
-      this.queueNextLevel(this.levels.convo);
-    }
   }
 
   private startTransition() {

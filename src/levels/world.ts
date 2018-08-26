@@ -24,7 +24,7 @@ import {
 
 import { canThingMoveToPosition } from "../helpers";
 
-const INPUT_BUFFER_LENGTH = 200;
+const INPUT_BUFFER_LENGTH = 100;
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -119,12 +119,13 @@ export default class World extends Level {
     this.addInteractables(this.buddies);
     this.addUpdateables([...this.game.player.dusts, this.energyBar]);
 
-    this.configurePlayer();
     this.resize();
   }
 
   public levelStarted() {
     this.energyBar.percentFull = this.game.player.energy;
+    this.game.player.move(this.playerSpawnPosition, false);
+    this.game.player.setConvoMode(false);
   }
 
   private processInput() {
@@ -149,7 +150,9 @@ export default class World extends Level {
 
   private walk(direction: Direction) {
     if (this.game.player.walking) return;
+
     // Get the tile index that we'd be walking onto
+    const prevTileIndex = Object.assign({}, this.game.player.tileIndex);
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
     switch (direction) {
       case Direction.Up:
@@ -166,32 +169,27 @@ export default class World extends Level {
       break;
     }
 
+    let levelToQueue = null;
+
     // Check if we're overlapping interactables like buddies
     const overlappedInteractable = this.interactables.find((interactable) => {
       return interactable.tileIndex.x === tileIndex.x &&
       interactable.tileIndex.y === tileIndex.y;
     });
 
-    if (overlappedInteractable) {
-      this.game.playerInteractedWithObject(overlappedInteractable);
-      return;
-    }
+    if (overlappedInteractable) levelToQueue = this.game.levels.convo;
 
     // Check if we're overlapping an interactable tile
-    const proposedTile = this.tileAtIndex(tileIndex);
-    if (proposedTile.interactable) {
-      if (proposedTile.name === "door") {
-        this.game.queueNextLevel(this.game.levels.sleep);
-      }
+    if (this.tileAtIndex(tileIndex).interactable) levelToQueue = this.game.levels.sleep;
+
+    if (levelToQueue) {
+      this.playerSpawnPosition.x = this.game.player.pos.x;
+      this.playerSpawnPosition.y = this.game.player.pos.y;
+      this.game.queueNextLevel(levelToQueue);
     }
 
     // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
-  }
-
-  private configurePlayer() {
-    this.game.player.setConvoMode(false);
-    this.game.player.move(this.playerSpawnPosition);
   }
 
   private movePlayerVertically(touchDistance: number): boolean {

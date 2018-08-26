@@ -92,11 +92,16 @@ export default class Buddy implements IDrawable, IInteractable {
     }
   }
 
-  public move(updatedPos: IPoint) {
+  public move(updatedPos: IPoint, animate: boolean = true) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
     this.tileIndex.x = Math.ceil(this.pos.x / TILE_SIZE);
     this.tileIndex.y = Math.ceil(this.pos.y / TILE_SIZE);
+
+    if (!animate) {
+      this.animations.walking.endPos.x = updatedPos.x;
+      this.animations.walking.endPos.y = updatedPos.y;
+    }
   }
 
   public walk(direction) {
