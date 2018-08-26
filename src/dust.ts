@@ -46,18 +46,15 @@ export default class Dust implements IDrawable, IUpdateable {
   public draw(context, timestamp) {
     const size = clerp(MIN_SIZE, MAX_SIZE, MIN_SIZE, MAX_SIZE, this.percentGrown);
     const alpha = clerp(INITIAL_ALPHA, 0.0, 0.0, INITIAL_ALPHA, this.percentGrown);
-
     context.globalAlpha = alpha;
     context.fillStyle = this.color;
 
-    // This sort of makes .drawingSize a lie... maybe make clearer later (haha)?
+    // TOOO: This sort of makes .drawingSize a lie... maybe make clearer later (haha)?
     context.fillRect(
       -this.drawingSize.width * size / 2.0,
       -this.drawingSize.height * size / 2.0,
       this.drawingSize.width * size,
       this.drawingSize.height * size,
     );
-
-    context.globalAlpha = 1.0;
   }
 }

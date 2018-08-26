@@ -186,7 +186,7 @@ export default class Buddy implements IDrawable, IInteractable {
       }
     }
 
-    context.setTransform(1, 0, 0, 1, 0, 0);
+    // context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   private maybeDoEyeAnimations(timestamp) {

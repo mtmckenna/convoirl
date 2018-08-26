@@ -62,8 +62,8 @@ export default class Game {
 
     this.transition = Object.assign({}, transition);
 
-    // this.switchLevel(this.levels.world);
-    this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.startScreen);
     // this.switchLevel(this.levels.convo);
     // this.switchLevel(this.levels.sleep);
   }
@@ -152,7 +152,6 @@ export default class Game {
   }
 
   private drawDrawables(timestamp: number) {
-    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
 
     const offset = this.camera.offset;
 
@@ -167,6 +166,8 @@ export default class Game {
         // Bitwise operator is supposedly the fastest way to land on whole pixels:
         // https://www.html5rocks.com/en/tutorials/canvas/performance/
         this.context.translate((x + 0.5) | 0, (y + 0.5) | 0);
+
+        this.context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
 
         drawable.draw(this.context, timestamp);
 
