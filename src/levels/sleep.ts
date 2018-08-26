@@ -5,7 +5,7 @@ import Door from "../tiles/door";
 import Level from "./level";
 
 const TEXT = "zzzzzz...";
-const SLEEP_DURATION = 1000;
+const SLEEP_DURATION = 1200;
 
 export default class Sleep extends Level {
   protected tileTypeMap = [Door];

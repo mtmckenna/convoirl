@@ -1,6 +1,8 @@
 /*
 TODO
   - animate energy bar
+  - make intro text bigger
+  - make player size bigger in convo
   - player look left/right
   - make house look nicer
   - add menu on battle

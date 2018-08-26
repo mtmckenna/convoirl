@@ -62,8 +62,8 @@ export default class Game {
 
     this.transition = Object.assign({}, transition);
 
-    this.switchLevel(this.levels.world);
-    // this.switchLevel(this.levels.startScreen);
+    // this.switchLevel(this.levels.world);
+    this.switchLevel(this.levels.startScreen);
     // this.switchLevel(this.levels.convo);
     // this.switchLevel(this.levels.sleep);
   }
@@ -211,7 +211,6 @@ export default class Game {
   }
 
   private clearCanvasContext(): void {
-    // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
     this.context.fillStyle = colorMap[2];
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
