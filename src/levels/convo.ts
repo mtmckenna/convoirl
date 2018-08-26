@@ -11,10 +11,10 @@ import Green from "../tiles/green";
 import Sky from "../tiles/sky";
 import Tree from "../tiles/tree";
 
-import { Direction, TILE_SIZE } from "../common";
+import { Direction, LINE_HEIGHT, TILE_SIZE } from "../common";
 import { randomIndexFromArray } from "../helpers";
 
-const BOX_HEIGHT = 5;
+const BOX_HEIGHT = 7;
 const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
@@ -30,7 +30,8 @@ export default class Convo extends Level {
   private buddies: Buddy[];
   private upArrow: Text;
   private downArrow: Text;
-  private skillOptions: { [key: string]: Text };
+  private skills: Text[];
+  private currentSkillIndex: number = 0;
 
   constructor(game: Game) {
     super(game);
@@ -56,6 +57,7 @@ export default class Convo extends Level {
     buddy2.setConvoMode(true);
 
     this.buddies = [this.game.player, buddy2];
+    this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
   }
 
   public levelStarted() {
@@ -80,6 +82,7 @@ export default class Convo extends Level {
       this.box,
       this.upArrow,
       this.downArrow,
+      ...this.skills,
     ]);
   }
 
@@ -138,12 +141,29 @@ export default class Convo extends Level {
     spacing;
 
     const upY = Math.floor(this.box.pos.y + this.box.drawingSize.height / 2 - this.upArrow.drawingSize.height / 2);
-
     const downX = this.box.pos.x + spacing;
     const downY = upY;
 
-    // console.log(upX);
     this.upArrow.move({ x: upX, y: upY });
     this.downArrow.move({ x: downX, y: downY });
+
+    this.skills.forEach((skill, index) => {
+      const indexDiff = this.currentSkillIndex - index;
+      const skillX = Math.floor(
+        this.box.pos.x +
+        this.box.drawingSize.width / 2 -
+        skill.drawingSize.width / 2,
+      );
+
+      const skillY = Math.floor(
+        this.box.pos.y +
+        this.box.drawingSize.height / 2 -
+        skill.drawingSize.height / 2 +
+        indexDiff * LINE_HEIGHT,
+      );
+
+      skill.move({ x: skillX, y: skillY });
+      skill.visible = Math.abs(indexDiff) > 1 ? false : true;
+    });
   }
 }

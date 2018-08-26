@@ -50,7 +50,10 @@ export default class Buddy implements IDrawable, IInteractable {
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public visible: boolean = true;
   public dusts: Dust[];
-  public skills: string[] = ["weather"];
+  public skills: string[] = ["weather", "sports", "pastries", "france", "cats"];
+  // public skills: string[] = ["weather"];
+  // public skills: string[] = ["weather", "sports"];
+
   public tileIndex: IPoint = { x: 0, y: 0 };
   public interactableType: InteractableType = InteractableType.Buddy;
   public energy: number = 1.0;

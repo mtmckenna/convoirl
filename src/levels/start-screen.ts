@@ -9,11 +9,10 @@ import Grass from "../tiles/grass";
 import Green from "../tiles/green";
 import Tree from "../tiles/tree";
 
-import { BLINK_DURATION } from "../common";
+import { BLINK_DURATION, LINE_HEIGHT } from "../common";
 
 const TITLE = "CONVO IRL";
 const TAP_TO_PLAY = "TAP TO PLAY";
-const LINE_HEIGHT = 10;
 
 export default class StartScreen extends Level {
   protected tileTypeMap = [Green, Flowers, Grass, Tree];
