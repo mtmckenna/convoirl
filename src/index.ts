@@ -11,6 +11,7 @@ TODO
   - have player be an instance on every level
   - gamepad
   - clouds
+  - stretch the player liek a catepiller
   - put tinymusic in
   - use diff easing function for level transition
   - add color effects on transition
@@ -18,7 +19,6 @@ TODO
   - readme
   - can probably consolidate a lot of the code around walking
   - npcs can walk around
-  - fix weird colors when transitioning back from sleep
 */
 
 import Camera from "./camera";

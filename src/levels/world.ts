@@ -109,10 +109,7 @@ export default class World extends Level {
   }
 
   public resize() {
-    const energyBarX = Math.floor(
-      (this.game.canvas.width - this.energyBar.drawingSize.width) / 2,
-    );
-
+    const energyBarX = Math.floor((this.game.canvas.width - this.energyBar.drawingSize.width) / 2);
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
   }
 
@@ -135,6 +132,7 @@ export default class World extends Level {
   }
 
   private walk(direction: Direction) {
+    if (this.game.player.walking) return;
     // Get the tile index that we'd be walking onto
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
     switch (direction) {

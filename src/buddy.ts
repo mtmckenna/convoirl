@@ -100,8 +100,6 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   public walk(direction) {
-    const animationEndTime = this.animations.walking.startTime + this.animations.walking.duration;
-    if (this.game.timestamp < animationEndTime) return;
     let { x, y } = this.pos;
 
     if (direction === Direction.Left) {
