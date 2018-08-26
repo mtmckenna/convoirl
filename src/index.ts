@@ -19,6 +19,7 @@ TODO
   - readme
   - can probably consolidate a lot of the code around walking
   - npcs can walk around
+  - move input stuff into its own class
 */
 
 import Camera from "./camera";
@@ -74,7 +75,6 @@ function update(timestamp: number): void {
 }
 
 function animate(timestamp: number): void {
-  game.timestamp = timestamp;
   if (currentTouch && touchDown) game.handleTouch(currentTouch);
   gameLoop(timestamp);
   game.draw(timestamp);

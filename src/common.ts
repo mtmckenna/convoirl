@@ -59,6 +59,11 @@ export interface ITileMap {
   tiles: Tile[];
 }
 
+export interface IInputBuffer {
+  pressedAt: number;
+  key: string;
+}
+
 export const TILE_SIZE: number = 8;
 export const HALF_TILE_SIZE: number = TILE_SIZE / 2;
 export const SQUARE_SIZE = 5;

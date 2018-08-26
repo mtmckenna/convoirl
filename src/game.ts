@@ -73,6 +73,7 @@ export default class Game {
   }
 
   public update(timestamp) {
+    this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
     if (this.transitioning) this.updateTransition(timestamp);
   }

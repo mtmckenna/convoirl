@@ -15,6 +15,7 @@ import Unwalkable from "../tiles/unwalkable";
 import {
   Direction,
   HALF_TILE_SIZE,
+  IInputBuffer,
   IPoint,
   IPositionable,
   SQUARE_SIZE,
@@ -22,6 +23,8 @@ import {
 } from "../common";
 
 import { canThingMoveToPosition } from "../helpers";
+
+const INPUT_BUFFER_LENGTH = 200;
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -52,6 +55,7 @@ export default class World extends Level {
 
   private buddies: Buddy[];
   private playerSpawnPosition: IPoint = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
+  private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
 
   constructor(game: Game) {
     super(game);
@@ -65,20 +69,22 @@ export default class World extends Level {
   }
 
   public handleInput(key) {
-    switch (key) {
-      case "ArrowUp":
-        this.walk(Direction.Up);
-        break;
-      case "ArrowDown":
-        this.walk(Direction.Down);
-        break;
-      case "ArrowRight":
-        this.walk(Direction.Right);
-        break;
-      case "ArrowLeft":
-        this.walk(Direction.Left);
-        break;
-    }
+    this.inputBuffer = { pressedAt: this.game.timestamp, key };
+
+    // switch (key) {
+    //   case "ArrowUp":
+    //     this.walk(Direction.Up);
+    //     break;
+    //   case "ArrowDown":
+    //     this.walk(Direction.Down);
+    //     break;
+    //   case "ArrowRight":
+    //     this.walk(Direction.Right);
+    //     break;
+    //   case "ArrowLeft":
+    //     this.walk(Direction.Left);
+    //     break;
+    // }
   }
 
   public handleTouch(touch) {
@@ -113,6 +119,11 @@ export default class World extends Level {
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
   }
 
+  public update(timestamp) {
+    super.update(timestamp);
+    this.processInput();
+  }
+
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
     this.addDrawables(this.tiles, 0);
@@ -129,6 +140,26 @@ export default class World extends Level {
 
   public levelStarted() {
     this.energyBar.percentFull = this.game.player.energy;
+  }
+
+  private processInput() {
+    const timeSinceInput = this.game.timestamp - this.inputBuffer.pressedAt;
+    if (timeSinceInput > INPUT_BUFFER_LENGTH) return;
+
+    switch (this.inputBuffer.key) {
+      case "ArrowUp":
+        this.walk(Direction.Up);
+        break;
+      case "ArrowDown":
+        this.walk(Direction.Down);
+        break;
+      case "ArrowRight":
+        this.walk(Direction.Right);
+        break;
+      case "ArrowLeft":
+        this.walk(Direction.Left);
+        break;
+    }
   }
 
   private walk(direction: Direction) {
