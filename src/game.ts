@@ -61,8 +61,8 @@ export default class Game {
     this.transition = Object.assign({}, transition);
 
     // this.switchLevel(this.levels.world);
-    // this.switchLevel(this.levels.startScreen);
-    this.switchLevel(this.levels.convo);
+    this.switchLevel(this.levels.startScreen);
+    // this.switchLevel(this.levels.convo);
     // this.switchLevel(this.levels.sleep);
   }
 
