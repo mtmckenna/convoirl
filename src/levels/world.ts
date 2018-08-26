@@ -70,21 +70,6 @@ export default class World extends Level {
 
   public handleInput(key) {
     this.inputBuffer = { pressedAt: this.game.timestamp, key };
-
-    // switch (key) {
-    //   case "ArrowUp":
-    //     this.walk(Direction.Up);
-    //     break;
-    //   case "ArrowDown":
-    //     this.walk(Direction.Down);
-    //     break;
-    //   case "ArrowRight":
-    //     this.walk(Direction.Right);
-    //     break;
-    //   case "ArrowLeft":
-    //     this.walk(Direction.Left);
-    //     break;
-    // }
   }
 
   public handleTouch(touch) {

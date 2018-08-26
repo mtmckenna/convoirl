@@ -1,22 +1,20 @@
 /*
 TODO
-  - animate energy bar
-  - make intro text bigger
   - make player size bigger in convo
   - player look left/right
-  - make house look nicer
   - add menu on battle
-  - input buffering
-  - have input keys be an enum
+  - animate energy bar
+  - make intro text bigger
+  - stretch the player liek a catepiller
+  - sfx
   - have player be an instance on every level
+  - readme
+  - make house look nicer
+  - have input keys be an enum
   - gamepad
   - clouds
-  - stretch the player liek a catepiller
-  - put tinymusic in
   - use diff easing function for level transition
   - add color effects on transition
-  - see if the image on transition can scale from the middle?
-  - readme
   - can probably consolidate a lot of the code around walking
   - npcs can walk around
   - move input stuff into its own class
