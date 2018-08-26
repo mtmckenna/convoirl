@@ -11,7 +11,6 @@ import { clerp } from "./helpers";
 
 import Buddy from "./buddy";
 import Camera from "./camera";
-import colorMap from "./colors";
 import Convo from "./levels/convo";
 import Level from "./levels/level";
 import Sleep from "./levels/sleep";
@@ -62,8 +61,8 @@ export default class Game {
     this.transition = Object.assign({}, transition);
 
     // this.switchLevel(this.levels.world);
-    this.switchLevel(this.levels.startScreen);
-    // this.switchLevel(this.levels.convo);
+    // this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.convo);
     // this.switchLevel(this.levels.sleep);
   }
 

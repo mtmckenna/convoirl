@@ -4,6 +4,7 @@ import Box from "../box";
 import Buddy from "../buddy";
 import colorMap from "../colors";
 import Game from "../game";
+import Text from "../text";
 
 import Flowers from "../tiles/flowers";
 import Green from "../tiles/green";
@@ -17,6 +18,7 @@ const BOX_HEIGHT = 5;
 const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
+const ARROW_SPACING = 2;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -26,18 +28,23 @@ export default class Convo extends Level {
 
   private box: Box;
   private buddies: Buddy[];
+  private upArrow: Text;
+  private downArrow: Text;
+  private skillOptions: { [key: string]: Text };
 
   constructor(game: Game) {
     super(game);
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
+    this.upArrow = new Text(this.game, "^");
+    this.downArrow = new Text(this.game, "_");
   }
 
-  public handleInput(key) {
-    return;
+  public handleInput() {
+    this.game.queueNextLevel(this.game.levels.world);
   }
 
   public handleTouch(touch) {
-    return;
+    this.handleInput();
   }
 
   public levelWillStart() {
@@ -63,12 +70,17 @@ export default class Convo extends Level {
     super.configureDrawablesAndUpdateables();
 
     this.updateBoxes();
+    this.updateText();
     this.moveBuddies();
     this.generateTileIndexes();
     this.generateTiles();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.buddies, 1);
-    this.addOverlayDrawables([this.box]);
+    this.addOverlayDrawables([
+      this.box,
+      this.upArrow,
+      this.downArrow,
+    ]);
   }
 
   protected generateTileIndexes() {
@@ -86,7 +98,10 @@ export default class Convo extends Level {
     }
 
     // Tree trees
-    this.tileIndexes[playerTileIndexY - 1] = this.tileIndexes[playerTileIndexY].map(() => 3);
+    const treeRow = this.tileIndexes[playerTileIndexY - 1];
+    if (treeRow) {
+      this.tileIndexes[playerTileIndexY - 1] = treeRow.map(() => 3);
+    }
   }
 
   private moveBuddies() {
@@ -113,5 +128,22 @@ export default class Convo extends Level {
     const y = this.game.canvas.height - height * this.game.squareSize - this.game.squareSize * 2;
     this.box.move({ x: this.game.squareSize * BOX_X, y });
     this.box.updateSize({ height, width });
+  }
+
+  private updateText() {
+    const spacing = ARROW_SPACING * this.game.squareSize;
+    const upX = this.box.pos.x +
+    this.box.drawingSize.width -
+    this.upArrow.drawingSize.width -
+    spacing;
+
+    const upY = Math.floor(this.box.pos.y + this.box.drawingSize.height / 2 - this.upArrow.drawingSize.height / 2);
+
+    const downX = this.box.pos.x + spacing;
+    const downY = upY;
+
+    // console.log(upX);
+    this.upArrow.move({ x: upX, y: upY });
+    this.downArrow.move({ x: downX, y: downY });
   }
 }

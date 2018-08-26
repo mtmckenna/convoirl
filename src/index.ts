@@ -4,6 +4,8 @@ TODO
   - add menu on battle
   - animate energy bar
   - make intro text bigger
+  - copy the right buddy into the battle
+  - scale arrows
   - stretch the player liek a catepiller
   - sfx
   - have player be an instance on every level
