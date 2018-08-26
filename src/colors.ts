@@ -8,4 +8,5 @@ export default [
   "#6e4c49",
   "#3e625e",
   "#4c547a",
+  "#66ccff",
 ];

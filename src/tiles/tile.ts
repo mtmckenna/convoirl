@@ -61,6 +61,7 @@ export default abstract class Tile implements IDrawable, IInteractable {
 
     const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);
     colors.forEach((color, index) => {
+      if (!color) return;
       offscreenContext.fillStyle = color;
       const x = this.game.squareSize * (index % this.tileLength);
       const y = this.game.squareSize * (Math.floor(index / this.tileLength));

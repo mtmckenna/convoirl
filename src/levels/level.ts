@@ -1,3 +1,4 @@
+import colorMap from "../colors";
 import Game from "../game";
 import Tile from "../tiles/tile";
 
@@ -27,6 +28,7 @@ export default abstract class Level {
   public overlayDrawables: IDrawable[] = [];
   public updateables: IUpdateable[] = [];
   public interactables: IInteractable[] = [];
+  public backgroundColor: string = colorMap[2];
 
   protected abstract tileIndexes: number[][];
   protected abstract tileTypeMap: any[]; // <-- what's the right way to do this?
@@ -105,11 +107,10 @@ export default abstract class Level {
 
   protected generateTileIndexes() {
     // The tiles should fit the screen size since we don't scroll in convo
-    const TILES_WIDE = Math.ceil(this.game.canvas.width / this.game.squareSize / TILE_SIZE);
-    const TILES_TALL = Math.ceil(this.game.canvas.height / this.game.squareSize / TILE_SIZE);
+    const sizeInTiles = this.game.sizeInTiles();
 
-    this.tileIndexes = new Array(TILES_TALL)
-      .fill(null).map(() => new Array(TILES_WIDE)
+    this.tileIndexes = new Array(sizeInTiles.height)
+      .fill(null).map(() => new Array(sizeInTiles.width)
         .fill(null).map(() => randomIndexFromArray(this.tileTypeMap)));
   }
 }

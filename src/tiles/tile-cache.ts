@@ -6,6 +6,7 @@ const tileCache: { [key: string]: { squareSize: number, canvas: HTMLCanvasElemen
   grass: { squareSize: SQUARE_SIZE, canvas: null },
   green: { squareSize: SQUARE_SIZE, canvas: null },
   house: { squareSize: SQUARE_SIZE, canvas: null },
+  sky: { squareSize: SQUARE_SIZE, canvas: null },
   tree: { squareSize: SQUARE_SIZE, canvas: null },
   unwalkable: { squareSize: SQUARE_SIZE, canvas: null },
 };

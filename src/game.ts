@@ -120,6 +120,13 @@ export default class Game {
     return gameSize;
   }
 
+  public sizeInTiles(): ISize {
+    const width = Math.ceil(this.canvas.width / this.squareSize / TILE_SIZE);
+    const height = Math.ceil(this.canvas.height / this.squareSize / TILE_SIZE);
+
+    return { width, height };
+  }
+
   private startTransition() {
     this.transition.startTime = this.timestamp;
     this.transition.running = true;
@@ -221,7 +228,7 @@ export default class Game {
 
   private clearCanvasContext(): void {
     if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
-    this.context.fillStyle = colorMap[2];
+    this.context.fillStyle = this.currentLevel.backgroundColor;
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }

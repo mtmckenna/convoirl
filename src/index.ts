@@ -1,7 +1,6 @@
 /*
 TODO
   - make player size bigger in convo
-  - player look left/right
   - add menu on battle
   - animate energy bar
   - make intro text bigger
@@ -19,6 +18,7 @@ TODO
   - can probably consolidate a lot of the code around walking
   - npcs can walk around
   - move input stuff into its own class
+  - add sun and clouds in convo
 */
 
 import Camera from "./camera";

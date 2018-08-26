@@ -2,12 +2,16 @@ import Level from "./level";
 
 import Box from "../box";
 import Buddy from "../buddy";
+import colorMap from "../colors";
 import Game from "../game";
 
 import Flowers from "../tiles/flowers";
 import Green from "../tiles/green";
+import Sky from "../tiles/sky";
+import Tree from "../tiles/tree";
 
 import { Direction, TILE_SIZE } from "../common";
+import { randomIndexFromArray } from "../helpers";
 
 const BOX_HEIGHT = 5;
 const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
@@ -15,18 +19,16 @@ const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 
 export default class Convo extends Level {
+  public backgroundColor = colorMap[9];
 
-  protected tileTypeMap = [Green, Flowers];
+  protected tileTypeMap = [Green, Flowers, Sky, Tree];
   protected tileIndexes = [[]];
 
   private box: Box;
-  // private boxHeight: number;
-  // private boxWidth: number;
   private buddies: Buddy[];
 
   constructor(game: Game) {
     super(game);
-    // this.boxHeight = this.game.squareSize * BOX_HEIGHT;
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
   }
 
@@ -60,13 +62,31 @@ export default class Convo extends Level {
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
 
-    this.generateTileIndexes();
-    this.generateTiles();
     this.updateBoxes();
     this.moveBuddies();
+    this.generateTileIndexes();
+    this.generateTiles();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.buddies, 1);
     this.addOverlayDrawables([this.box]);
+  }
+
+  protected generateTileIndexes() {
+    const sizeInTiles = this.game.sizeInTiles();
+    const playerTileIndexY = this.game.player.tileIndex.y;
+
+    // Ground tiles
+    this.tileIndexes = new Array(sizeInTiles.height)
+      .fill(null).map(() => new Array(sizeInTiles.width)
+        .fill(null).map(() => randomIndexFromArray([0, 1]))); // Don't include the sky/tree tile
+
+    // Sky tiles
+    for (let i = 0; i < playerTileIndexY; i++) {
+      this.tileIndexes[i] = this.tileIndexes[i].map(() => 2);
+    }
+
+    // Tree trees
+    this.tileIndexes[playerTileIndexY - 1] = this.tileIndexes[playerTileIndexY].map(() => 3);
   }
 
   private moveBuddies() {
