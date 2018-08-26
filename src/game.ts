@@ -1,5 +1,6 @@
 import {
   IAnimation,
+  IPoint,
   ISize,
   SQUARE_SIZE,
   TILE_SIZE,
@@ -105,6 +106,20 @@ export default class Game {
     this.currentLevel.handleTouch(touch);
   }
 
+  public gameCoordsFromDrawingCoords(drawingCoords: IPoint) {
+    const gameCoords = Object.assign({}, drawingCoords);
+    gameCoords.x = Math.floor(gameCoords.x / this.squareSize);
+    gameCoords.y = Math.floor(gameCoords.y / this.squareSize);
+    return gameCoords;
+  }
+
+  public gameSizeFromDrawingSize(drawingSize: ISize) {
+    const gameSize = Object.assign({}, drawingSize);
+    gameSize.width = Math.floor(gameSize.width / this.squareSize);
+    gameSize.height = Math.floor(gameSize.height / this.squareSize);
+    return gameSize;
+  }
+
   private startTransition() {
     this.transition.startTime = this.timestamp;
     this.transition.running = true;
@@ -140,6 +155,7 @@ export default class Game {
 
   private switchLevel(nextLevel) {
     this.currentLevel = nextLevel;
+    nextLevel.levelWillStart();
     nextLevel.configureDrawablesAndUpdateables();
     nextLevel.levelStarted();
   }

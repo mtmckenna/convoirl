@@ -33,6 +33,7 @@ const EYE_COLOR = "rgb(0, 0, 0)";
 const RIGHT_EYE_OFFSET = 4;
 const EYE_OFFSET = 1;
 const EYE_OFFSET_CONVO = 4;
+const CONVO_LOOK_RIGHT_OFFSET = 30;
 const NUM_DUSTS = 50;
 const TIME_BETWEEN_DUSTS = 30;
 
@@ -59,7 +60,7 @@ export default class Buddy implements IDrawable, IInteractable {
   private color: string;
   private lastDustAt: number = 0;
   private inConvoMode: boolean = false;
-  private convoLookLeft: boolean = true;
+  private convoLookRight: boolean = false;
 
   constructor(game) {
     this.game = game;
@@ -82,13 +83,14 @@ export default class Buddy implements IDrawable, IInteractable {
 
   public setConvoMode(inConvoMode: boolean) {
     this.inConvoMode = inConvoMode;
+    this.rot = Math.PI;
   }
 
   public convoLook(direction) {
-    if (direction === Direction.Left) {
-      this.convoLookLeft = true;
-    } else if (direction === Direction.Right) {
-      this.convoLookLeft = false;
+    if (direction === Direction.Right) {
+      this.convoLookRight = true;
+    } else if (direction === Direction.Left) {
+      this.convoLookRight = false;
     }
   }
 
@@ -227,14 +229,16 @@ export default class Buddy implements IDrawable, IInteractable {
     context.fillStyle = EYE_COLOR;
 
     let offset = EYE_OFFSET;
+    let convoLookRightOffset = 0;
     if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
+    if (this.inConvoMode && this.convoLookRight) convoLookRightOffset = CONVO_LOOK_RIGHT_OFFSET;
 
     const scaledEyeOffset = offset * this.game.squareSize;
     const scaledEyeSize = EYE_SIZE * this.game.squareSize;
     const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.game.squareSize;
 
     context.fillRect(
-      scaledEyeOffset + leftRightOffset,
+      scaledEyeOffset + leftRightOffset - convoLookRightOffset,
       scaledEyeOffset,
       scaledEyeSize,
       scaledEyeSize * openness,
@@ -243,7 +247,7 @@ export default class Buddy implements IDrawable, IInteractable {
     context.fillStyle = EYE_REFLECTION_COLOR;
 
     context.fillRect(
-      scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.game.squareSize),
+      scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.game.squareSize) - convoLookRightOffset,
       scaledEyeOffset,
       scaledEyeReflectionSize,
       scaledEyeReflectionSize * openness,

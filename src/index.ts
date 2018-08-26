@@ -10,6 +10,7 @@ TODO
   - have player be an instance on every level
   - readme
   - make house look nicer
+  - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - have input keys be an enum
   - gamepad
   - clouds

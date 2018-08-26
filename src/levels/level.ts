@@ -39,6 +39,7 @@ export default abstract class Level {
   public abstract handleInput(key: string);
   public abstract handleTouch(touch: Touch);
 
+  public levelWillStart() { return; }
   public levelStarted() { return; }
 
   public update(timestamp: number) {

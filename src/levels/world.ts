@@ -25,6 +25,7 @@ import {
 import { canThingMoveToPosition } from "../helpers";
 
 const INPUT_BUFFER_LENGTH = 100;
+const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -54,7 +55,8 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
-  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
+  private playerSpawnPosition: IPoint = HOME_TILE;
+  // private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
 
   constructor(game: Game) {
@@ -186,6 +188,7 @@ export default class World extends Level {
       this.playerSpawnPosition.x = this.game.player.pos.x;
       this.playerSpawnPosition.y = this.game.player.pos.y;
       this.game.queueNextLevel(levelToQueue);
+      return;
     }
 
     // If we're not overlapping anything fun, just walk
