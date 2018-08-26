@@ -1,10 +1,11 @@
 import Tile from "./tile";
 
+import { singleColorTileArray } from "../helpers";
+
 export default class Door extends Tile {
   public name = "door";
-  public visible = false;
   public interactable = true;
-  protected colorMatrix = [];
+  protected colorMatrix = singleColorTileArray(0);
 
   constructor(game, rowIndex, columnIndex) {
     super(game, rowIndex, columnIndex);

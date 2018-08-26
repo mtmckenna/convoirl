@@ -15,6 +15,7 @@ import Camera from "./camera";
 import colorMap from "./colors";
 import Convo from "./levels/convo";
 import Level from "./levels/level";
+import Sleep from "./levels/sleep";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
@@ -54,6 +55,7 @@ export default class Game {
 
     this.levels = {
       convo: new Convo(this),
+      sleep: new Sleep(this),
       startScreen: new StartScreen(this),
       world: new World(this),
     };
@@ -63,6 +65,7 @@ export default class Game {
     // this.switchLevel(this.levels.world);
     this.switchLevel(this.levels.startScreen);
     // this.switchLevel(this.levels.convo);
+    // this.switchLevel(this.levels.sleep);
   }
 
   get transitioning(): boolean {
@@ -145,6 +148,7 @@ export default class Game {
   private switchLevel(nextLevel) {
     this.currentLevel = nextLevel;
     nextLevel.configureDrawablesAndUpdateables();
+    nextLevel.levelStarted();
   }
 
   private drawDrawables(timestamp: number) {
@@ -206,6 +210,8 @@ export default class Game {
   }
 
   private clearCanvasContext(): void {
+    // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
     this.context.fillStyle = colorMap[2];
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }

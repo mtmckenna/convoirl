@@ -51,12 +51,13 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
-  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 8, y: TILE_SIZE * 10 };
+  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 
   constructor(game: Game) {
     super(game);
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
+    this.game.player.energy = 0.6;
 
     const buddy = new Buddy(game);
     buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
@@ -123,14 +124,14 @@ export default class World extends Level {
     this.addDrawables(this.buddies, 2);
     this.addOverlayDrawables([this.energyBar]);
     this.addInteractables(this.buddies);
-
-    this.addUpdateables([
-      ...this.game.player.dusts,
-      this.energyBar,
-    ]);
+    this.addUpdateables([...this.game.player.dusts, this.energyBar]);
 
     this.configurePlayer();
     this.resize();
+  }
+
+  public levelStarted() {
+    this.energyBar.percentFull = this.game.player.energy;
   }
 
   private walk(direction: Direction) {
@@ -165,7 +166,9 @@ export default class World extends Level {
     // Check if we're overlapping an interactable tile
     const proposedTile = this.tileAtIndex(tileIndex);
     if (proposedTile.interactable) {
-      return;
+      if (proposedTile.name === "door") {
+        this.game.queueNextLevel(this.game.levels.sleep);
+      }
     }
 
     // If we're not overlapping anything fun, just walk

@@ -39,6 +39,8 @@ export default abstract class Level {
   public abstract handleInput(key: string);
   public abstract handleTouch(touch: Touch);
 
+  public levelStarted() { return; }
+
   public update(timestamp: number) {
     this.updateables.forEach((updateable) => updateable.update(timestamp));
   }

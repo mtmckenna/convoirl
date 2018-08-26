@@ -72,6 +72,10 @@ function twoPhaseClerp(t: number, min: number, max: number, reverse = false): nu
   }
 }
 
+function singleColorTileArray(colorIndex) {
+  return new Array(TILE_SIZE).fill(null).map(() => new Array(TILE_SIZE).fill(colorIndex));
+}
+
 export {
   canThingMoveToPosition,
   clerp,
@@ -80,6 +84,7 @@ export {
   oneOrMinusOne,
   randomElementFromArray,
   randomIndexFromArray,
+  singleColorTileArray,
   shouldDoAnimation,
   twoPhaseClerp,
 };

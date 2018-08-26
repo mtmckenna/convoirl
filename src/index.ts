@@ -1,11 +1,10 @@
 /*
 TODO
-  - player look left/right
-  - house recharges energy
   - animate energy bar
+  - player look left/right
   - make house look nicer
   - add menu on battle
-  - npcs can walk around
+  - input buffering
   - have input keys be an enum
   - have player be an instance on every level
   - gamepad
@@ -14,10 +13,10 @@ TODO
   - use diff easing function for level transition
   - add color effects on transition
   - see if the image on transition can scale from the middle?
-  - input buffering
   - readme
   - can probably consolidate a lot of the code around walking
-  - right side of box is blurry
+  - npcs can walk around
+  - fix weird colors when transitioning back from sleep
 */
 
 import Camera from "./camera";

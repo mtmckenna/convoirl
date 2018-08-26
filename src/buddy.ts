@@ -52,6 +52,7 @@ export default class Buddy implements IDrawable, IInteractable {
   public skills: string[] = ["weather"];
   public tileIndex: IPoint = { x: 0, y: 0 };
   public interactableType: InteractableType = InteractableType.Buddy;
+  public energy: number = 1.0;
 
   private animations: IAnimations = {};
   private rot: number = Math.PI;
