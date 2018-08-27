@@ -40,12 +40,21 @@ export default class Convo extends Level {
     this.downArrow = new Text(this.game, "_");
   }
 
-  public handleInput() {
-    this.game.queueNextLevel(this.game.levels.world);
+  public handleInput(key) {
+    if (!key) this.game.queueNextLevel(this.game.levels.world);
+
+    switch (key) {
+      case "ArrowUp":
+        this.moveSkillCursor(-1);
+        break;
+      case "ArrowDown":
+        this.moveSkillCursor(1);
+        break;
+    }
   }
 
   public handleTouch(touch) {
-    this.handleInput();
+    this.handleInput(null);
   }
 
   public levelWillStart() {
@@ -68,11 +77,16 @@ export default class Convo extends Level {
     this.configureDrawablesAndUpdateables();
   }
 
+  public update(timestamp) {
+    super.update(timestamp);
+    this.updateText();
+  }
+
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
 
     this.updateBoxes();
-    this.updateText();
+    // this.updateText();
     this.moveBuddies();
     this.generateTileIndexes();
     this.generateTiles();
@@ -105,6 +119,12 @@ export default class Convo extends Level {
     if (treeRow) {
       this.tileIndexes[playerTileIndexY - 1] = treeRow.map(() => 3);
     }
+  }
+
+  private moveSkillCursor(amountToMoveBy) {
+    const updatedIndex = this.currentSkillIndex + amountToMoveBy;
+    const skill = this.skills[updatedIndex];
+    if (skill) this.currentSkillIndex = updatedIndex;
   }
 
   private moveBuddies() {
