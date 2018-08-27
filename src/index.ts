@@ -1,30 +1,36 @@
 /*
 TODO
-  - make player size bigger in convo
-  - add https://github.com/gregtillbrook/parcel-plugin-bundle-visualiser
   - use box behind title screen
   - can tap up/down arrow to move
   - add menu on battle
   - animate energy bar
-  - make intro text bigger
   - copy the right buddy into the battle
-  - scale arrows
-  - stretch the player liek a catepiller
+  - stretch the player like a catepiller
   - sfx
-  - have player be an instance on every level
   - readme
   - make house look nicer
-  - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - have input keys be an enum
   - gamepad
   - clouds
-  - use diff easing function for level transition
-  - add color effects on transition
-  - can probably consolidate a lot of the code around walking
+
+BACKBURNER
   - npcs can walk around
   - move input stuff into its own class
   - add sun and clouds in convo
   - animate buttons when you press them
+  - make player size bigger in convo
+  - scale arrows
+  - can probably consolidate a lot of the code around walking
+  - add color effects on transition
+  - have player be an instance on every level
+  - use diff easing function for level transition
+
+SPACE SAVING THOUGHTS
+  - All single color tiles can derive from one tile type
+  - move all the tileIndexes to their own file
+  - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
+  - can remove some css
+  - might be able to save space by using gameCoordsFrom/gameSizeFrom
 */
 
 import Camera from "./camera";
