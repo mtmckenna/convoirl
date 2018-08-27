@@ -1,7 +1,9 @@
 /*
 TODO
   - make player size bigger in convo
-  - alpha on things that aren't useable
+  - add https://github.com/gregtillbrook/parcel-plugin-bundle-visualiser
+  - use box behind title screen
+  - can tap up/down arrow to move
   - add menu on battle
   - animate energy bar
   - make intro text bigger

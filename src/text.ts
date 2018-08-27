@@ -18,6 +18,7 @@ export default class Text implements IDrawable {
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
+  public alpha = 1.0;
 
   constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;
@@ -34,6 +35,7 @@ export default class Text implements IDrawable {
 
   public draw(context) {
     let currX = this.pos.x;
+    context.globalAlpha = this.alpha;
 
     this.pixelLetters.forEach((letter) => {
       let currY = this.pos.y;

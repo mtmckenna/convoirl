@@ -14,6 +14,7 @@ export default class Box implements IDrawable {
   public size: ISize = { height: SQUARE_SIZE, width: SQUARE_SIZE };
   public drawingSize: ISize;
   public visible: boolean = true;
+  public alpha = 1.0;
 
   private strokePos: IPoint = { x: 0, y: 0 };
   private color: string;

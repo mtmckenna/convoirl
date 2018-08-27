@@ -17,6 +17,7 @@ export default class Dust implements IDrawable, IUpdateable {
   public pos = { x: 0, y: 0};
   public color: string = colorMap[1];
   public visible: boolean = false;
+  public alpha = 1.0;
 
   private percentGrown: number = 0.0;
   private startTime: number;
@@ -41,12 +42,12 @@ export default class Dust implements IDrawable, IUpdateable {
       if (!this.visible) return;
       this.percentGrown = (timestamp - this.startTime) / GROW_DURATION;
       this.visible = this.percentGrown >= 1.0 ? false : true;
+      this.alpha = clerp(INITIAL_ALPHA, 0.0, 0.0, INITIAL_ALPHA, this.percentGrown);
   }
 
   public draw(context, timestamp) {
     const size = clerp(MIN_SIZE, MAX_SIZE, MIN_SIZE, MAX_SIZE, this.percentGrown);
-    const alpha = clerp(INITIAL_ALPHA, 0.0, 0.0, INITIAL_ALPHA, this.percentGrown);
-    context.globalAlpha = alpha;
+    context.globalAlpha = this.alpha;
     context.fillStyle = this.color;
 
     // TOOO: This sort of makes .drawingSize a lie... maybe make clearer later (haha)?

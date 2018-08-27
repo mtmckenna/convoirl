@@ -14,6 +14,7 @@ import { flatten } from "../helpers";
 export default abstract class Tile implements IDrawable, IInteractable {
   public drawingSize = { width: TILE_SIZE, height: TILE_SIZE };
   public pos = { x: 0, y: 0 };
+  public alpha = 1.0;
   public size = { width: TILE_SIZE, height: TILE_SIZE };
   public walkable: boolean = true;
   public visible: boolean = true;

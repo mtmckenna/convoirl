@@ -44,10 +44,10 @@ const RIGHT = "right";
 
 export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
-
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public pos: IPoint = { x: TILE_SIZE, y: TILE_SIZE };
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
+  public alpha: 1.0;
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather", "sports", "pastries", "france", "cats"];

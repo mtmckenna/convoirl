@@ -22,6 +22,7 @@ export default class EnergyBar implements IDrawable {
   public visible: boolean = true;
   public percentFull: number = 1.0;
   public lastBlinkAt: number = 0;
+  public alpha = 1.0;
 
   private box: Box;
 

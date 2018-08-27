@@ -11,7 +11,12 @@ import Green from "../tiles/green";
 import Sky from "../tiles/sky";
 import Tree from "../tiles/tree";
 
-import { Direction, LINE_HEIGHT, TILE_SIZE } from "../common";
+import {
+  Direction,
+  DISABLED_ALPHA,
+  LINE_HEIGHT,
+  TILE_SIZE,
+} from "../common";
 import { randomIndexFromArray } from "../helpers";
 
 const BOX_HEIGHT = 7;
@@ -45,10 +50,10 @@ export default class Convo extends Level {
 
     switch (key) {
       case "ArrowUp":
-        this.moveSkillCursor(-1);
+        this.moveSkillCursor(1);
         break;
       case "ArrowDown":
-        this.moveSkillCursor(1);
+        this.moveSkillCursor(-1);
         break;
     }
   }
@@ -86,7 +91,8 @@ export default class Convo extends Level {
     super.configureDrawablesAndUpdateables();
 
     this.updateBoxes();
-    // this.updateText();
+    this.updateText();
+    this.moveSkillCursor(0);
     this.moveBuddies();
     this.generateTileIndexes();
     this.generateTiles();
@@ -123,8 +129,20 @@ export default class Convo extends Level {
 
   private moveSkillCursor(amountToMoveBy) {
     const updatedIndex = this.currentSkillIndex + amountToMoveBy;
-    const skill = this.skills[updatedIndex];
-    if (skill) this.currentSkillIndex = updatedIndex;
+    const updatedSkill = this.skills[updatedIndex];
+    this.downArrow.alpha = 1.0;
+    this.upArrow.alpha = 1.0;
+    this.skills.forEach((skill) => skill.alpha = DISABLED_ALPHA);
+
+    if (updatedSkill) {
+      updatedSkill.alpha = 1.0;
+      this.currentSkillIndex = updatedIndex;
+    } else {
+      this.skills[this.currentSkillIndex].alpha = 1.0;
+    }
+
+    if (this.currentSkillIndex === 0) this.downArrow.alpha = DISABLED_ALPHA;
+    if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = DISABLED_ALPHA;
   }
 
   private moveBuddies() {
