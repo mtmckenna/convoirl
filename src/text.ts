@@ -36,6 +36,7 @@ export default class Text implements IDrawable {
   public draw(context) {
     let currX = this.pos.x;
     context.globalAlpha = this.alpha;
+    if (this.game.transitioning) context.globalAlpha = Math.min(this.alpha, this.game.transition.nextLevelAlpha);
 
     this.pixelLetters.forEach((letter) => {
       let currY = this.pos.y;

@@ -30,9 +30,9 @@ export default class Game {
   public player: Buddy;
   public squareSize: number = SQUARE_SIZE;
   public size: ISize;
+  public transition: IAnimation;
 
   private context: CanvasRenderingContext2D;
-  private transition: IAnimation;
   private nextLevel: null | Level = null;
   private imageOfPreviousLevel: HTMLImageElement = null;
 
