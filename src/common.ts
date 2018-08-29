@@ -71,5 +71,5 @@ export const SQUARE_SIZE = 5;
 export const MS_PER_UPDATE = 1.0 / 60.0;
 export const NUM_TILES_ON_LONG_SIDE = 16;
 export const BLINK_DURATION = 750;
-export const LINE_HEIGHT = 5 * 10;
+export const LINE_HEIGHT = 8;
 export const DISABLED_ALPHA = 0.5;

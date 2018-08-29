@@ -197,7 +197,7 @@ export default class Convo extends Level {
         this.box.pos.y +
         this.box.drawingSize.height / 2 -
         skill.drawingSize.height / 2 +
-        indexDiff * LINE_HEIGHT,
+        indexDiff * LINE_HEIGHT * this.game.squareSize,
       );
 
       skill.move({ x: skillX, y: skillY });
