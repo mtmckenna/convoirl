@@ -1,6 +1,5 @@
 import colorMap from "../colors";
 import Game from "../game";
-import tileCache from "./tile-cache";
 
 import TILES from "./tiles";
 
@@ -50,14 +49,11 @@ export default class Tile implements IDrawable, IInteractable {
   }
 
   get offscreenCanvas(): HTMLCanvasElement {
-    return tileCache[this.name].canvas;
+    return TILES[this.name].canvas;
   }
 
   public draw(context) {
     context.drawImage(this.offscreenCanvas, 0, 0);
-    if (tileCache[this.name].squareSize === this.game.squareSize) return;
-    this.drawingSize.width = this.tileLength * this.game.squareSize;
-    this.drawingSize.height = this.tileLength * this.game.squareSize;
   }
 
   // It's faster to draw the tile as an image from an offscreen
@@ -81,7 +77,6 @@ export default class Tile implements IDrawable, IInteractable {
       offscreenContext.fillRect(x, y, this.game.squareSize, this.game.squareSize);
     });
 
-    tileCache[this.name].squareSize = this.game.squareSize;
-    tileCache[this.name].canvas = offscreenCanvas;
+    TILES[this.name].canvas = offscreenCanvas;
   }
 }

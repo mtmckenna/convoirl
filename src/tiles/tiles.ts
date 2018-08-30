@@ -5,10 +5,12 @@ const E = null;
 
 export default {
   door: {
+    canvas: null,
     colorMatrix: singleColorTileArray(0),
     interactable: true,
   },
   flowers: {
+    canvas: null,
     colorMatrix: [
       [2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 5, 2, 2, 2, 3, 2],
@@ -21,6 +23,7 @@ export default {
     ],
   },
   grass: {
+    canvas: null,
     colorMatrix: [
     [2, 2, 2, 2, 2, 2, 2, 2],
     [2, 2, 2, 2, 2, 2, 2, 2],
@@ -33,9 +36,11 @@ export default {
     ],
   },
   green: {
+    canvas: null,
     colorMatrix: singleColorTileArray(2),
   },
   house: {
+    canvas: null,
     colorMatrix: [
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -65,9 +70,11 @@ export default {
     tileLength: 3 * TILE_SIZE,
   },
   sky: {
+    canvas: null,
     colorMatrix: singleColorTileArray(9),
   },
   tree: {
+    canvas: null,
     colorMatrix: [
       [E, E, E, E, E, E, E, E],
       [E, E, 7, 7, 7, 7, E, E],
@@ -81,6 +88,7 @@ export default {
     walkable: false,
   },
   unwalkable: {
+    canvas: null,
     visible: false,
     walkable: false,
   },
