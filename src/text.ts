@@ -2,19 +2,24 @@ import colorMap from "./colors";
 import Game from "./game";
 import letters from "./letters";
 
-import { IDrawable, IPoint, ISize, SQUARE_SIZE } from "./common";
+import {
+  IPoint,
+  ISize,
+  ITouchable,
+  SQUARE_SIZE,
+  } from "./common";
 
 const SHADOW_COLOR = colorMap[0];
 const SHADOW_OFFSET = 2;
 
 // Text from https://github.com/PaulBGD/PixelFont
-export default class Text implements IDrawable {
+export default class Text implements ITouchable {
   public game: Game;
   public words: string = "";
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
-  public drawingSize: ISize;
-  public pos: IPoint;
+  public drawingSize: ISize = { width: 0, height: 0};
+  public pos: IPoint = { x: 0, y: 0 };
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
@@ -24,7 +29,7 @@ export default class Text implements IDrawable {
     this.game = game;
     this.words = words.toUpperCase();
     this.color = color;
-    this.pos = pos;
+    this.move(pos);
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
     this.updateSize();
     this.drawingSize = {
@@ -65,6 +70,8 @@ export default class Text implements IDrawable {
       currX += this.game.squareSize + maxX;
     });
   }
+
+  public touched() { return; }
 
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;

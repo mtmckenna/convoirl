@@ -12,12 +12,14 @@ import Sky from "../tiles/sky";
 import Tree from "../tiles/tree";
 
 import {
+  DEBOUNCE_TIME,
   Direction,
   DISABLED_ALPHA,
+  ITouchable,
   LINE_HEIGHT,
   TILE_SIZE,
 } from "../common";
-import { randomIndexFromArray } from "../helpers";
+import { debounce, randomIndexFromArray } from "../helpers";
 
 const BOX_HEIGHT = 7;
 const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
@@ -37,12 +39,18 @@ export default class Convo extends Level {
   private downArrow: Text;
   private skills: Text[];
   private currentSkillIndex: number = 0;
+  private touchables: ITouchable[] = [];
 
   constructor(game: Game) {
     super(game);
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.upArrow = new Text(this.game, "^");
     this.downArrow = new Text(this.game, "_");
+    const debouncedHandleInput = debounce(this.handleInput.bind(this), DEBOUNCE_TIME);
+    this.handleInput = debouncedHandleInput;
+    this.upArrow.touched = () => this.handleInput("ArrowUp");
+    this.downArrow.touched = () => this.handleInput("ArrowDown");
+    this.touchables.push(this.upArrow, this.downArrow);
   }
 
   public handleInput(key) {
@@ -59,7 +67,26 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
-    this.handleInput(null);
+    // The math to convert from canvas->screen size could probably be generalized
+    const touched = this.touchables.find((touchable) => {
+      const size = Object.assign({}, touchable.drawingSize);
+      const pos = Object.assign({}, touchable.pos);
+      size.width *= this.game.scaleFactor;
+      size.height *= this.game.scaleFactor;
+      pos.x *= this.game.scaleFactor;
+      pos.y *= this.game.scaleFactor;
+
+      return touch.clientX >= pos.x &&
+      touch.clientX <= pos.x + size.width &&
+      touch.clientY >= pos.y &&
+      touch.clientY <= pos.y + size.height;
+    });
+
+    if (touched) {
+      touched.touched();
+    } else {
+      this.handleInput(null);
+    }
   }
 
   public levelWillStart() {

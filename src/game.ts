@@ -31,6 +31,7 @@ export default class Game {
   public squareSize: number = SQUARE_SIZE;
   public size: ISize;
   public transition: IAnimation;
+  public scaleFactor: number = 1.0;
 
   private context: CanvasRenderingContext2D;
   private nextLevel: null | Level = null;
@@ -144,6 +145,8 @@ export default class Game {
       height: this.canvas.height,
       width: this.canvas.width,
     };
+
+    this.scaleFactor = window.innerWidth / this.canvas.width;
   }
 
   private updateTransition(timestamp) {

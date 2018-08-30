@@ -56,6 +56,10 @@ export interface IDrawable extends IPositionable {
   draw(context: CanvasRenderingContext2D, timestamp: number): void;
 }
 
+export interface ITouchable extends IDrawable {
+  touched(): void;
+}
+
 export interface ITileMap {
   tiles: Tile[];
 }
@@ -73,3 +77,4 @@ export const NUM_TILES_ON_LONG_SIDE = 16;
 export const BLINK_DURATION = 750;
 export const LINE_HEIGHT = 8;
 export const DISABLED_ALPHA = 0.5;
+export const DEBOUNCE_TIME = 120;

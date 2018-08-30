@@ -1,7 +1,7 @@
 /*
 TODO
-  - use box behind title screen
-  - can tap up/down arrow to move
+  - make drawingsize a getter? or subclass...
+  - when transitioning, don't process input for a second
   - add menu on battle
   - animate energy bar
   - copy the right buddy into the battle
@@ -115,6 +115,15 @@ requestAnimationFrame(animate);
 window.addEventListener("resize", () => resize());
 
 window.addEventListener("keydown", (event) => {
+  const key = event.key;
+  if (keyActions[key]) {
+    keyActions[key]();
+  } else {
+    game.handleInput(key);
+  }
+});
+
+window.addEventListener("keyup", (event) => {
   const key = event.key;
   if (keyActions[key]) {
     keyActions[key]();
