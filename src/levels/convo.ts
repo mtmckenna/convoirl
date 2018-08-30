@@ -48,7 +48,6 @@ export default class Convo extends Level {
     this.handleInput = throttledHandleInput;
     this.upArrow.touched = () => this.handleInput("ArrowUp");
     this.downArrow.touched = () => this.handleInput("ArrowDown");
-    this.touchables.push(this.upArrow, this.downArrow);
   }
 
   public handleInput(key) {
@@ -60,6 +59,9 @@ export default class Convo extends Level {
         this.moveSkillCursor(-1);
         break;
       case "Enter":
+        this.useSelectedSkill();
+        break;
+      case "q":
         this.game.queueNextLevel(this.game.levels.world);
     }
   }
@@ -96,12 +98,17 @@ export default class Convo extends Level {
 
   public levelWillStart() {
     this.updateBoxes();
+    this.clearTouchables();
 
     this.game.player.setConvoMode(true);
     this.game.player.convoLook(Direction.Right);
 
     this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
+    this.skills.forEach((skill) => skill.touched = () => {
+      if (this.skills[this.currentSkillIndex] === skill) this.handleInput("Enter");
+    });
+    this.touchables.push(this.upArrow, this.downArrow, ...this.skills);
   }
 
   public levelStarted() {
@@ -157,6 +164,10 @@ export default class Convo extends Level {
     }
   }
 
+  private clearTouchables() {
+    this.touchables = [];
+  }
+
   private moveSkillCursor(amountToMoveBy) {
     const updatedIndex = this.currentSkillIndex + amountToMoveBy;
     const updatedSkill = this.skills[updatedIndex];
@@ -173,6 +184,10 @@ export default class Convo extends Level {
 
     if (this.currentSkillIndex === 0) this.downArrow.alpha = DISABLED_ALPHA;
     if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = DISABLED_ALPHA;
+  }
+
+  private useSelectedSkill() {
+    console.log(this.skills[this.currentSkillIndex].words);
   }
 
   private moveBuddies() {
