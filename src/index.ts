@@ -1,10 +1,9 @@
 /*
 TODO
-  - make drawingsize a getter? or subclass...
+  - make player size bigger in convo
   - when transitioning, don't process input for a second
   - add menu on battle
   - animate energy bar
-  - copy the right buddy into the battle
   - stretch the player like a catepiller
   - sfx
   - readme
@@ -12,13 +11,14 @@ TODO
   - have input keys be an enum
   - gamepad
   - clouds
+  - make drawingsize a getter? or subclass...
+  - intro animation
 
 BACKBURNER
   - npcs can walk around
   - move input stuff into its own class
   - add sun and clouds in convo
   - animate buttons when you press them
-  - make player size bigger in convo
   - scale arrows
   - can probably consolidate a lot of the code around walking
   - add color effects on transition

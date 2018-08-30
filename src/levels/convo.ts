@@ -37,6 +37,7 @@ export default class Convo extends Level {
   private skills: Text[];
   private currentSkillIndex: number = 0;
   private touchables: ITouchable[] = [];
+  private buddy: Buddy;
 
   constructor(game: Game) {
     super(game);
@@ -51,8 +52,6 @@ export default class Convo extends Level {
   }
 
   public handleInput(key) {
-    // if (!key) this.game.queueNextLevel(this.game.levels.world);
-
     switch (key) {
       case "ArrowUp":
         this.moveSkillCursor(1);
@@ -60,6 +59,8 @@ export default class Convo extends Level {
       case "ArrowDown":
         this.moveSkillCursor(-1);
         break;
+      case "Enter":
+        this.game.queueNextLevel(this.game.levels.world);
     }
   }
 
@@ -80,7 +81,6 @@ export default class Convo extends Level {
       touch.clientY <= pos.y + size.height + touchFuzz;
     });
 
-
     if (touched) {
       touched.touched();
     } else {
@@ -88,15 +88,19 @@ export default class Convo extends Level {
     }
   }
 
+  public setBuddy(buddy: Buddy) {
+    this.buddy = buddy;
+    this.buddy.setConvoMode(true);
+    this.buddy.convoLook(Direction.Left);
+  }
+
   public levelWillStart() {
     this.updateBoxes();
 
     this.game.player.setConvoMode(true);
     this.game.player.convoLook(Direction.Right);
-    const buddy2 = new Buddy(this.game);
-    buddy2.setConvoMode(true);
 
-    this.buddies = [this.game.player, buddy2];
+    this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
   }
 

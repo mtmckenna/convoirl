@@ -84,6 +84,13 @@ export default class Buddy implements IDrawable, IInteractable {
     return this.animations.walking.running;
   }
 
+  public copy(): Buddy {
+    const buddy = new Buddy(this.game);
+    buddy.move(this.pos);
+    buddy.color = this.color;
+    return buddy;
+  }
+
   public setConvoMode(inConvoMode: boolean) {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;

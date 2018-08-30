@@ -21,6 +21,7 @@ const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 
 export default class World extends Level {
   public energyBar: EnergyBar;
+  public currentBuddy: Buddy;
 
   protected tileTypeMap = ["green", "flowers", "grass", "tree", "house", "unwalkable", "door"];
   protected tileIndexes = [
@@ -47,8 +48,8 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
-  private playerSpawnPosition: IPoint = HOME_TILE;
-  // private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
+  // private playerSpawnPosition: IPoint = HOME_TILE;
+  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
 
   constructor(game: Game) {
@@ -171,7 +172,10 @@ export default class World extends Level {
       interactable.tileIndex.y === tileIndex.y;
     });
 
-    if (overlappedInteractable) levelToQueue = this.game.levels.convo;
+    if (overlappedInteractable) {
+      this.currentBuddy = overlappedInteractable as Buddy;
+      levelToQueue = this.game.levels.convo;
+    }
 
     // Check if we're overlapping an interactable tile
     if (this.tileAtIndex(tileIndex).interactable) levelToQueue = this.game.levels.sleep;

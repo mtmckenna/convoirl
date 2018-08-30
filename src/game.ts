@@ -61,8 +61,8 @@ export default class Game {
 
     this.transition = Object.assign({}, transition);
 
-    // this.switchLevel(this.levels.world);
-    this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.startScreen);
     // this.switchLevel(this.levels.convo);
     // this.switchLevel(this.levels.sleep);
   }
@@ -94,6 +94,10 @@ export default class Game {
   }
 
   public queueNextLevel(nextLevel: Level) {
+    if (nextLevel === this.levels.convo) {
+      const { convo, world } = this.levels;
+      (convo as Convo).setBuddy((world as World).currentBuddy.copy());
+    }
     this.nextLevel = nextLevel;
     this.startTransition();
   }
