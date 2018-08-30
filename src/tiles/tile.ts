@@ -35,10 +35,10 @@ export default class Tile implements IDrawable, IInteractable {
 
     this.name = name;
     this.colorMatrix = TILES[name].colorMatrix;
-    this.walkable = this.walkable || TILES[name].walkable;
-    this.visible = this.visible || TILES[name].visible;
-    this.interactable = this.interactable || TILES[name].interactable;
-    this.tileLength = TILES[name].tileLength || this.tileLength;
+    this.walkable = TILES[name].hasOwnProperty("walkable") ? TILES[name].walkable : this.walkable;
+    this.visible = TILES[name].hasOwnProperty("visible") ? TILES[name].visible : this.visible;
+    this.interactable = TILES[name].hasOwnProperty("interactable") ? TILES[name].interactable : this.interactable;
+    this.tileLength = TILES[name].hasOwnProperty("tileLength") ? TILES[name].tileLength : this.tileLength;
 
     this.drawingSize = {
       height: this.tileLength * this.game.squareSize,
