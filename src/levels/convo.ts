@@ -7,20 +7,22 @@ import Game from "../game";
 import Text from "../text";
 
 import {
-  DEBOUNCE_TIME,
   Direction,
   DISABLED_ALPHA,
   ITouchable,
   LINE_HEIGHT,
+  THROTTLE_TIME,
   TILE_SIZE,
 } from "../common";
-import { debounce, randomIndexFromArray } from "../helpers";
+
+import { randomIndexFromArray, throttle } from "../helpers";
 
 const BOX_HEIGHT = 7;
 const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
+const TOUCH_FUZZ = 1;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -41,15 +43,15 @@ export default class Convo extends Level {
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.upArrow = new Text(this.game, "^");
     this.downArrow = new Text(this.game, "_");
-    const debouncedHandleInput = debounce(this.handleInput.bind(this), DEBOUNCE_TIME);
-    this.handleInput = debouncedHandleInput;
+    const throttledHandleInput = throttle(this.handleInput.bind(this), THROTTLE_TIME);
+    this.handleInput = throttledHandleInput;
     this.upArrow.touched = () => this.handleInput("ArrowUp");
     this.downArrow.touched = () => this.handleInput("ArrowDown");
     this.touchables.push(this.upArrow, this.downArrow);
   }
 
   public handleInput(key) {
-    if (!key) this.game.queueNextLevel(this.game.levels.world);
+    // if (!key) this.game.queueNextLevel(this.game.levels.world);
 
     switch (key) {
       case "ArrowUp":
@@ -66,16 +68,18 @@ export default class Convo extends Level {
     const touched = this.touchables.find((touchable) => {
       const size = Object.assign({}, touchable.drawingSize);
       const pos = Object.assign({}, touchable.pos);
+      const touchFuzz = TOUCH_FUZZ * this.game.squareSize * this.game.scaleFactor;
       size.width *= this.game.scaleFactor;
       size.height *= this.game.scaleFactor;
       pos.x *= this.game.scaleFactor;
       pos.y *= this.game.scaleFactor;
 
-      return touch.clientX >= pos.x &&
-      touch.clientX <= pos.x + size.width &&
-      touch.clientY >= pos.y &&
-      touch.clientY <= pos.y + size.height;
+      return touch.clientX >= pos.x - touchFuzz &&
+      touch.clientX <= pos.x + size.width + touchFuzz &&
+      touch.clientY >= pos.y - touchFuzz &&
+      touch.clientY <= pos.y + size.height + touchFuzz;
     });
+
 
     if (touched) {
       touched.touched();

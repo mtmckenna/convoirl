@@ -76,26 +76,23 @@ function singleColorTileArray(colorIndex) {
   return new Array(TILE_SIZE).fill(null).map(() => new Array(TILE_SIZE).fill(colorIndex));
 }
 
-function debounce(func, wait, immediate = false) {
-  let timeout;
+function throttle(func, throttleTime) {
+  let waiting;
   return function(...params: any[]) {
     const context = this;
     const args = arguments;
-    const later = () => {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
+
+    if (waiting) return;
+
+    func.apply(context, args);
+    waiting = setTimeout(() => waiting = null, throttleTime);
   };
 }
 
 export {
   canThingMoveToPosition,
   clerp,
-  debounce,
+  throttle,
   flatten,
   lerp,
   oneOrMinusOne,

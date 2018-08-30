@@ -77,4 +77,4 @@ export const NUM_TILES_ON_LONG_SIDE = 16;
 export const BLINK_DURATION = 750;
 export const LINE_HEIGHT = 8;
 export const DISABLED_ALPHA = 0.5;
-export const DEBOUNCE_TIME = 120;
+export const THROTTLE_TIME = 120;
