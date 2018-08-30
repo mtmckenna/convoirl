@@ -3,11 +3,6 @@ import colorMap from "../colors";
 import Game from "../game";
 import Text from "../text";
 
-import Flowers from "../tiles/flowers";
-import Grass from "../tiles/grass";
-import Green from "../tiles/green";
-import Tree from "../tiles/tree";
-
 import Level from "./level";
 
 import { BLINK_DURATION, LINE_HEIGHT } from "../common";
@@ -17,7 +12,7 @@ const TAP_TO_PLAY = "TAP TO PLAY";
 const PADDING = 2;
 
 export default class StartScreen extends Level {
-  protected tileTypeMap = [Green, Flowers, Grass, Tree];
+  protected tileTypeMap = ["green", "flowers", "grass", "tree"];
   protected tileIndexes = [[]];
   protected title: Text;
   protected instructions: Text;

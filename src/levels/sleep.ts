@@ -1,14 +1,13 @@
 import colorMap from "../colors";
 import Game from "../game";
 import Text from "../text";
-import Door from "../tiles/door";
 import Level from "./level";
 
 const TEXT = "zzzzzz...";
 const SLEEP_DURATION = 1200;
 
 export default class Sleep extends Level {
-  protected tileTypeMap = [Door];
+  protected tileTypeMap = ["door"];
   protected tileIndexes = [[]];
   protected text: Text;
   protected startedSleepAt: number = null;

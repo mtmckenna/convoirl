@@ -4,14 +4,6 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
-import Door from "../tiles/door";
-import Flowers from "../tiles/flowers";
-import Grass from "../tiles/grass";
-import Green from "../tiles/green";
-import House from "../tiles/house";
-import Tree from "../tiles/tree";
-import Unwalkable from "../tiles/unwalkable";
-
 import {
   Direction,
   HALF_TILE_SIZE,
@@ -30,7 +22,7 @@ const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 export default class World extends Level {
   public energyBar: EnergyBar;
 
-  protected tileTypeMap = [Green, Flowers, Grass, Tree, House, Unwalkable, Door];
+  protected tileTypeMap = ["green", "flowers", "grass", "tree", "house", "unwalkable", "door"];
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3],

@@ -31,7 +31,7 @@ export default abstract class Level {
   public backgroundColor: string = colorMap[2];
 
   protected abstract tileIndexes: number[][];
-  protected abstract tileTypeMap: any[]; // <-- what's the right way to do this?
+  protected abstract tileTypeMap: string[];
 
   constructor(game: Game) {
     this.game = game;
@@ -67,7 +67,7 @@ export default abstract class Level {
     this.drawingSize = { width: width * this.game.squareSize, height: height * this.game.squareSize };
     this.tilesGrid = this.tileIndexes.map(
       (column, columnIndex) => column.map(
-        (tileIndex, rowIndex) => new this.tileTypeMap[tileIndex](this.game, rowIndex, columnIndex)),
+        (tileIndex, rowIndex) => new Tile(this.game, this.tileTypeMap[tileIndex], rowIndex, columnIndex)),
     );
 
     this.tiles = flatten(this.tilesGrid);

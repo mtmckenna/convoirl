@@ -6,11 +6,6 @@ import colorMap from "../colors";
 import Game from "../game";
 import Text from "../text";
 
-import Flowers from "../tiles/flowers";
-import Green from "../tiles/green";
-import Sky from "../tiles/sky";
-import Tree from "../tiles/tree";
-
 import {
   DEBOUNCE_TIME,
   Direction,
@@ -30,7 +25,7 @@ const ARROW_SPACING = 2;
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
 
-  protected tileTypeMap = [Green, Flowers, Sky, Tree];
+  protected tileTypeMap = ["green", "flowers", "sky", "tree"];
   protected tileIndexes = [[]];
 
   private box: Box;

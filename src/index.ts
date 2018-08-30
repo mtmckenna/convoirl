@@ -26,8 +26,6 @@ BACKBURNER
   - use diff easing function for level transition
 
 SPACE SAVING THOUGHTS
-  - All single color tiles can derive from one tile type
-  - move all the tileIndexes to their own file
   - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
   - can remove some css
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
