@@ -2,7 +2,6 @@
 TODO
   - make player size bigger in convo
   - when transitioning, don't process input for a second
-  - add menu on battle
   - animate energy bar
   - stretch the player like a catepiller
   - sfx

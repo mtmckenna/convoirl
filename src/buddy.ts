@@ -17,6 +17,7 @@ import {
   InteractableType,
   IPoint,
   ISize,
+  SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
 
@@ -33,7 +34,7 @@ const EYE_COLOR = "rgb(0, 0, 0)";
 const RIGHT_EYE_OFFSET = 4;
 const EYE_OFFSET = 1;
 const EYE_OFFSET_CONVO = 4;
-const CONVO_LOOK_RIGHT_OFFSET = 30;
+const CONVO_LOOK_RIGHT_OFFSET = 6;
 const NUM_DUSTS = 50;
 const TIME_BETWEEN_DUSTS = 30;
 
@@ -51,8 +52,6 @@ export default class Buddy implements IDrawable, IInteractable {
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather", "sports", "pastries", "france", "cats"];
-  // public skills: string[] = ["weather"];
-  // public skills: string[] = ["weather", "sports"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
   public interactableType: InteractableType = InteractableType.Buddy;
@@ -64,6 +63,7 @@ export default class Buddy implements IDrawable, IInteractable {
   private lastDustAt: number = 0;
   private inConvoMode: boolean = false;
   private convoLookRight: boolean = false;
+  private squareSize: number = SQUARE_SIZE;
 
   constructor(game) {
     this.game = game;
@@ -74,6 +74,7 @@ export default class Buddy implements IDrawable, IInteractable {
     this.dusts = Array.from(Array(NUM_DUSTS).keys()).map(() => new Dust(this.game));
     this.drawingSize.width = TILE_SIZE * this.game.squareSize;
     this.drawingSize.height = TILE_SIZE * this.game.squareSize;
+    this.squareSize = this.game.squareSize;
   }
 
   get blinking() {
@@ -94,6 +95,19 @@ export default class Buddy implements IDrawable, IInteractable {
   public setConvoMode(inConvoMode: boolean) {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;
+    this.squareSize = this.game.squareSize;
+    this.size.width = TILE_SIZE;
+    this.size.height = TILE_SIZE;
+    this.drawingSize.width = this.size.width * this.game.squareSize;
+    this.drawingSize.height = this.size.height * this.game.squareSize;
+
+    if (inConvoMode) {
+      this.squareSize *= 2;
+      this.size.width *= 2;
+      this.size.height *= 2;
+      this.drawingSize.width *= 2;
+      this.drawingSize.height *= 2;
+    }
   }
 
   public convoLook(direction) {
@@ -201,7 +215,7 @@ export default class Buddy implements IDrawable, IInteractable {
       }
     }
 
-    // context.setTransform(1, 0, 0, 1, 0, 0);
+    context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   private maybeDoEyeAnimations(timestamp) {
@@ -234,18 +248,18 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   private drawEye(context, whichOne, openness, lookAwayOffset) {
-    const leftRightOffset = whichOne === LEFT ? 0 : (RIGHT_EYE_OFFSET * this.game.squareSize);
+    const leftRightOffset = whichOne === LEFT ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
 
     context.fillStyle = EYE_COLOR;
 
     let offset = EYE_OFFSET;
     let convoLookRightOffset = 0;
     if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
-    if (this.inConvoMode && this.convoLookRight) convoLookRightOffset = CONVO_LOOK_RIGHT_OFFSET;
+    if (this.inConvoMode && this.convoLookRight) convoLookRightOffset = CONVO_LOOK_RIGHT_OFFSET * this.squareSize;
 
-    const scaledEyeOffset = offset * this.game.squareSize;
-    const scaledEyeSize = EYE_SIZE * this.game.squareSize;
-    const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.game.squareSize;
+    const scaledEyeOffset = offset * this.squareSize;
+    const scaledEyeSize = EYE_SIZE * this.squareSize;
+    const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.squareSize;
 
     context.fillRect(
       scaledEyeOffset + leftRightOffset - convoLookRightOffset,
@@ -257,7 +271,7 @@ export default class Buddy implements IDrawable, IInteractable {
     context.fillStyle = EYE_REFLECTION_COLOR;
 
     context.fillRect(
-      scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.game.squareSize) - convoLookRightOffset,
+      scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.squareSize) - convoLookRightOffset,
       scaledEyeOffset,
       scaledEyeReflectionSize,
       scaledEyeReflectionSize * openness,

@@ -18,8 +18,8 @@ import {
 
 import { randomIndexFromArray, throttle } from "../helpers";
 
-const BOX_HEIGHT = 7;
-const BUDDY_Y_FROM_BOX = 2 * TILE_SIZE;
+const BOX_HEIGHT = 6;
+const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
@@ -104,7 +104,7 @@ export default class Convo extends Level {
   }
 
   public levelWillStart() {
-    this.updateBoxes();
+    if (!this.buddy) this.setBuddy(new Buddy(this.game));
     this.clearTouchables();
 
     this.game.player.setConvoMode(true);
@@ -205,13 +205,16 @@ export default class Convo extends Level {
 
   private moveBuddies() {
     const buddy = this.buddies[1];
-    const boxPos = this.game.gameCoordsFromDrawingCoords(this.box.pos);
+
+    const boxPosX = this.box.pos.x / this.game.squareSize;
+    const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
+
     const boxSize = this.game.gameSizeFromDrawingSize(this.box.drawingSize);
     const convoWidth = this.game.player.size.width + BUDDY_DISTANCE + buddy.size.width;
 
     const playerPos = {
-      x: boxPos.x + (boxSize.width - convoWidth) / 2,
-      y: boxPos.y - BUDDY_Y_FROM_BOX,
+      x: boxPosX + (boxSize.width - convoWidth) / 2,
+      y: boxPosY,
     };
 
     const buddyPos = Object.assign({}, playerPos);
@@ -228,11 +231,15 @@ export default class Convo extends Level {
     this.box.move({ x: this.game.squareSize * BOX_X, y });
     this.box.updateSize({ height, width });
 
-    const barWidth = (this.energyBar.size.width + this.convoBar.size.width + BAR_SPACING) * this.game.squareSize;
-    const energyX = (this.game.canvas.width - barWidth) / 2;
-    const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
+    const barWidth =
+    this.energyBar.drawingSize.width +
+    this.convoBar.drawingSize.width +
+    BAR_SPACING * this.game.squareSize;
 
+    const energyX = (this.game.canvas.width - barWidth) / 2;
     this.energyBar.move({ x: Math.floor(energyX), y: Math.floor(this.energyBar.pos.y) });
+
+    const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
     this.convoBar.move({ x: Math.floor(convoX), y: Math.floor(this.convoBar.pos.y) });
   }
 
