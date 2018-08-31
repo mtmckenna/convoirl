@@ -10,7 +10,6 @@ TODO
   - gamepad
   - clouds
   - make drawingsize a getter? or subclass...
-  - intro animation
 
 BACKBURNER
   - npcs can walk around

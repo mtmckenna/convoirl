@@ -23,7 +23,6 @@ const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
-const TOUCH_FUZZ = 10;
 const BAR_SPACING = 3;
 
 export default class Convo extends Level {
@@ -78,16 +77,15 @@ export default class Convo extends Level {
     const touched = this.touchables.find((touchable) => {
       const size = Object.assign({}, touchable.drawingSize);
       const pos = Object.assign({}, touchable.pos);
-      const touchFuzz = TOUCH_FUZZ * this.game.squareSize * this.game.scaleFactor;
       size.width *= this.game.scaleFactor;
       size.height *= this.game.scaleFactor;
       pos.x *= this.game.scaleFactor;
       pos.y *= this.game.scaleFactor;
 
-      return touch.clientX >= pos.x - touchFuzz &&
-      touch.clientX <= pos.x + size.width + touchFuzz &&
-      touch.clientY >= pos.y - touchFuzz &&
-      touch.clientY <= pos.y + size.height + touchFuzz;
+      return touch.clientX >= pos.x &&
+      touch.clientX <= pos.x + size.width &&
+      touch.clientY >= pos.y &&
+      touch.clientY <= pos.y + size.height;
     });
 
     if (touched) {
