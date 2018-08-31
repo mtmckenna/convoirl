@@ -23,7 +23,7 @@ const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
-const TOUCH_FUZZ = 1;
+const TOUCH_FUZZ = 10;
 const BAR_SPACING = 3;
 
 export default class Convo extends Level {
