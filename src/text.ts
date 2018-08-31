@@ -40,8 +40,8 @@ export default class Text implements ITouchable {
 
   public draw(context) {
     let currX = this.pos.x;
-    context.globalAlpha = this.alpha;
-    if (this.game.transitioning) context.globalAlpha = Math.min(this.alpha, this.game.transition.nextLevelAlpha);
+    const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
+    context.globalAlpha = alpha;
 
     this.pixelLetters.forEach((letter) => {
       let currY = this.pos.y;
@@ -90,6 +90,6 @@ export default class Text implements ITouchable {
     // Add up the widths of all the letters + spaces
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
 
-    this.size = { width, height: SQUARE_SIZE };
+    this.size = { width, height: this.game.squareSize };
   }
 }

@@ -10,7 +10,6 @@ import {
   IInputBuffer,
   IPoint,
   IPositionable,
-  SQUARE_SIZE,
   TILE_SIZE,
 } from "../common";
 
@@ -48,14 +47,14 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
-  // private playerSpawnPosition: IPoint = HOME_TILE;
-  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
+  private playerSpawnPosition: IPoint = HOME_TILE;
+  // private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
 
   constructor(game: Game) {
     super(game);
     this.generateTiles();
-    this.energyBar = new EnergyBar(this.game, { x: 0, y: SQUARE_SIZE });
+    this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
     this.game.player.energy = 0.6;
 
     const buddy = new Buddy(game);

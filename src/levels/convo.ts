@@ -3,6 +3,7 @@ import Level from "./level";
 import Box from "../box";
 import Buddy from "../buddy";
 import colorMap from "../colors";
+import EnergyBar from "../energy-bar";
 import Game from "../game";
 import Text from "../text";
 
@@ -23,6 +24,7 @@ const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
 const TOUCH_FUZZ = 1;
+const BAR_SPACING = 3;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -38,9 +40,14 @@ export default class Convo extends Level {
   private currentSkillIndex: number = 0;
   private touchables: ITouchable[] = [];
   private buddy: Buddy;
+  private energyBar: EnergyBar;
+  private convoBar: EnergyBar;
+  private convoPerTurn: number = 0.25;
 
   constructor(game: Game) {
     super(game);
+    this.energyBar = new EnergyBar(this.game, { x: this.game.squareSize, y: this.game.squareSize }, "ENERGY");
+    this.convoBar = new EnergyBar(this.game, { x: this.game.squareSize, y: this.game.squareSize }, "CONVO");
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.upArrow = new Text(this.game, "^");
     this.downArrow = new Text(this.game, "_");
@@ -103,6 +110,9 @@ export default class Convo extends Level {
     this.game.player.setConvoMode(true);
     this.game.player.convoLook(Direction.Right);
 
+    this.energyBar.percentFull = this.game.player.energy;
+    this.convoBar.percentFull = 0.0;
+
     this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
     this.skills.forEach((skill) => skill.touched = () => {
@@ -139,6 +149,8 @@ export default class Convo extends Level {
       this.box,
       this.upArrow,
       this.downArrow,
+      this.energyBar,
+      this.convoBar,
       ...this.skills,
     ]);
   }
@@ -187,7 +199,8 @@ export default class Convo extends Level {
   }
 
   private useSelectedSkill() {
-    console.log(this.skills[this.currentSkillIndex].words);
+    this.convoBar.percentFull += this.convoPerTurn;
+    if (this.convoBar.percentFull >= 1.0) this.game.queueNextLevel(this.game.levels.world);
   }
 
   private moveBuddies() {
@@ -214,6 +227,13 @@ export default class Convo extends Level {
     const y = this.game.canvas.height - height * this.game.squareSize - this.game.squareSize * 2;
     this.box.move({ x: this.game.squareSize * BOX_X, y });
     this.box.updateSize({ height, width });
+
+    const barWidth = (this.energyBar.size.width + this.convoBar.size.width + BAR_SPACING) * this.game.squareSize;
+    const energyX = (this.game.canvas.width - barWidth) / 2;
+    const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
+
+    this.energyBar.move({ x: energyX, y: this.energyBar.pos.y });
+    this.convoBar.move({ x: convoX, y: this.convoBar.pos.y });
   }
 
   private updateText() {

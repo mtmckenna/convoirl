@@ -50,6 +50,8 @@ export default class Box implements IDrawable {
   }
 
   public draw(context) {
+    const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
+    context.globalAlpha = alpha;
     context.fillStyle = this.color;
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
     context.strokeStyle = colorMap[1];

@@ -16,7 +16,7 @@ const BLINK_THRESHOLD = 0.2;
 export default class EnergyBar implements IDrawable {
   public energyText: Text;
   public game: Game;
-  public pos: IPoint;
+  public pos: IPoint = { x: 0, y: 0 };
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
@@ -26,18 +26,20 @@ export default class EnergyBar implements IDrawable {
 
   private box: Box;
 
-  constructor(game: Game, pos: IPoint) {
+  constructor(game: Game, pos: IPoint, word: string) {
     this.game = game;
-    this.pos = pos;
-    this.energyText = new Text(this.game, "ENERGY", colorMap[7], { x: this.pos.x, y: this.pos.y });
+    this.energyText = new Text(this.game, word, colorMap[7]);
     this.energyText.shadow = false;
+
     this.size = Object.assign({}, this.energyText.size);
     this.drawingSize = Object.assign({}, this.energyText.drawingSize);
     this.drawingSize.width = (this.size.width + 1) * this.game.squareSize;
     this.drawingSize.height = (this.size.height + 1) * this.game.squareSize;
 
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
-    this.box = new Box(game, this.pos, boxSize, colorMap[7]);
+    this.box = new Box(game, pos, boxSize, colorMap[7]);
+
+    this.move(pos);
   }
 
   public move(updatedPos: IPoint) {
@@ -45,8 +47,10 @@ export default class EnergyBar implements IDrawable {
     this.pos.y = updatedPos.y;
 
     this.box.move(this.pos);
-    this.energyText.pos.x = updatedPos.x + SQUARE_SIZE / 2 + 0.5;
-    this.energyText.pos.y = updatedPos.y + SQUARE_SIZE / 2 + 0.5;
+    this.energyText.move({
+      x: updatedPos.x + SQUARE_SIZE / 2 + 0.5,
+      y: updatedPos.y + SQUARE_SIZE / 2 + 0.5,
+    });
   }
 
   public draw(context) {
