@@ -232,8 +232,8 @@ export default class Convo extends Level {
     const energyX = (this.game.canvas.width - barWidth) / 2;
     const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
 
-    this.energyBar.move({ x: energyX, y: this.energyBar.pos.y });
-    this.convoBar.move({ x: convoX, y: this.convoBar.pos.y });
+    this.energyBar.move({ x: Math.floor(energyX), y: Math.floor(this.energyBar.pos.y) });
+    this.convoBar.move({ x: Math.floor(convoX), y: Math.floor(this.convoBar.pos.y) });
   }
 
   private updateText() {
