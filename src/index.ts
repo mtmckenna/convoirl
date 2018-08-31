@@ -1,7 +1,5 @@
 /*
 TODO
-  - when transitioning, don't process input for a second
-  - animate energy bar
   - stretch the player like a catepiller
   - sfx
   - readme
@@ -10,6 +8,7 @@ TODO
   - gamepad
   - clouds
   - make drawingsize a getter? or subclass...
+  - make sure walking animation is right... might be configuring walking wrong
 
 BACKBURNER
   - npcs can walk around
@@ -26,6 +25,7 @@ SPACE SAVING THOUGHTS
   - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
   - can remove some css
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
+  - dedupe some lerp stuff (buddy/energybar)
 */
 
 import Camera from "./camera";

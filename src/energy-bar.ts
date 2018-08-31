@@ -5,11 +5,15 @@ import Text from "./text";
 
 import {
   BLINK_DURATION,
+  IAnimations,
   IDrawable,
   IPoint,
   ISize,
   SQUARE_SIZE,
 } from "./common";
+
+import { animateEnergy } from "./animations";
+import { lerp } from "./helpers";
 
 const BLINK_THRESHOLD = 0.2;
 
@@ -25,6 +29,7 @@ export default class EnergyBar implements IDrawable {
   public alpha = 1.0;
 
   private box: Box;
+  private animations: IAnimations = {};
 
   constructor(game: Game, pos: IPoint, word: string) {
     this.game = game;
@@ -39,7 +44,14 @@ export default class EnergyBar implements IDrawable {
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
     this.box = new Box(game, pos, boxSize, colorMap[7]);
 
+    this.animations.level = Object.assign({}, animateEnergy);
+
     this.move(pos);
+  }
+
+  // TODO: check if I can use values
+  get animating(): boolean {
+    return !!Object.values(this.animations).find((animation) => animation.running);
   }
 
   public move(updatedPos: IPoint) {
@@ -53,11 +65,20 @@ export default class EnergyBar implements IDrawable {
     });
   }
 
-  public draw(context) {
+  public draw(context, timestamp) {
+    this.updateLevel(timestamp);
+
     this.box.draw(context);
     context.fillStyle = colorMap[1];
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
     this.energyText.draw(context);
+  }
+
+  public animateToLevel(updatedLevel) {
+    this.animations.level.startTime = this.game.timestamp;
+    this.animations.level.startLevel = this.percentFull;
+    this.animations.level.endLevel = updatedLevel;
+    this.animations.level.running = true;
   }
 
   public update(timestamp) {
@@ -70,5 +91,19 @@ export default class EnergyBar implements IDrawable {
       this.visible = !this.visible;
       this.lastBlinkAt = timestamp;
     }
+  }
+
+  private updateLevel(timestamp) {
+    if (!this.animations.level.running) return;
+    const t = (timestamp - this.animations.level.startTime) / this.animations.level.duration;
+
+    let level = lerp(this.animations.level.startLevel, this.animations.level.endLevel, t);
+
+    if (t >= 1.0) {
+      level = this.animations.level.endLevel;
+      this.animations.level.running = false;
+    }
+
+    this.percentFull = level;
   }
 }

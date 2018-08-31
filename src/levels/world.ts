@@ -117,7 +117,7 @@ export default class World extends Level {
   }
 
   public levelStarted() {
-    this.energyBar.percentFull = this.game.player.energy;
+    this.energyBar.animateToLevel(this.game.player.energy);
     this.game.player.move(this.playerSpawnPosition, false);
     this.game.player.setConvoMode(false);
   }

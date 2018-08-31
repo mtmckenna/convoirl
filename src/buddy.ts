@@ -119,6 +119,7 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   public move(updatedPos: IPoint, animate: boolean = true) {
+    // TODO: weird that I set pos here?
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
     this.tileIndex.x = Math.ceil(this.pos.x / TILE_SIZE);

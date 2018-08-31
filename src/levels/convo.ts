@@ -41,6 +41,7 @@ export default class Convo extends Level {
   private buddy: Buddy;
   private energyBar: EnergyBar;
   private convoBar: EnergyBar;
+  private convoLevel: number = 0.0;
   private convoPerTurn: number = 0.25;
 
   constructor(game: Game) {
@@ -108,8 +109,9 @@ export default class Convo extends Level {
     this.game.player.setConvoMode(true);
     this.game.player.convoLook(Direction.Right);
 
-    this.energyBar.percentFull = this.game.player.energy;
-    this.convoBar.percentFull = 0.0;
+    this.energyBar.animateToLevel(this.game.player.energy);
+    this.convoLevel = 0.0;
+    this.convoBar.animateToLevel(this.convoLevel);
 
     this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
@@ -130,6 +132,9 @@ export default class Convo extends Level {
   public update(timestamp) {
     super.update(timestamp);
     this.updateText();
+    if (this.convoLevel >= 1.0 && !this.convoBar.animating) {
+      this.game.queueNextLevel(this.game.levels.world);
+    }
   }
 
   public configureDrawablesAndUpdateables() {
@@ -197,8 +202,9 @@ export default class Convo extends Level {
   }
 
   private useSelectedSkill() {
-    this.convoBar.percentFull += this.convoPerTurn;
-    if (this.convoBar.percentFull >= 1.0) this.game.queueNextLevel(this.game.levels.world);
+    if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
+    this.convoLevel += this.convoPerTurn;
+    this.convoBar.animateToLevel(this.convoLevel);
   }
 
   private moveBuddies() {

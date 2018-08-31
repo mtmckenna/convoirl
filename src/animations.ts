@@ -25,6 +25,14 @@ const walking: IAnimation = {
   startTime: 0,
 };
 
+const animateEnergy: IAnimation = {
+  duration: 1000.0,
+  endLevel: 0,
+  running: false,
+  startLevel: 0,
+  startTime: 0,
+};
+
 const transition: IAnimation = {
   duration: 1000.0,
   nextLevelAlpha: 0.0,
@@ -34,4 +42,10 @@ const transition: IAnimation = {
   startTime: 0.0,
 };
 
-export { blinking, lookAway, transition, walking };
+export {
+  animateEnergy,
+  blinking,
+  lookAway,
+  transition,
+  walking,
+};
