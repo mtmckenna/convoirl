@@ -60,10 +60,6 @@ export interface ITouchable extends IDrawable {
   touched(): void;
 }
 
-export interface ITileMap {
-  tiles: Tile[];
-}
-
 export interface IInputBuffer {
   pressedAt: number;
   key: string;

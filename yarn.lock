@@ -4250,7 +4250,7 @@ strip-json-comments@1.0.x:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
 
-strip-json-comments@~2.0.1:
+strip-json-comments@^2.0.1, strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
@@ -4443,6 +4443,13 @@ trumpet@~1.7.0:
     inherits "^2.0.0"
     readable-stream "^1.0.27-1"
     through2 "^1.0.0"
+
+ts-unused-exports@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/ts-unused-exports/-/ts-unused-exports-2.0.11.tgz#4c19c2a7d59662b51796a4eba1ce75681783fea1"
+  dependencies:
+    strip-json-comments "^2.0.1"
+    typescript "^2.9.2"
 
 tslib@^1.8.0, tslib@^1.8.1:
   version "1.9.3"

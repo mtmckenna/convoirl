@@ -14,7 +14,8 @@
     "build": "yarn run delete-dist && yarn run create-dist && yarn run parcel-build && yarn run inline-build",
     "build-zipped": "yarn run build && yarn node ./scripts/zip-file.js",
     "party": "yarn run build-zipped && yarn run check-file-size",
-    "lint": "yarn tslint ./src/*.ts"
+    "lint": "yarn tslint ./src/*.ts",
+    "check-unused": "yarn ts-unused-exports tsconfig.json src/**/*.ts src/*.ts"
   },
   "devDependencies": {
     "archiver": "^2.1.1",
@@ -27,6 +28,7 @@
     "parcel-bundler": "^1.9.7",
     "parcel-plugin-bundle-visualiser": "^1.1.2",
     "rimraf": "^2.6.2",
+    "ts-unused-exports": "^2.0.11",
     "tslint": "^5.11.0",
     "typescript": "^2.9.2"
   }
