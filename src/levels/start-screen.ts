@@ -12,6 +12,8 @@ const TAP_TO_PLAY = "TAP TO PLAY";
 const PADDING = 2;
 
 export default class StartScreen extends Level {
+  public panDirection = 1.0;
+
   protected tileTypeMap = ["green", "flowers", "grass", "tree"];
   protected tileIndexes = [[]];
   protected title: Text;
@@ -33,7 +35,12 @@ export default class StartScreen extends Level {
 
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
-    this.generateTileIndexes();
+
+    const sizeInTiles = this.game.sizeInTiles();
+    sizeInTiles.width *= 2;
+    sizeInTiles.height *= 2;
+
+    this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.moveText();
     this.addDrawables(this.tiles, 0);

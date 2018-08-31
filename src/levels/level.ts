@@ -105,9 +105,9 @@ export default abstract class Level {
     this.interactables = [];
   }
 
-  protected generateTileIndexes() {
+  protected generateTileIndexes(sizeInTiles?: ISize) {
     // The tiles should fit the screen size since we don't scroll in convo
-    const sizeInTiles = this.game.sizeInTiles();
+    sizeInTiles = sizeInTiles || this.game.sizeInTiles();
 
     this.tileIndexes = new Array(sizeInTiles.height)
       .fill(null).map(() => new Array(sizeInTiles.width)

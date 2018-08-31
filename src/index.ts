@@ -1,6 +1,5 @@
 /*
 TODO
-  - make player size bigger in convo
   - when transitioning, don't process input for a second
   - animate energy bar
   - stretch the player like a catepiller
@@ -40,6 +39,9 @@ import {
   SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
+import StartScreen from "./levels/start-screen";
+
+const PAN_SPEED = 0.05;
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
@@ -79,7 +81,15 @@ function resize() {
 
 function update(timestamp: number): void {
   game.update(timestamp);
-  camera.move(game.player);
+
+  if (game.currentLevel === game.levels.startScreen) {
+    const level = game.levels.startScreen as StartScreen;
+    camera.pos.x -= level.panDirection * PAN_SPEED;
+    if (camera.pos.x < -game.canvas.width) level.panDirection = -1;
+    if (camera.pos.x > 0) level.panDirection = 1;
+  } else {
+    camera.move(game.player);
+  }
 }
 
 function animate(timestamp: number): void {
