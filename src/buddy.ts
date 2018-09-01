@@ -116,17 +116,11 @@ export default class Buddy implements IDrawable, IInteractable {
     }
   }
 
-  public move(updatedPos: IPoint, animate: boolean = true) {
-    // TODO: weird that I set pos here?
+  public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
     this.tileIndex.x = Math.ceil(this.pos.x / TILE_SIZE);
     this.tileIndex.y = Math.ceil(this.pos.y / TILE_SIZE);
-
-    if (!animate) {
-      this.animations.walking.endPos.x = updatedPos.x;
-      this.animations.walking.endPos.y = updatedPos.y;
-    }
   }
 
   public walk(direction: "up" | "down" | "left" | "right") {
@@ -146,23 +140,24 @@ export default class Buddy implements IDrawable, IInteractable {
       y -= this.game.tileSize;
     }
 
-    // Todo: avoid recreating objects
+    const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
     const canMove = canThingMoveToPosition(this, endPos, this.game.currentLevel);
-    if (canMove) this.configureWalkingAnimation(endPos);
+    if (canMove) this.configureWalkingAnimation(startPos, endPos);
   }
 
-  public configureWalkingAnimation(endPos) {
+  public configureWalkingAnimation(startPos, endPos) {
     this.animations.walking.startTime = this.game.timestamp;
     this.animations.walking.endPos = endPos;
+    this.animations.walking.startPos = startPos;
     this.animations.walking.running = true;
   }
 
   public updateWalkingPosition(timestamp) {
     if (!this.walking) return;
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
-    let x = lerp(this.pos.x, this.animations.walking.endPos.x, t);
-    let y = lerp(this.pos.y, this.animations.walking.endPos.y, t);
+    let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);
+    let y = lerp(this.animations.walking.startPos.y, this.animations.walking.endPos.y, t);
 
     if (t >= 1.0) {
       x = this.animations.walking.endPos.x;

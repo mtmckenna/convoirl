@@ -16,7 +16,7 @@ import {
 
 import { canThingMoveToPosition } from "../helpers";
 
-const INPUT_BUFFER_LENGTH = 100;
+const INPUT_BUFFER_LENGTH = 50;
 const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 
 export default class World extends Level {
@@ -119,7 +119,7 @@ export default class World extends Level {
 
   public levelStarted() {
     this.energyBar.animateToLevel(this.game.player.energy);
-    this.game.player.move(this.playerSpawnPosition, false);
+    this.game.player.move(this.playerSpawnPosition);
     this.game.player.setConvoMode(false);
 
     // @ts-ignore

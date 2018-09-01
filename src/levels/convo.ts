@@ -225,8 +225,8 @@ export default class Convo extends Level {
     const buddyPos = Object.assign({}, playerPos);
     buddyPos.x += BUDDY_DISTANCE + this.game.player.size.width;
 
-    this.game.player.move(playerPos, false);
-    buddy.move(buddyPos, false);
+    this.game.player.move(playerPos);
+    buddy.move(buddyPos);
   }
 
   private updateBoxes() {
