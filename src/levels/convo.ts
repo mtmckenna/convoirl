@@ -8,7 +8,6 @@ import Game from "../game";
 import Text from "../text";
 
 import {
-  Direction,
   DISABLED_ALPHA,
   ITouchable,
   LINE_HEIGHT,
@@ -101,7 +100,7 @@ export default class Convo extends Level {
   public setBuddy(buddy: Buddy) {
     this.buddy = buddy;
     this.buddy.setConvoMode(true);
-    this.buddy.convoLook(Direction.Left);
+    this.buddy.convoLook("left");
   }
 
   public levelWillStart() {
@@ -109,7 +108,7 @@ export default class Convo extends Level {
     this.clearTouchables();
 
     this.game.player.setConvoMode(true);
-    this.game.player.convoLook(Direction.Right);
+    this.game.player.convoLook("right");
 
     this.energyBar.animateToLevel(this.game.player.energy);
     this.convoLevel = 0.0;

@@ -10,11 +10,9 @@ import {
 } from "./helpers";
 
 import {
-  Direction,
   IAnimations,
   IDrawable,
   IInteractable,
-  InteractableType,
   IPoint,
   ISize,
   SQUARE_SIZE,
@@ -54,7 +52,7 @@ export default class Buddy implements IDrawable, IInteractable {
   public skills: string[] = ["weather", "sports", "pastries", "france", "cats"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
-  public interactableType: InteractableType = InteractableType.Buddy;
+  public interactableType: string = "buddy";
   public energy: number = 1.0;
 
   private animations: IAnimations = {};
@@ -110,10 +108,10 @@ export default class Buddy implements IDrawable, IInteractable {
     }
   }
 
-  public convoLook(direction) {
-    if (direction === Direction.Right) {
+  public convoLook(direction: "left" | "right") {
+    if (direction === "right") {
       this.convoLookRight = true;
-    } else if (direction === Direction.Left) {
+    } else if (direction === "left") {
       this.convoLookRight = false;
     }
   }
@@ -131,19 +129,19 @@ export default class Buddy implements IDrawable, IInteractable {
     }
   }
 
-  public walk(direction) {
+  public walk(direction: "up" | "down" | "left" | "right") {
     let { x, y } = this.pos;
 
-    if (direction === Direction.Left) {
+    if (direction === "left") {
       this.rot = -Math.PI / 2.0;
       x -= this.game.tileSize;
-    } else if (direction === Direction.Right) {
+    } else if (direction === "right") {
       this.rot = Math.PI / 2.0;
       x += this.game.tileSize;
-    } else if (direction === Direction.Down) {
+    } else if (direction === "down") {
       this.rot = Math.PI;
       y += this.game.tileSize;
-    } else if (direction === Direction.Up) {
+    } else if (direction === "up") {
       this.rot = 0;
       y -= this.game.tileSize;
     }

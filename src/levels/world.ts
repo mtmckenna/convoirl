@@ -7,7 +7,6 @@ import Game from "../game";
 import TinyMusic from "tinymusic";
 
 import {
-  Direction,
   HALF_TILE_SIZE,
   IInputBuffer,
   IPoint,
@@ -144,36 +143,36 @@ export default class World extends Level {
 
     switch (this.inputBuffer.key) {
       case "ArrowUp":
-        this.walk(Direction.Up);
+        this.walk("up");
         break;
       case "ArrowDown":
-        this.walk(Direction.Down);
+        this.walk("down");
         break;
       case "ArrowRight":
-        this.walk(Direction.Right);
+        this.walk("right");
         break;
       case "ArrowLeft":
-        this.walk(Direction.Left);
+        this.walk("left");
         break;
     }
   }
 
-  private walk(direction: Direction) {
+  private walk(direction: "up" | "down" | "left" | "right") {
     if (this.game.player.walking) return;
 
     // Get the tile index that we'd be walking onto
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
     switch (direction) {
-      case Direction.Up:
+      case "up":
       tileIndex.y -= 1;
       break;
-      case Direction.Down:
+      case "down":
       tileIndex.y += 1;
       break;
-      case Direction.Left:
+      case "left":
       tileIndex.x -= 1;
       break;
-      case Direction.Right:
+      case "right":
       tileIndex.x += 1;
       break;
     }
@@ -206,12 +205,12 @@ export default class World extends Level {
   }
 
   private movePlayerVertically(touchDistance: number): boolean {
-    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, Direction.Up)) {
+    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, "up")) {
       this.handleInput("ArrowUp");
       return true;
     }
 
-    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, Direction.Down)) {
+    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, "down")) {
       this.handleInput("ArrowDown");
       return true;
     }
@@ -220,12 +219,12 @@ export default class World extends Level {
   }
 
   private movePlayerHorizontally(touchDistance: number): boolean {
-    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, Direction.Right)) {
+    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, "right")) {
       this.handleInput("ArrowRight");
       return true;
     }
 
-    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, Direction.Left)) {
+    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, "left")) {
       this.handleInput("ArrowLeft");
       return true;
     }
@@ -233,19 +232,19 @@ export default class World extends Level {
     return false;
   }
 
-  private canThingMoveInDirection(thing: IPositionable, direction: Direction) {
+  private canThingMoveInDirection(thing: IPositionable, direction: "up" | "down" | "right" | "left") {
     const pos = Object.assign({}, thing.pos);
     switch (direction) {
-      case Direction.Up:
+      case "up":
       pos.y -= this.game.tileSize;
       break;
-      case Direction.Down:
+      case "down":
       pos.y += this.game.tileSize;
       break;
-      case Direction.Left:
+      case "left":
       pos.x -= this.game.tileSize;
       break;
-      case Direction.Right:
+      case "right":
       pos.x += this.game.tileSize;
       break;
     }

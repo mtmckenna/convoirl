@@ -6,7 +6,6 @@ import TILES from "./tiles";
 import {
   IDrawable,
   IInteractable,
-  InteractableType,
   IPoint,
   TILE_SIZE,
 } from "../common";
@@ -22,7 +21,7 @@ export default class Tile implements IDrawable, IInteractable {
   public game: Game;
   public tileIndex: IPoint;
   public interactable: boolean = false;
-  public interactableType: InteractableType = InteractableType.Tile;
+  public interactableType = "Tile";
   public name: string;
 
   protected tileLength: number = TILE_SIZE;

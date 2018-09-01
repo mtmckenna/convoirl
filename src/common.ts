@@ -1,17 +1,4 @@
 import Game from "./game";
-import Tile from "./tiles/tile";
-
-export enum Direction {
-  Up,
-  Down,
-  Left,
-  Right,
-}
-
-export enum InteractableType {
-  Buddy,
-  Tile,
-}
 
 export interface IPoint {
   x: number;
@@ -45,7 +32,7 @@ export interface IUpdateable {
 
 export interface IInteractable {
   tileIndex: IPoint;
-  interactableType: InteractableType;
+  interactableType: string;
 }
 
 export interface IDrawable extends IPositionable {
