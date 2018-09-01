@@ -28,6 +28,7 @@ SPACE SAVING THOUGHTS
   - can remove some css
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
+  - remove sleep level
 */
 
 import Camera from "./camera";

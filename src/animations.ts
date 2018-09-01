@@ -43,9 +43,18 @@ const transition: IAnimation = {
   startTime: 0.0,
 };
 
+const floatText: IAnimation = {
+  duration: 1500.0,
+  endPos: { x: 0, y: 0 },
+  running: false,
+  startPos: { x: 0, y: 0 },
+  startTime: 0,
+};
+
 export {
   animateEnergy,
   blinking,
+  floatText,
   lookAway,
   transition,
   walking,

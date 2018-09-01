@@ -79,7 +79,6 @@ export default class Game {
     this.drawDrawables(timestamp);
     this.drawOverlayDrawables(timestamp);
     if (this.transitioning) this.updateTransition(timestamp);
-
   }
 
   public resize() {

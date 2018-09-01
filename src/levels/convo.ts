@@ -23,6 +23,7 @@ const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const BOX_X = 2;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
+const FLOATY_TEXT_INDEX = 2;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -133,6 +134,7 @@ export default class Convo extends Level {
   public update(timestamp) {
     super.update(timestamp);
     this.updateText();
+    this.updateFloatyText();
     if (this.convoLevel >= 1.0 && !this.convoBar.animating) {
       this.game.queueNextLevel(this.game.levels.world);
     }
@@ -204,6 +206,13 @@ export default class Convo extends Level {
 
   private useSelectedSkill() {
     if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
+    const skill = this.skills[this.currentSkillIndex];
+    const text = new Text(this.game, skill.words, colorMap[9]);
+
+    const pos = { x: this.game.player.pos.x, y: this.game.player.pos.y };
+    text.startFloat(pos);
+    this.addDrawables([text], FLOATY_TEXT_INDEX);
+
     this.convoLevel += this.convoPerTurn;
     this.convoBar.animateToLevel(this.convoLevel);
   }
@@ -280,5 +289,14 @@ export default class Convo extends Level {
       skill.move({ x: skillX, y: skillY });
       skill.visible = Math.abs(indexDiff) > 1 ? false : true;
     });
+  }
+
+  private updateFloatyText() {
+    const floaties = this.drawables[FLOATY_TEXT_INDEX];
+
+    for (let i = floaties.length - 1; i >= 0; i--) {
+      const floaty = floaties[i];
+      if (floaty.pos.y < 0) floaties.splice(i, 1);
+    }
   }
 }

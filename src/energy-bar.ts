@@ -49,7 +49,6 @@ export default class EnergyBar implements IDrawable {
     this.move(pos);
   }
 
-  // TODO: check if I can use values
   get animating(): boolean {
     const animationArray = Object.keys(this.animations).map((key) => this.animations[key]);
     return !!animationArray.find((animation) => animation.running);
@@ -72,7 +71,7 @@ export default class EnergyBar implements IDrawable {
     this.box.draw(context);
     context.fillStyle = colorMap[1];
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
-    this.energyText.draw(context);
+    this.energyText.draw(context, timestamp);
   }
 
   public animateToLevel(updatedLevel) {
