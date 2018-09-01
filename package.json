@@ -11,7 +11,7 @@
     "check-file-size": "yarn node ./scripts/check-file-size.js",
     "delete-dist": "yarn rimraf ./dist",
     "create-dist": "yarn mkdirp ./dist/inlined ./dist/zipped",
-    "parcel-build": "yarn parcel build index.html -d ./dist/bundled --no-source-maps",
+    "parcel-build": "yarn parcel build index.html -d ./dist/bundled --no-source-maps --experimental-scope-hoisting",
     "inline-build": "html-inline -i ./dist/bundled/index.html -o ./dist/inlined/index.html",
     "build": "yarn run delete-dist && yarn run create-dist && yarn run parcel-build && yarn run inline-build",
     "build-zipped": "yarn run build && yarn node ./scripts/zip-file.js",
