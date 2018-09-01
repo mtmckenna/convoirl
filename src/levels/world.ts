@@ -123,9 +123,10 @@ export default class World extends Level {
     this.game.player.move(this.playerSpawnPosition, false);
     this.game.player.setConvoMode(false);
 
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    // @ts-ignore
+    const NormalizedAudioContext = AudioContext || webkitAudioContext;
 
-    const ac = new AudioContext();
+    const ac = new NormalizedAudioContext();
     const tempo = 120;
     const sequence = new TinyMusic.Sequence(ac, tempo, [
       "G2 q",
