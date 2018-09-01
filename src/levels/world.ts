@@ -4,6 +4,8 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
+import TinyMusic from "tinymusic";
+
 import {
   Direction,
   HALF_TILE_SIZE,
@@ -120,6 +122,17 @@ export default class World extends Level {
     this.energyBar.animateToLevel(this.game.player.energy);
     this.game.player.move(this.playerSpawnPosition, false);
     this.game.player.setConvoMode(false);
+
+    const ac = new AudioContext();
+    const tempo = 120;
+    const sequence = new TinyMusic.Sequence(ac, tempo, [
+      "G2 q",
+      "G3 q",
+      "G4 q",
+    ]);
+
+    sequence.loop = false;
+    sequence.play();
   }
 
   private processInput() {

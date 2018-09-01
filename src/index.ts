@@ -1,6 +1,8 @@
 /*
 TODO
   - stretch the player like a catepiller
+  - players have words come out their bodies
+  - add mouths
   - sfx
   - readme
   - make house look nicer

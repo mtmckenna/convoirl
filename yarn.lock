@@ -4387,6 +4387,10 @@ tiny-inflate@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.2.tgz#93d9decffc8805bd57eae4310f0b745e9b6fb3a7"
 
+tinymusic@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tinymusic/-/tinymusic-1.0.0.tgz#333d2c1df6b1ce21015fb19518684e41f7901e94"
+
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"
