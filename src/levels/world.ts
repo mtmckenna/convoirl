@@ -162,7 +162,6 @@ export default class World extends Level {
     if (this.game.player.walking) return;
 
     // Get the tile index that we'd be walking onto
-    const prevTileIndex = Object.assign({}, this.game.player.tileIndex);
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
     switch (direction) {
       case Direction.Up:
