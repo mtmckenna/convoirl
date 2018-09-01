@@ -46,12 +46,6 @@ export default class Game {
     this.context.mozImageSmoothingEnabled = false;
     this.context.webkitImageSmoothingEnabled = false;
 
-    // @ts-ignore
-    this.context.msImageSmoothingEnabled = false; // tslint:disable-line
-    this.context.imageSmoothingEnabled = false;
-    this.context.webkitImageSmoothingEnabled = false;
-    this.context.mozImageSmoothingEnabled = false;
-
     this.levels = {
       convo: new Convo(this),
       sleep: new Sleep(this),
