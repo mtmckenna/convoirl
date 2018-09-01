@@ -124,7 +124,7 @@ export default class World extends Level {
     this.game.player.setConvoMode(false);
 
     // @ts-ignore
-    const NormalizedAudioContext = AudioContext || webkitAudioContext;
+    const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
 
     const ac = new NormalizedAudioContext();
     const tempo = 120;
