@@ -51,7 +51,8 @@ export default class EnergyBar implements IDrawable {
 
   // TODO: check if I can use values
   get animating(): boolean {
-    return (Object as any).values(this.animations).find((animation) => animation.running);
+    const animationArray = Object.keys(this.animations).map((key) => this.animations[key]);
+    return !!animationArray.find((animation) => animation.running);
   }
 
   public move(updatedPos: IPoint) {
