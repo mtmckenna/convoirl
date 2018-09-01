@@ -74,6 +74,8 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
+    const fuzz = 20 * this.game.scaleFactor;
+
     // The math to convert from canvas->screen size could probably be generalized
     const touched = this.touchables.find((touchable) => {
       const size = Object.assign({}, touchable.drawingSize);
@@ -83,10 +85,10 @@ export default class Convo extends Level {
       pos.x *= this.game.scaleFactor;
       pos.y *= this.game.scaleFactor;
 
-      return touch.clientX >= pos.x &&
-      touch.clientX <= pos.x + size.width &&
-      touch.clientY >= pos.y &&
-      touch.clientY <= pos.y + size.height;
+      return touch.clientX + fuzz >= pos.x &&
+      touch.clientX - fuzz <= pos.x + size.width &&
+      touch.clientY + fuzz >= pos.y &&
+      touch.clientY - fuzz <= pos.y + size.height;
     });
 
     if (touched) {
