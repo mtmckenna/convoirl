@@ -3,20 +3,12 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  /* background-color: #96c083; */
-  /* background-color: #ff0000; */
 }
 
 #game {
   z-index: 2;
   height: 100%;
   width: 100%;
-  image-rendering:optimizeSpeed;             /* Legal fallback */
-  image-rendering:-moz-crisp-edges;          /* Firefox        */
-  image-rendering:-o-crisp-edges;            /* Opera          */
-  image-rendering:-webkit-optimize-contrast; /* Safari         */
-  image-rendering:optimize-contrast;         /* CSS3 Proposed  */
-  image-rendering:crisp-edges;               /* CSS4 Proposed  */
-  image-rendering:pixelated;                 /* CSS4 Proposed  */
-  -ms-interpolation-mode:nearest-neighbor;   /* IE8+           */
+  image-rendering:pixelated;
+  image-rendering: optimizeSpeed;
 }
