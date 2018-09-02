@@ -48,9 +48,8 @@ export default class StartScreen extends Level {
     this.game.queueNextLevel(this.game.levels.world);
   }
 
-  public handleTouch(touch) {
-    const touched = this.touchedTouchable(touch);
-    if (touched) touched.touched();
+  public handleTouch() {
+    this.handleInput();
   }
 
   private moveText() {

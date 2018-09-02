@@ -21,6 +21,10 @@ import { canThingMoveToPosition, throttle } from "../helpers";
 const INPUT_BUFFER_LENGTH = 50;
 const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 7 };
 
+const STATE_SLEEPING = "sleeping";
+const STATE_INTRO = "intro";
+const STATE_PLAY = "play";
+
 const TEXT_INTROS = [
   ["great news!", "a new kid moved", "into the woods!"],
   ["become friends", "by having a", "convo... irl!"],
@@ -63,12 +67,15 @@ export default class World extends Level {
   private playerSpawnPosition: IPoint = HOME_TILE;
   // private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
-  private textIntros = TEXT_INTROS;
+  private textIntros: string[][] = TEXT_INTROS;
+  private state: string = STATE_INTRO;
 
   constructor(game: Game) {
     super(game);
-    const throttledHandleTouch = throttle(this.handleTouch.bind(this), 1000);
+    const throttledHandleTouch = throttle(this.handleTouch.bind(this), THROTTLE_TIME);
+    const throttledHandleInput = throttle(this.handleInput.bind(this), THROTTLE_TIME);
     this.handleTouch = throttledHandleTouch;
+    this.handleInput = throttledHandleInput;
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
     this.game.player.energy = 0.6;
@@ -77,22 +84,19 @@ export default class World extends Level {
     buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
     this.buddies = [buddy];
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
-    this.box.setWords(TEXT_INTROS[0]);
-    this.box.touched = () => this.showNextIntroBox();
+    this.showNextIntroBox();
   }
 
   public handleInput(key) {
+    if (this.game.transitioning) return;
+    if (this.handleBoxInput()) return;
     this.inputBuffer = { pressedAt: this.game.timestamp, key };
   }
 
   public handleTouch(touch) {
-    const touched = this.touchedTouchable(touch);
-    if (touched) {
-      touched.touched();
-      return;
-    }
-
+    if (this.game.transitioning) return;
     if (this.game.player.walking) return;
+    if (this.handleBoxInput()) return;
 
     const { camera } = this.game;
     const { height, width } = camera.size;
@@ -163,14 +167,32 @@ export default class World extends Level {
     sequence.play();
   }
 
+  private handleBoxInput(): boolean {
+    if (this.state === STATE_PLAY) return false;
+
+    // Sleeping
+    if (this.state === STATE_SLEEPING) {
+      this.state = STATE_PLAY;
+      this.box.visible = false;
+      this.walk("down");
+    }
+
+    // Run through intro
+    if (this.state === STATE_INTRO) this.showNextIntroBox();
+
+    return true;
+  }
+
   private showNextIntroBox() {
-    this.textIntros.shift();
-    if (!this.textIntros.length) {
+    const words = this.textIntros[0];
+    if (!words) {
+      this.state = STATE_PLAY;
       this.box.visible = false;
       return;
     }
 
-    this.box.setWords(this.textIntros[0]);
+    this.box.setWords(words);
+    this.textIntros.shift();
   }
 
   private updateBox() {
@@ -250,10 +272,7 @@ export default class World extends Level {
     this.energyBar.animateToLevel(this.game.player.energy);
     this.box.setWords(TEXT_SLEEP);
     this.box.visible = true;
-    this.box.touched = () => {
-      this.game.player.walk("down");
-      this.box.visible = false;
-    };
+    this.state = STATE_SLEEPING;
   }
 
   private movePlayerVertically(touchDistance: number): boolean {
