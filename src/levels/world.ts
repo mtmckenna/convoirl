@@ -26,10 +26,10 @@ const STATE_INTRO = "intro";
 const STATE_PLAY = "play";
 
 const TEXT_INTROS = [
-  ["great news!", "a new kid moved", "into the woods!"],
+  ["great news! a", "new kid moved", "into the woods!"],
   ["become friends", "by having a", "convo... irl!"],
-  ["first level up", "by chatting with", "your neighbors!"],
-  ["people like", "talking about", "their interests!"],
+  ["first level up!", "chat with", "your neighbors!"],
+  ["talk to them", "about their", "interests!"],
 ];
 
 const TEXT_SLEEP = ["", "zzzzzz...", ""];

@@ -66,7 +66,7 @@ export default class Game {
   get boxSize(): ISize {
     return {
       height: 3 * LETTER_HEIGHT + 2 * LINE_HEIGHT,
-      width:  LETTER_HEIGHT * 13,
+      width:  LETTER_HEIGHT * 12,
     };
   }
 
