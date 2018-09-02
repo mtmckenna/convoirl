@@ -19,7 +19,7 @@ import {
 import { canThingMoveToPosition, throttle } from "../helpers";
 
 const INPUT_BUFFER_LENGTH = 50;
-const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 7 };
+const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
 
 const STATE_SLEEPING = "sleeping";
 const STATE_INTRO = "intro";

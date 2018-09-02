@@ -147,10 +147,12 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   public configureWalkingAnimation(startPos, endPos) {
-    this.animations.walking.startTime = this.game.timestamp;
-    this.animations.walking.endPos = endPos;
-    this.animations.walking.startPos = startPos;
-    this.animations.walking.running = true;
+    const  { walking } = this.animations;
+    walking.startTime = this.game.timestamp;
+    walking.endPos = endPos;
+    walking.startPos = startPos;
+    walking.running = true;
+    walking.t = 0;
   }
 
   public updateWalkingPosition(timestamp) {
@@ -159,10 +161,13 @@ export default class Buddy implements IDrawable, IInteractable {
     let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);
     let y = lerp(this.animations.walking.startPos.y, this.animations.walking.endPos.y, t);
 
+    this.animations.walking.t = t;
+
     if (t >= 1.0) {
       x = this.animations.walking.endPos.x;
       y = this.animations.walking.endPos.y;
       this.animations.walking.running = false;
+      this.animations.walking.t = 0;
     }
 
     // TODO: avoid creating new objects
@@ -171,6 +176,7 @@ export default class Buddy implements IDrawable, IInteractable {
 
   public draw(context, timestamp) {
     this.updateWalkingPosition(timestamp);
+    const t = this.animations.walking.t;
 
     context.translate(
       this.drawingSize.width / 2.0,
@@ -185,11 +191,15 @@ export default class Buddy implements IDrawable, IInteractable {
     );
 
     context.fillStyle = this.color;
+
+    let growAmount = t;
+    if (t > 0.5) growAmount = 1 - t;
+
     context.fillRect(
       0,
       0,
       this.drawingSize.width,
-      this.drawingSize.height,
+      this.drawingSize.height + this.drawingSize.height * growAmount,
     );
 
     this.maybeDoEyeAnimations(timestamp);

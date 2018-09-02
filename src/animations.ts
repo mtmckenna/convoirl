@@ -19,11 +19,12 @@ const lookAway: IAnimation = {
 };
 
 const walking: IAnimation = {
-  duration: 200.0,
+  duration: 250.0,
   endPos: { x: 0, y: 0 },
   running: false,
   startPos: { x: 0, y: 0 },
   startTime: 0,
+  t: 0,
 };
 
 const animateEnergy: IAnimation = {
