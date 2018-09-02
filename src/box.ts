@@ -1,14 +1,17 @@
 import colorMap from "./colors";
 import Game from "./game";
+import Text from "./text";
 
 import {
-  IDrawable,
   IPoint,
   ISize,
+  ITouchable,
+  LETTER_HEIGHT,
+  LINE_HEIGHT,
   SQUARE_SIZE,
  } from "./common";
 
-export default class Box implements IDrawable {
+export default class Box implements ITouchable {
   public game: Game;
   public pos: IPoint = { x: 0, y: 0 };
   public size: ISize = { height: SQUARE_SIZE, width: SQUARE_SIZE };
@@ -18,6 +21,7 @@ export default class Box implements IDrawable {
 
   private strokePos: IPoint = { x: 0, y: 0 };
   private color: string;
+  private texts: Text[] = [];
 
   constructor(game: Game, pos: IPoint, size: ISize, color: string = colorMap[8]) {
     this.game = game;
@@ -40,6 +44,7 @@ export default class Box implements IDrawable {
     // https://stackoverflow.com/questions/28057881/javascript-either-strokerect-or-fillrect-blurry-depending-on-translation
     this.strokePos.x = Math.floor(this.pos.x) + 0.5;
     this.strokePos.y = Math.floor(this.pos.y) + 0.5;
+    this.moveTexts();
   }
 
   public updateSize(updatedSize: ISize) {
@@ -49,7 +54,7 @@ export default class Box implements IDrawable {
     this.drawingSize.width = this.size.width * this.game.squareSize;
   }
 
-  public draw(context) {
+  public draw(context, timestamp) {
     const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
     context.globalAlpha = alpha;
     context.fillStyle = this.color;
@@ -58,5 +63,29 @@ export default class Box implements IDrawable {
     context.fillStyle = colorMap[1];
     context.lineWidth = this.game.squareSize;
     context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);
+
+    this.texts.forEach((text) => text.draw(context, timestamp));
+  }
+
+  public setWords(words: string[]) {
+    this.texts = words.map((word) => new Text(this.game, word));
+    this.moveTexts();
+  }
+
+  public touched() { return; }
+
+  private moveTexts() {
+    if (!this.texts.length) return;
+    const drawingLineSize = LINE_HEIGHT * this.game.squareSize;
+    const drawingLetterSize = LETTER_HEIGHT * this.game.squareSize;
+    const numLines = this.texts.length;
+
+    // TODO: Why minus -2???
+    const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
+    this.texts.forEach((text, index) => {
+      const x = Math.floor(this.pos.x + this.game.squareSize * (this.size.width - text.size.width) / 2);
+      const y = Math.floor(this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index);
+      text.move({ x, y });
+    });
   }
 }

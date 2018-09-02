@@ -1,5 +1,6 @@
 import Level from "./level";
 
+import Box from "../box";
 import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
@@ -11,13 +12,23 @@ import {
   IInputBuffer,
   IPoint,
   IPositionable,
+  THROTTLE_TIME,
   TILE_SIZE,
 } from "../common";
 
-import { canThingMoveToPosition } from "../helpers";
+import { canThingMoveToPosition, throttle } from "../helpers";
 
 const INPUT_BUFFER_LENGTH = 50;
-const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
+const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 7 };
+
+const TEXT_INTROS = [
+  ["great news!", "a new kid moved", "into the woods!"],
+  ["become friends", "by having a", "convo... irl!"],
+  ["first level up", "by chatting with", "your neighbors!"],
+  ["people like", "talking about", "their interests!"],
+];
+
+const TEXT_SLEEP = ["", "zzzzzz...", ""];
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -48,12 +59,16 @@ export default class World extends Level {
   ];
 
   private buddies: Buddy[];
+  private box: Box;
   private playerSpawnPosition: IPoint = HOME_TILE;
   // private playerSpawnPosition: IPoint = { x: TILE_SIZE * 9, y: TILE_SIZE * 10 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
+  private textIntros = TEXT_INTROS;
 
   constructor(game: Game) {
     super(game);
+    const throttledHandleTouch = throttle(this.handleTouch.bind(this), 1000);
+    this.handleTouch = throttledHandleTouch;
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
     this.game.player.energy = 0.6;
@@ -61,6 +76,9 @@ export default class World extends Level {
     const buddy = new Buddy(game);
     buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
     this.buddies = [buddy];
+    this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
+    this.box.setWords(TEXT_INTROS[0]);
+    this.box.touched = () => this.showNextIntroBox();
   }
 
   public handleInput(key) {
@@ -68,6 +86,12 @@ export default class World extends Level {
   }
 
   public handleTouch(touch) {
+    const touched = this.touchedTouchable(touch);
+    if (touched) {
+      touched.touched();
+      return;
+    }
+
     if (this.game.player.walking) return;
 
     const { camera } = this.game;
@@ -97,6 +121,7 @@ export default class World extends Level {
   public resize() {
     const energyBarX = Math.floor((this.game.canvas.width - this.energyBar.drawingSize.width) / 2);
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
+    this.updateBox();
   }
 
   public update(timestamp) {
@@ -110,8 +135,9 @@ export default class World extends Level {
     this.addDrawables(this.game.player.dusts, 1);
     this.addDrawables([this.game.player], 2);
     this.addDrawables(this.buddies, 2);
-    this.addOverlayDrawables([this.energyBar]);
+    this.addOverlayDrawables([this.energyBar, this.box]);
     this.addInteractables(this.buddies);
+    this.addTouchables([this.box]);
     this.addUpdateables([...this.game.player.dusts, this.energyBar]);
 
     this.resize();
@@ -135,6 +161,21 @@ export default class World extends Level {
 
     sequence.loop = false;
     sequence.play();
+  }
+
+  private showNextIntroBox() {
+    this.textIntros.shift();
+    if (!this.textIntros.length) {
+      this.box.visible = false;
+      return;
+    }
+
+    this.box.setWords(this.textIntros[0]);
+  }
+
+  private updateBox() {
+    this.box.move(this.game.boxPos);
+    this.box.updateSize(this.game.boxSize);
   }
 
   private processInput() {
@@ -191,7 +232,7 @@ export default class World extends Level {
     }
 
     // Check if we're overlapping an interactable tile
-    if (this.tileAtIndex(tileIndex).interactable) levelToQueue = this.game.levels.sleep;
+    if (this.tileAtIndex(tileIndex).interactable) this.sleep();
 
     if (levelToQueue) {
       this.playerSpawnPosition.x = this.game.player.pos.x;
@@ -202,6 +243,17 @@ export default class World extends Level {
 
     // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
+  }
+
+  private sleep() {
+    this.game.player.energy = 1;
+    this.energyBar.animateToLevel(this.game.player.energy);
+    this.box.setWords(TEXT_SLEEP);
+    this.box.visible = true;
+    this.box.touched = () => {
+      this.game.player.walk("down");
+      this.box.visible = false;
+    }
   }
 
   private movePlayerVertically(touchDistance: number): boolean {

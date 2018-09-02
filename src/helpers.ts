@@ -76,16 +76,16 @@ function singleColorTileArray(colorIndex) {
   return new Array(TILE_SIZE).fill(null).map(() => new Array(TILE_SIZE).fill(colorIndex));
 }
 
-function throttle(func, throttleTime) {
-  let waiting;
-  return function(...params: any[]) {
-    const context = this;
+function throttle(func, limit) {
+  let inThrottle;
+  return function() {
     const args = arguments;
-
-    if (waiting) return;
-
-    func.apply(context, args);
-    waiting = setTimeout(() => waiting = null, throttleTime);
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
   };
 }
 

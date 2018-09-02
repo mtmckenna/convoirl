@@ -9,7 +9,6 @@ import { BLINK_DURATION, LINE_HEIGHT } from "../common";
 
 const TITLE = "CONVO IRL";
 const TAP_TO_PLAY = "TAP TO PLAY";
-const PADDING = 2;
 
 export default class StartScreen extends Level {
   public panDirection = 1.0;
@@ -27,6 +26,7 @@ export default class StartScreen extends Level {
     this.title = new Text(this.game, TITLE, colorMap[1]);
     this.instructions = new Text(this.game, TAP_TO_PLAY, colorMap[1]);
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
+    this.box.touched = () => this.handleInput();
   }
 
   public resize() {
@@ -43,6 +43,7 @@ export default class StartScreen extends Level {
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.moveText();
+    this.addTouchables([this.box]);
     this.addDrawables(this.tiles, 0);
     this.addOverlayDrawables([this.box, this.title, this.instructions]);
   }
@@ -52,8 +53,9 @@ export default class StartScreen extends Level {
     this.game.queueNextLevel(this.game.levels.world);
   }
 
-  public handleTouch() {
-    this.handleInput();
+  public handleTouch(touch) {
+    const touched = this.touchedTouchable(touch);
+    if (touched) touched.touched();
   }
 
   public update(timestamp) {
@@ -64,25 +66,18 @@ export default class StartScreen extends Level {
   }
 
   private moveText() {
-    const canvasWidth = this.game.canvas.width;
-    const canvasHeight = this.game.canvas.height;
-    const { squareSize } = this.game;
-    const width = (Math.max(this.title.size.width, this.instructions.size.width) + 2) + PADDING * 2;
-    const height = this.title.size.height + this.instructions.size.height + LINE_HEIGHT + PADDING * 2;
-    const drawingWidth = squareSize * width;
-    const drawingHeight = squareSize * height;
+    this.box.move(this.game.boxPos);
+    this.box.updateSize(this.game.boxSize);
 
-    const boxX = Math.floor((canvasWidth - drawingWidth) / 2);
-    const boxY = Math.floor((canvasHeight - drawingHeight) / 2);
+    const titlePosX = Math.floor(
+      this.box.pos.x + this.game.squareSize * (this.game.boxSize.width - this.title.size.width) / 2,
+    );
+    const titlePosY = Math.floor(this.box.pos.y + LINE_HEIGHT * this.game.squareSize);
 
-    this.box.move({ x: boxX, y: boxY });
-    this.box.updateSize({ height, width });
-
-    const titlePosX = Math.floor(boxX + (drawingWidth - this.title.drawingSize.width) / 2);
-    const titlePosY = Math.floor(boxY + PADDING * this.game.squareSize);
-
-    const instructionsPosX = Math.floor(boxX + (drawingWidth - this.instructions.drawingSize.width) / 2);
-    const instructionsPosY = titlePosY + height + LINE_HEIGHT * this.game.squareSize;
+    const instructionsPosX = Math.floor(
+      this.box.pos.x + this.game.squareSize * (this.game.boxSize.width - this.instructions.size.width) / 2,
+    );
+    const instructionsPosY = titlePosY + LINE_HEIGHT * this.game.squareSize;
 
     this.title.move({ x: titlePosX, y: titlePosY });
     this.instructions.move({ x: instructionsPosX, y: instructionsPosY });

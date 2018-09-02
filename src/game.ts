@@ -2,6 +2,8 @@ import {
   IAnimation,
   IPoint,
   ISize,
+  LETTER_HEIGHT,
+  LINE_HEIGHT,
   SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
@@ -13,7 +15,6 @@ import Buddy from "./buddy";
 import Camera from "./camera";
 import Convo from "./levels/convo";
 import Level from "./levels/level";
-import Sleep from "./levels/sleep";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
@@ -48,17 +49,29 @@ export default class Game {
 
     this.levels = {
       convo: new Convo(this),
-      sleep: new Sleep(this),
       startScreen: new StartScreen(this),
       world: new World(this),
     };
 
     this.transition = Object.assign({}, transition);
 
-    // this.switchLevel(this.levels.world);
-    this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.startScreen);
     // this.switchLevel(this.levels.convo);
-    // this.switchLevel(this.levels.sleep);
+  }
+
+  get boxPos(): IPoint {
+    return {
+      x: (this.canvas.width - this.boxSize.width * this.squareSize) / 2,
+      y: (this.canvas.height - this.boxSize.height * this.squareSize) / 2,
+    };
+  }
+
+  get boxSize(): ISize {
+    return {
+      height: 3 * LETTER_HEIGHT + 2 * LINE_HEIGHT,
+      width:  LETTER_HEIGHT * 13,
+    };
   }
 
   get transitioning(): boolean {
@@ -120,7 +133,6 @@ export default class Game {
   public sizeInTiles(): ISize {
     const width = Math.ceil(this.canvas.width / this.squareSize / TILE_SIZE);
     const height = Math.ceil(this.canvas.height / this.squareSize / TILE_SIZE);
-
     return { width, height };
   }
 

@@ -7,6 +7,7 @@ import {
   IInteractable,
   IPoint,
   ISize,
+  ITouchable,
   IUpdateable,
   TILE_SIZE,
  } from "../common";
@@ -28,6 +29,7 @@ export default abstract class Level {
   public overlayDrawables: IDrawable[] = [];
   public updateables: IUpdateable[] = [];
   public interactables: IInteractable[] = [];
+  public touchables: ITouchable[] = [];
   public backgroundColor: string = colorMap[2];
 
   protected abstract tileIndexes: number[][];
@@ -53,6 +55,7 @@ export default abstract class Level {
     this.clearOverlayDrawables();
     this.clearUpdateables();
     this.clearInteractables();
+    this.clearTouchables();
   }
 
   public tileAtIndex(tileIndex: IPoint) {
@@ -85,6 +88,10 @@ export default abstract class Level {
     this.updateables.push(...updateables);
   }
 
+  protected addTouchables(touchables: ITouchable[]) {
+    this.touchables.push(...touchables);
+  }
+
   protected addInteractables(interactables: IInteractable[]) {
     this.interactables.push(...interactables);
   }
@@ -105,6 +112,10 @@ export default abstract class Level {
     this.interactables = [];
   }
 
+  protected clearTouchables() {
+    this.touchables = [];
+  }
+
   protected generateTileIndexes(sizeInTiles?: ISize) {
     // The tiles should fit the screen size since we don't scroll in convo
     sizeInTiles = sizeInTiles || this.game.sizeInTiles();
@@ -112,5 +123,25 @@ export default abstract class Level {
     this.tileIndexes = new Array(sizeInTiles.height)
       .fill(null).map(() => new Array(sizeInTiles.width)
         .fill(null).map(() => randomIndexFromArray(this.tileTypeMap)));
+  }
+
+  protected touchedTouchable(touch: Touch): ITouchable {
+    const fuzz = 20 * this.game.scaleFactor;
+
+    const touched = this.touchables.find((touchable) => {
+      const size = Object.assign({}, touchable.drawingSize);
+      const pos = Object.assign({}, touchable.pos);
+      size.width *= this.game.scaleFactor;
+      size.height *= this.game.scaleFactor;
+      pos.x *= this.game.scaleFactor;
+      pos.y *= this.game.scaleFactor;
+
+      return touch.clientX + fuzz >= pos.x &&
+      touch.clientX - fuzz <= pos.x + size.width &&
+      touch.clientY + fuzz >= pos.y &&
+      touch.clientY - fuzz <= pos.y + size.height;
+    });
+
+    if (touched && touched.visible) return touched;
   }
 }

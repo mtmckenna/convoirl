@@ -9,7 +9,6 @@ import Text from "../text";
 
 import {
   DISABLED_ALPHA,
-  ITouchable,
   LINE_HEIGHT,
   THROTTLE_TIME,
   TILE_SIZE,
@@ -20,7 +19,6 @@ import { randomIndexFromArray, throttle } from "../helpers";
 const BOX_HEIGHT = 6;
 const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
-const BOX_X = 2;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
 const FLOATY_TEXT_INDEX = 2;
@@ -37,7 +35,6 @@ export default class Convo extends Level {
   private downArrow: Text;
   private skills: Text[];
   private currentSkillIndex: number = 0;
-  private touchables: ITouchable[] = [];
   private buddy: Buddy;
   private energyBar: EnergyBar;
   private convoBar: EnergyBar;
@@ -74,23 +71,7 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
-    const fuzz = 20 * this.game.scaleFactor;
-
-    // The math to convert from canvas->screen size could probably be generalized
-    const touched = this.touchables.find((touchable) => {
-      const size = Object.assign({}, touchable.drawingSize);
-      const pos = Object.assign({}, touchable.pos);
-      size.width *= this.game.scaleFactor;
-      size.height *= this.game.scaleFactor;
-      pos.x *= this.game.scaleFactor;
-      pos.y *= this.game.scaleFactor;
-
-      return touch.clientX + fuzz >= pos.x &&
-      touch.clientX - fuzz <= pos.x + size.width &&
-      touch.clientY + fuzz >= pos.y &&
-      touch.clientY - fuzz <= pos.y + size.height;
-    });
-
+    const touched = this.touchedTouchable(touch);
     if (touched) {
       touched.touched();
     } else {
@@ -120,7 +101,7 @@ export default class Convo extends Level {
     this.skills.forEach((skill) => skill.touched = () => {
       if (this.skills[this.currentSkillIndex] === skill) this.handleInput("Enter");
     });
-    this.touchables.push(this.upArrow, this.downArrow, ...this.skills);
+    this.addTouchables([this.upArrow, this.downArrow, ...this.skills]);
   }
 
   public levelStarted() {
@@ -182,10 +163,6 @@ export default class Convo extends Level {
     }
   }
 
-  private clearTouchables() {
-    this.touchables = [];
-  }
-
   private moveSkillCursor(amountToMoveBy) {
     const updatedIndex = this.currentSkillIndex + amountToMoveBy;
     const updatedSkill = this.skills[updatedIndex];
@@ -239,10 +216,10 @@ export default class Convo extends Level {
   }
 
   private updateBoxes() {
-    const width = Math.floor(this.game.canvas.width / this.game.squareSize - this.game.squareSize);
+    const width = this.game.boxSize.width;
     const height = this.game.squareSize * BOX_HEIGHT;
     const y = this.game.canvas.height - height * this.game.squareSize - this.game.squareSize * 2;
-    this.box.move({ x: this.game.squareSize * BOX_X, y });
+    this.box.move({ x: this.game.squareSize * 2, y });
     this.box.updateSize({ height, width });
 
     const barWidth =
