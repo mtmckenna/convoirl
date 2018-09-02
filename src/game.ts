@@ -119,20 +119,6 @@ export default class Game {
     this.currentLevel.handleTouch(touch);
   }
 
-  public gameCoordsFromDrawingCoords(drawingCoords: IPoint) {
-    const gameCoords = Object.assign({}, drawingCoords);
-    gameCoords.x = Math.floor(gameCoords.x / this.squareSize);
-    gameCoords.y = Math.floor(gameCoords.y / this.squareSize);
-    return gameCoords;
-  }
-
-  public gameSizeFromDrawingSize(drawingSize: ISize) {
-    const gameSize = Object.assign({}, drawingSize);
-    gameSize.width = Math.floor(gameSize.width / this.squareSize);
-    gameSize.height = Math.floor(gameSize.height / this.squareSize);
-    return gameSize;
-  }
-
   public sizeInTiles(): ISize {
     const width = Math.ceil(this.canvas.width / this.squareSize / TILE_SIZE);
     const height = Math.ceil(this.canvas.height / this.squareSize / TILE_SIZE);

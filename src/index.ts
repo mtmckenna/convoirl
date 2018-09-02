@@ -26,6 +26,8 @@ SPACE SAVING THOUGHTS
   - can remove some of the code around palcing skills
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
+  - move canThingMoveToPosition to buddy
+  - might be able to remove drawingSize on some things
 */
 
 import Camera from "./camera";

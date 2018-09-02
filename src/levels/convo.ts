@@ -199,7 +199,11 @@ export default class Convo extends Level {
     const boxPosX = this.box.pos.x / this.game.squareSize;
     const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
 
-    const boxSize = this.game.gameSizeFromDrawingSize(this.box.drawingSize);
+    const boxSize = {
+      height: Math.floor(this.box.drawingSize.height / this.game.squareSize),
+      width: Math.floor(this.box.drawingSize.width / this.game.squareSize),
+    };
+
     const convoWidth = this.game.player.size.width + BUDDY_DISTANCE + buddy.size.width;
 
     const playerPos = {

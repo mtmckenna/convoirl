@@ -49,7 +49,7 @@ export default class Buddy implements IDrawable, IInteractable {
   public alpha: 1.0;
   public visible: boolean = true;
   public dusts: Dust[];
-  public skills: string[] = ["weather"];
+  public skills: string[] = ["weather", "pastries", "france", "cats", "sports", "math"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
   public interactableType: string = "buddy";
@@ -147,7 +147,7 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   public configureWalkingAnimation(startPos, endPos) {
-    const  { walking } = this.animations;
+    const { walking } = this.animations;
     walking.startTime = this.game.timestamp;
     walking.endPos = endPos;
     walking.startPos = startPos;
