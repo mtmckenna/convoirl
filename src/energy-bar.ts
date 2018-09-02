@@ -68,7 +68,7 @@ export default class EnergyBar implements IDrawable {
   public draw(context, timestamp) {
     this.updateLevel(timestamp);
 
-    this.box.draw(context);
+    this.box.draw(context, timestamp);
     context.fillStyle = colorMap[1];
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
     this.energyText.draw(context, timestamp);

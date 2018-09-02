@@ -25,7 +25,7 @@ BACKBURNER
 
 SPACE SAVING THOUGHTS
   - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
-  - can remove some css
+  - can remove some of the code around palcing skills
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
 */

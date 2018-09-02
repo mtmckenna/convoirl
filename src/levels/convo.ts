@@ -16,7 +16,6 @@ import {
 
 import { randomIndexFromArray, throttle } from "../helpers";
 
-const BOX_HEIGHT = 6;
 const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const ARROW_SPACING = 2;
@@ -101,7 +100,6 @@ export default class Convo extends Level {
     this.skills.forEach((skill) => skill.touched = () => {
       if (this.skills[this.currentSkillIndex] === skill) this.handleInput("Enter");
     });
-    this.addTouchables([this.upArrow, this.downArrow, ...this.skills]);
   }
 
   public levelStarted() {
@@ -140,6 +138,7 @@ export default class Convo extends Level {
       this.convoBar,
       ...this.skills,
     ]);
+    this.addTouchables([this.upArrow, this.downArrow, ...this.skills]);
   }
 
   protected generateTileIndexes() {
@@ -216,11 +215,9 @@ export default class Convo extends Level {
   }
 
   private updateBoxes() {
-    const width = this.game.boxSize.width;
-    const height = this.game.squareSize * BOX_HEIGHT;
-    const y = this.game.canvas.height - height * this.game.squareSize - this.game.squareSize * 2;
-    this.box.move({ x: this.game.squareSize * 2, y });
-    this.box.updateSize({ height, width });
+    const y = this.game.canvas.height - this.game.boxSize.height * this.game.squareSize - this.game.squareSize * 2;
+    this.box.move({ x: this.game.boxPos.x, y });
+    this.box.updateSize(this.game.boxSize);
 
     const barWidth =
     this.energyBar.drawingSize.width +
@@ -236,14 +233,14 @@ export default class Convo extends Level {
 
   private updateText() {
     const spacing = ARROW_SPACING * this.game.squareSize;
-    const upX = this.box.pos.x +
+    const upX = Math.floor(this.box.pos.x +
     this.box.drawingSize.width -
     this.upArrow.drawingSize.width -
-    spacing;
+    spacing);
 
     const upY = Math.floor(this.box.pos.y + this.box.drawingSize.height / 2 - this.upArrow.drawingSize.height / 2);
-    const downX = this.box.pos.x + spacing;
-    const downY = upY;
+    const downX = Math.floor(this.box.pos.x + spacing);
+    const downY = Math.floor(upY);
 
     this.upArrow.move({ x: upX, y: upY });
     this.downArrow.move({ x: downX, y: downY });

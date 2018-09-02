@@ -16,7 +16,7 @@
     "build": "yarn run delete-dist && yarn run create-dist && yarn run parcel-build && yarn run inline-build",
     "build-zipped": "yarn run build && yarn node ./scripts/zip-file.js",
     "party": "yarn run build-zipped && yarn run check-file-size",
-    "lint": "yarn tslint ./src/*.ts",
+    "lint": "yarn tslint ./src/*.ts ./src/**/*.ts",
     "check-unused": "yarn ts-unused-exports tsconfig.json src/**/*.ts src/*.ts"
   },
   "devDependencies": {

@@ -253,7 +253,7 @@ export default class World extends Level {
     this.box.touched = () => {
       this.game.player.walk("down");
       this.box.visible = false;
-    }
+    };
   }
 
   private movePlayerVertically(touchDistance: number): boolean {
