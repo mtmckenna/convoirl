@@ -54,10 +54,6 @@ export default class Game {
     };
 
     this.transition = Object.assign({}, transition);
-
-    // this.switchLevel(this.levels.world);
-    this.switchLevel(this.levels.startScreen);
-    // this.switchLevel(this.levels.convo);
   }
 
   get boxPos(): IPoint {
@@ -78,6 +74,13 @@ export default class Game {
     return this.transition.running;
   }
 
+  public boot(timestamp) {
+    this.timestamp = timestamp;
+    this.switchLevel(this.levels.startScreen);
+    // this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.convo);
+  }
+
   public update(timestamp) {
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
@@ -96,7 +99,7 @@ export default class Game {
 
   public resize() {
     this.setSize();
-    this.currentLevel.resize();
+    if (this.currentLevel) this.currentLevel.resize();
   }
 
   public queueNextLevel(nextLevel: Level) {

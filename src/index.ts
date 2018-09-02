@@ -5,22 +5,21 @@ TODO
   - sfx
   - readme
   - make house look nicer
-  - have input keys be an enum
   - gamepad
   - clouds
   - make drawingsize a getter? or subclass...
-  - make sure walking animation is right... might be configuring walking wrong
 
 BACKBURNER
   - npcs can walk around
   - move input stuff into its own class
   - add sun and clouds in convo
   - animate buttons when you press them
-  - scale arrows
   - can probably consolidate a lot of the code around walking
   - add color effects on transition
   - have player be an instance on every level
   - use diff easing function for level transition
+  - panning on convo
+  - move camera into game
 
 SPACE SAVING THOUGHTS
   - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
@@ -39,6 +38,7 @@ import {
   SQUARE_SIZE,
   TILE_SIZE,
 } from "./common";
+
 import StartScreen from "./levels/start-screen";
 
 const PAN_SPEED = 0.05;
@@ -54,6 +54,7 @@ let width: number = sideLength;
 let height: number = sideLength;
 let currentTouch: Touch = null;
 let touchDown: boolean = false;
+let booted: boolean = false;
 
 game.camera = camera;
 
@@ -80,6 +81,12 @@ function resize() {
 }
 
 function update(timestamp: number): void {
+  if (!booted) {
+    game.boot(timestamp);
+    resize();
+    booted = true;
+  }
+
   game.update(timestamp);
 
   if (game.currentLevel === game.levels.startScreen) {
@@ -116,21 +123,11 @@ function handleTouchUp() {
   touchDown = false;
 }
 
-resize();
 requestAnimationFrame(animate);
 
 window.addEventListener("resize", () => resize());
 
 window.addEventListener("keydown", (event) => {
-  const key = event.key;
-  if (keyActions[key]) {
-    keyActions[key]();
-  } else {
-    game.handleInput(key);
-  }
-});
-
-window.addEventListener("keyup", (event) => {
   const key = event.key;
   if (keyActions[key]) {
     keyActions[key]();

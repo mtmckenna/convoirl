@@ -40,6 +40,8 @@ export default class StartScreen extends Level {
     this.moveText();
     this.addTouchables([this.box]);
     this.addDrawables(this.tiles, 0);
+    this.box.animateTextIn(this.game.timestamp);
+
     this.addOverlayDrawables([this.box]);
   }
 

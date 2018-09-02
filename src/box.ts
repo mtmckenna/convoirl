@@ -11,6 +11,8 @@ import {
   SQUARE_SIZE,
  } from "./common";
 
+const TEXT_SPEED = 50;
+
 export default class Box implements ITouchable {
   public game: Game;
   public pos: IPoint = { x: 0, y: 0 };
@@ -22,6 +24,7 @@ export default class Box implements ITouchable {
   private strokePos: IPoint = { x: 0, y: 0 };
   private color: string;
   private texts: Text[] = [];
+  private startTime: number = null;
 
   constructor(game: Game, pos: IPoint, size: ISize, color: string = colorMap[8]) {
     this.game = game;
@@ -34,6 +37,10 @@ export default class Box implements ITouchable {
     };
 
     this.move(pos);
+  }
+
+  get textLength() {
+    return this.texts.reduce((prev, text) => prev + text.words.length, 0);
   }
 
   public move(updatedPos: IPoint) {
@@ -64,12 +71,32 @@ export default class Box implements ITouchable {
     context.lineWidth = this.game.squareSize;
     context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);
 
-    this.texts.forEach((text) => text.draw(context, timestamp));
+    let indexes = new Array(this.texts.length).fill(0);
+
+    if (this.startTime) {
+      // TODO: gotta be a simpler way of doing the animation here
+      const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / TEXT_SPEED), this.textLength);
+      indexes = this.texts.map((text, i) => {
+        // Add up lengths of previous texts
+        const prevSum = this.texts.slice(0, i).reduce((prev, toCount) => toCount.words.length + prev, 0);
+        return Math.min(showUpToIndex - prevSum, text.words.length);
+      });
+    }
+
+    this.texts.forEach((text, i) => {
+      // Animate text in
+      text.showUpToIndex(indexes[i]);
+      text.draw(context, timestamp);
+    });
   }
 
   public setWords(words: string[]) {
     this.texts = words.map((word) => new Text(this.game, word));
     this.moveTexts();
+  }
+
+  public animateTextIn(time: number) {
+    this.startTime = time;
   }
 
   public touched() { return; }

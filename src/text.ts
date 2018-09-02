@@ -29,10 +29,12 @@ export default class Text implements ITouchable {
   public alpha = 1.0;
 
   private animations: IAnimations = {};
+  private upToIndex: number = null;
 
   constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;
     this.words = words.toUpperCase();
+    this.upToIndex = this.words.length;
     this.color = color;
     this.move(pos);
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
@@ -50,9 +52,10 @@ export default class Text implements ITouchable {
     const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
     context.globalAlpha = alpha;
 
-    this.pixelLetters.forEach((letter) => {
+    for (let i = 0; i < this.upToIndex; i++) {
       let currY = this.pos.y;
       let maxX = 0;
+      const letter = this.pixelLetters[i];
 
       for (let y = 0; y < letter.length; y++) {
         const row = letter[y];
@@ -75,7 +78,7 @@ export default class Text implements ITouchable {
         currY = this.game.squareSize * (y + 1) + this.pos.y;
       }
       currX += this.game.squareSize + maxX;
-    });
+    }
 
     this.updateFloat(timestamp);
   }
@@ -85,6 +88,10 @@ export default class Text implements ITouchable {
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
+  }
+
+  public showUpToIndex(index: number) {
+    this.upToIndex = index;
   }
 
   public startFloat(updatedPos: IPoint) {

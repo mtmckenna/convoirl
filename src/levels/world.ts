@@ -84,7 +84,6 @@ export default class World extends Level {
     buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
     this.buddies = [buddy];
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
-    this.showNextIntroBox();
   }
 
   public handleInput(key) {
@@ -151,6 +150,7 @@ export default class World extends Level {
     this.energyBar.animateToLevel(this.game.player.energy);
     this.game.player.move(this.playerSpawnPosition);
     this.game.player.setConvoMode(false);
+    this.showNextIntroBox();
 
     // @ts-ignore
     const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
@@ -192,6 +192,7 @@ export default class World extends Level {
     }
 
     this.box.setWords(words);
+    this.box.animateTextIn(this.game.timestamp);
     this.textIntros.shift();
   }
 
@@ -271,6 +272,7 @@ export default class World extends Level {
     this.game.player.energy = 1;
     this.energyBar.animateToLevel(this.game.player.energy);
     this.box.setWords(TEXT_SLEEP);
+    this.box.animateTextIn(this.game.timestamp);
     this.box.visible = true;
     this.state = STATE_SLEEPING;
   }
