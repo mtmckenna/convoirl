@@ -3,6 +3,7 @@ import Game from "./game";
 import Text from "./text";
 
 import {
+  IFadeable,
   IPoint,
   ISize,
   ITouchable,
@@ -10,12 +11,13 @@ import {
   LINE_HEIGHT,
  } from "./common";
 
-export default class Box implements ITouchable {
+export default class Box implements ITouchable, IFadeable {
   public game: Game;
   public pos: IPoint;
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
+  public alpha = 1;
 
   private strokePos: IPoint;
   private color: string;
@@ -59,6 +61,8 @@ export default class Box implements ITouchable {
   }
 
   public draw(context, timestamp) {
+    const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
+    context.globalAlpha = alpha;
     context.fillStyle = this.color;
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
     context.strokeStyle = colorMap[1];
