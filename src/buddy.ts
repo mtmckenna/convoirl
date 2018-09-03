@@ -126,18 +126,23 @@ export default class Buddy implements IDrawable, IInteractable {
   public walk(direction: "up" | "down" | "left" | "right") {
     let { x, y } = this.pos;
 
-    if (direction === "left") {
-      this.rot = -Math.PI / 2.0;
-      x -= this.game.tileSize;
-    } else if (direction === "right") {
-      this.rot = Math.PI / 2.0;
-      x += this.game.tileSize;
-    } else if (direction === "down") {
-      this.rot = Math.PI;
-      y += this.game.tileSize;
-    } else if (direction === "up") {
-      this.rot = 0;
-      y -= this.game.tileSize;
+    switch (direction) {
+      case "left":
+        this.rot = -Math.PI / 2;
+        x -= this.game.tileSize;
+        break;
+      case "right":
+        this.rot = Math.PI / 2;
+        x += this.game.tileSize;
+        break;
+      case "down":
+        this.rot = Math.PI;
+        y += this.game.tileSize;
+        break;
+      case "up":
+        this.rot = 0;
+        y -= this.game.tileSize;
+        break;
     }
 
     const startPos = { x: this.pos.x, y: this.pos.y };
@@ -218,8 +223,6 @@ export default class Buddy implements IDrawable, IInteractable {
         this.lastDustAt = timestamp;
       }
     }
-
-    context.setTransform(1, 0, 0, 1, 0, 0);
   }
 
   private maybeDoEyeAnimations(timestamp) {
