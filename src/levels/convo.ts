@@ -14,7 +14,7 @@ import {
   TS,
 } from "../common";
 
-import { randomElementFromArray, randomIndexFromArray, throttle } from "../helpers";
+import { randomIndexFromArray, throttle } from "../helpers";
 
 const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TS;
@@ -203,6 +203,7 @@ export default class Convo extends Level {
       this.convoLevel += .34;
       this.game.player.energy -= .15;
       this.buddyFloatText(this.buddy, "yeah...", colorMap[10]);
+      this.game.camera.shakeScreen();
     }
 
     if (skill === "listen") {
