@@ -173,7 +173,8 @@ export default class Game {
 
     this.currentLevel.drawables.forEach((drawablesAtZIndex) => {
       drawablesAtZIndex.forEach((drawable) => {
-        if (!drawable.visible) return;
+        // the !drawable is a hack to help reduce file size on levels with generated tiles
+        if (!drawable || !drawable.visible) return;
         const x = drawable.pos.x * this.squareSize + offset.x;
         const y = drawable.pos.y * this.squareSize + offset.y;
 

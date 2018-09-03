@@ -76,8 +76,6 @@ export default class World extends Level {
     this.handleTouch = throttledHandleTouch;
     this.handleInput = throttledHandleInput;
 
-    this.tileIndexes = this.tileIndexes.map((row) => row.map((i) => i ? i : 0));
-
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
     this.game.player.energy =  .6;

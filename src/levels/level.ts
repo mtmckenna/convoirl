@@ -23,7 +23,7 @@ export default abstract class Level {
   public drawingSize: ISize;
 
   public tiles: Tile[];
-  public tilesGrid: Tile[][];
+  public tilesGrid: Tile[][] = [];
 
   public drawables: IDrawable[][];
   public overlayDrawables: IDrawable[] = [];
@@ -32,7 +32,8 @@ export default abstract class Level {
   public touchables: ITouchable[] = [];
   public backgroundColor: string = colorMap[2];
 
-  protected abstract tileIndexes: number[][];
+  protected  tileIndexes: number[][];
+
   protected abstract tileTypeMap: string[];
 
   constructor(game: Game) {
@@ -68,10 +69,14 @@ export default abstract class Level {
 
     this.size = { width, height };
     this.drawingSize = { width: width * this.game.squareSize, height: height * this.game.squareSize };
-    this.tilesGrid = this.tileIndexes.map(
-      (column, columnIndex) => column.map(
-        (tileIndex, rowIndex) => new Tile(this.game, this.tileTypeMap[tileIndex], rowIndex, columnIndex)),
-    );
+
+    for (let i = 0; i < this.tileIndexes.length; i++) {
+      this.tilesGrid.push(new Array(this.tileIndexes[i].length));
+      for (let j = 0; j < this.tileIndexes[i].length; j++) {
+        const tileType = this.tileTypeMap[this.tileIndexes[i][j] || 0];
+        this.tilesGrid[i][j] = new Tile(this.game, tileType, j, i);
+      }
+    }
 
     this.tiles = flatten(this.tilesGrid);
   }

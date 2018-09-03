@@ -20,6 +20,7 @@ BACKBURNER
   - use diff easing function for level transition
   - panning on convo
   - move camera into game
+  - did I get rowindex/colindex backwards on tile?
 
 SPACE SAVING THOUGHTS
   - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
