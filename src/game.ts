@@ -35,6 +35,7 @@ export default class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.player = new Buddy(this);
+    this.player.skills.push("weather");
 
     this.canvas = canvas;
     this.setSize();

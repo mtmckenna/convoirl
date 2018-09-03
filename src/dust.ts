@@ -9,7 +9,7 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
 
   public drawingSize;
   public size = { width: 1, height: 1 };
-  public pos = { x: 0, y: 0};
+  public pos = { x: 0, y: 0 };
   public color: string = colorMap[1];
   public visible: boolean = false;
   public alpha = 1;

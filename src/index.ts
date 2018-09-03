@@ -9,7 +9,6 @@ TODO
   - make drawingsize a getter? or subclass...
 
 BACKBURNER
-  - npcs can walk around
   - move input stuff into its own class
   - add sun and clouds in convo
   - animate buttons when you press them
@@ -29,6 +28,7 @@ SPACE SAVING THOUGHTS
   - remove debug
   - conslidate where flooring
   - could reduce common indexes in tiles
+  - try closure
 */
 
 import Camera from "./camera";

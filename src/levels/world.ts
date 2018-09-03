@@ -23,7 +23,7 @@ const TEXT_INTROS = [
   ["talk to them", "about their", "interests!"],
 ];
 
-const TEXT_SLEEP = ["", "zzzzzz...", ""];
+const WB_START_POS = { x: TS * 18, y: TS * 7 };
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -60,6 +60,7 @@ export default class World extends Level {
   private textIntros: string[][] = TEXT_INTROS;
   // private state: string = "intro";
   private state: string = "play";
+  private walkingBuddy: Buddy;
 
   constructor(game: Game) {
     super(game);
@@ -117,6 +118,12 @@ export default class World extends Level {
   public update(timestamp) {
     super.update(timestamp);
     this.processInput();
+    this.startConvo(this.game.player.tileIndex);
+
+    // Make walking buddy walk
+    if (this.walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) this.walkingBuddy.autoWalkDirection = "right";
+    if (this.walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) this.walkingBuddy.autoWalkDirection = "left";
+    this.walkingBuddy.walk(this.walkingBuddy.autoWalkDirection);
   }
 
   public configureDrawablesAndUpdateables() {
@@ -124,12 +131,13 @@ export default class World extends Level {
     this.createBuddies();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.game.player.dusts, 1);
+    this.addDrawables(this.walkingBuddy.dusts, 1);
     this.addDrawables([this.game.player], 2);
     this.addDrawables(this.buddies, 2);
     this.addOverlayDrawables([this.energyBar, this.box]);
     this.addInteractables(this.buddies);
     this.addTouchables([this.box]);
-    this.addUpdateables([...this.game.player.dusts]);
+    this.addUpdateables([...this.game.player.dusts, this.game.player, this.walkingBuddy, ...this.walkingBuddy.dusts]);
 
     this.resize();
   }
@@ -183,6 +191,19 @@ export default class World extends Level {
     booksBuddy.skills.push("books");
     booksBuddy.look("up");
 
+    const mathBuddy = new Buddy(this.game);
+    mathBuddy.move({ x: TS * 26, y: TS * 8 });
+    mathBuddy.skills.push("math");
+    mathBuddy.look("left");
+
+    const fashionBuddy = new Buddy(this.game);
+    fashionBuddy.move(WB_START_POS);
+    fashionBuddy.skills.push("math");
+    fashionBuddy.look("left");
+    fashionBuddy.autoWalkDirection = "left";
+    this.walkingBuddy = fashionBuddy;
+    this.walkingBuddy.animations.walking.duration = 750;
+
     this.buddies = [
       listenBuddy,
       pastryBuddy,
@@ -190,6 +211,8 @@ export default class World extends Level {
       sportsBuddy,
       specialBuddy,
       booksBuddy,
+      mathBuddy,
+      fashionBuddy,
     ];
   }
 
@@ -258,68 +281,51 @@ export default class World extends Level {
         break;
     }
 
-    let levelToQueue = null;
+    // Start a convo if overlapping a buddy
+    if (this.startConvo(tileIndex)) return;
 
-    // Check if we're overlapping interactables like buddies
-    const overlappedInteractable = this.interactables.find((interactable) => {
-      return interactable.tileIndex.x === tileIndex.x &&
-      interactable.tileIndex.y === tileIndex.y;
-    });
-
-    if (overlappedInteractable) {
-      this.currentBuddy = overlappedInteractable as Buddy;
-      levelToQueue = this.game.levels.convo;
-    }
-
-    // Check if we're overlapping an interactable tile
+    // Check if we're overlapping the door
     if (this.tileAtIndex(tileIndex).interactable) this.sleep();
-
-    if (levelToQueue) {
-      this.playerSpawnPosition.x = this.game.player.pos.x;
-      this.playerSpawnPosition.y = this.game.player.pos.y;
-      this.game.queueNextLevel(levelToQueue);
-      return;
-    }
 
     // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
     return true;
   }
 
+  private startConvo(tileIndex: IPoint): boolean {
+    // Check if we're overlapping interactables like buddies
+    const overlappedInteractable = this.interactables.find((interactable) => {
+      return interactable.tileIndex.x === tileIndex.x &&
+        interactable.tileIndex.y === tileIndex.y;
+    });
+
+    if (overlappedInteractable) {
+      this.currentBuddy = overlappedInteractable as Buddy;
+      this.playerSpawnPosition.x = this.game.player.pos.x;
+      this.playerSpawnPosition.y = this.game.player.pos.y;
+      this.game.queueNextLevel(this.game.levels.convo);
+      return true;
+    }
+
+    return false;
+  }
+
   private sleep() {
     this.game.player.energy = 1;
     this.energyBar.animateToLevel(this.game.player.energy);
-    this.box.setWords(TEXT_SLEEP);
+    this.box.setWords(["", "zzzzzz...", ""]);
     this.box.animateTextIn(this.game.timestamp);
     this.box.visible = true;
     this.state = "sleeping";
   }
 
-  private movePlayerVertically(touchDistance: number): boolean {
-    if (touchDistance < 0) {
-      this.handleInput("ArrowUp");
-      return true;
-    }
-
-    if (touchDistance > 0) {
-      this.handleInput("ArrowDown");
-      return true;
-    }
-
-    return false;
+  private movePlayerVertically(touchDistance: number) {
+    if (touchDistance < 0) this.handleInput("ArrowUp");
+    if (touchDistance > 0) this.handleInput("ArrowDown");
   }
 
-  private movePlayerHorizontally(touchDistance: number): boolean {
-    if (touchDistance > 0) {
-      this.handleInput("ArrowRight");
-      return true;
-    }
-
-    if (touchDistance < 0) {
-      this.handleInput("ArrowLeft");
-      return true;
-    }
-
-    return false;
+  private movePlayerHorizontally(touchDistance: number) {
+    if (touchDistance > 0) this.handleInput("ArrowRight");
+    if (touchDistance < 0) this.handleInput("ArrowLeft");
   }
 }

@@ -2,7 +2,6 @@ import Dust from "./dust";
 import Game from "./game";
 
 import {
-  canThingMoveToPosition,
   lerp,
   randomIndexFromArray,
   shouldDoAnimation,
@@ -15,6 +14,7 @@ import {
   IInteractable,
   IPoint,
   ISize,
+  IUpdateable,
   SQUARE_SIZE,
   TS,
 } from "./common";
@@ -36,19 +36,19 @@ const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"
 
 // ["weather", "pastries", "france", "cats", "sports", "math", "books", "gymnastics"]
 
-export default class Buddy implements IDrawable, IInteractable {
+export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public game: Game;
   public drawingSize: ISize;
   public pos: IPoint = { x: 0, y: 0 };
   public size: ISize = { height: TS, width: TS };
   public visible: boolean = true;
   public dusts: Dust[];
-  public skills: string[] = ["weather"];
-
+  public skills: string[] = [];
+  public autoWalkDirection: "left" | "right" | "up" | "down";
+  public animations: IAnimations = {};
   public tileIndex: IPoint = { x: 0, y: 0 };
   public energy: number = 1;
 
-  private animations: IAnimations = {};
   private rot: number = Math.PI;
   private color: string;
   private lastDustAt: number = 0;
@@ -110,54 +110,43 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   public move(updatedPos: IPoint) {
+    // console.log(updatedPos);
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
     this.tileIndex.x = Math.ceil(this.pos.x / TS);
     this.tileIndex.y = Math.ceil(this.pos.y / TS);
   }
 
+  // TODO: can combine look and walk
   public look(direction: "up" | "down" | "left" | "right") {
-    switch (direction) {
-      case "left":
-        this.rot = -Math.PI / 2;
-        break;
-      case "right":
-        this.rot = Math.PI / 2;
-        break;
-      case "down":
-        this.rot = Math.PI;
-        break;
-      case "up":
-        this.rot = 0;
-        break;
-    }
+    this.walk(direction, true);
   }
 
-  public walk(direction: "up" | "down" | "left" | "right") {
+  public walk(direction: "up" | "down" | "left" | "right", justLook: boolean = false) {
     let { x, y } = this.pos;
 
     switch (direction) {
       case "left":
-        this.look("left");
+        this.rot = -Math.PI / 2;
         x -= TS;
         break;
       case "right":
-        this.look("right");
+        this.rot = Math.PI / 2;
         x += TS;
         break;
       case "down":
-        this.look("down");
+        this.rot = Math.PI;
         y += TS;
         break;
       case "up":
-        this.look("up");
+        this.rot = 0;
         y -= TS;
         break;
     }
 
     const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
-    if (this.canMoveToPosition(endPos)) this.configureWalkingAnimation(startPos, endPos);
+    if (!this.walking && this.canMoveToPosition(endPos) && !justLook) this.configureWalkingAnimation(startPos, endPos);
   }
 
   public configureWalkingAnimation(startPos, endPos) {
@@ -169,8 +158,7 @@ export default class Buddy implements IDrawable, IInteractable {
     walking.t = 0;
   }
 
-  public updateWalkingPosition(timestamp) {
-    if (!this.walking) return;
+  public update(timestamp) {
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
     let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);
     let y = lerp(this.animations.walking.startPos.y, this.animations.walking.endPos.y, t);
@@ -186,10 +174,10 @@ export default class Buddy implements IDrawable, IInteractable {
 
     // TODO: avoid creating new objects
     this.move({ x, y });
+
   }
 
   public draw(context, timestamp) {
-    this.updateWalkingPosition(timestamp);
     const t = this.animations.walking.t;
 
     context.translate(
