@@ -62,12 +62,12 @@ function twoPhaseClerp(t: number, min: number, max: number, reverse = false): nu
   }
 
   // if in second half of animation
-  if (t >= 0.5) {
-    const t2 = (t - 0.5) / 0.5;
+  if (t >= .5) {
+    const t2 = (t - .5) / .5;
     return clerp(start, end, min, max, t2);
   // else if in the first half of animation
   } else {
-    const t2 = t / 0.5;
+    const t2 = t / .5;
     return clerp(end, start, min, max, t2);
   }
 }

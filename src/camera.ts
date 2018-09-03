@@ -10,9 +10,9 @@ import {
 
 import { oneOrMinusOne } from "./helpers";
 
-const SCREEN_SHAKE_FRICTION: number = 0.9;
-const SCREEN_SHAKE_MAX_AMPLITUDE: number = 10.0;
-const SCREEN_SHAKE_MIN_AMPLITUDE: number = 0.01;
+const SCREEN_SHAKE_FRICTION: number = .9;
+const SCREEN_SHAKE_MAX_AMPLITUDE: number = 10;
+const SCREEN_SHAKE_MIN_AMPLITUDE: number = .01;
 
 // Note that a stupid thing I did was make the size/pos of
 // camera be the drawing size/pos and not the non-scaled pos...
@@ -43,13 +43,13 @@ export default class Camera implements IPositionable {
   }
 
   public move(drawable: IDrawable): void {
-    this.pos.x = this.game.canvas.width / 2.0 -
+    this.pos.x = this.game.canvas.width / 2 -
       drawable.pos.x * this.game.squareSize -
-      drawable.drawingSize.width / 2.0;
+      drawable.drawingSize.width / 2;
 
-    this.pos.y = this.game.canvas.height / 2.0 -
+    this.pos.y = this.game.canvas.height / 2 -
       drawable.pos.y * this.game.squareSize -
-      drawable.drawingSize.height / 2.0;
+      drawable.drawingSize.height / 2;
 
     // Stop camera at edges of level size
     const leftStop = 0;

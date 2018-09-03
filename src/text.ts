@@ -26,7 +26,7 @@ export default class Text implements ITouchable {
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
-  public alpha = 1.0;
+  public alpha = 1;
 
   private animations: IAnimations = {};
   private upToIndex: number = null;
@@ -116,7 +116,7 @@ export default class Text implements ITouchable {
     updatedPos.x = this.pos.x + t * Math.sin(t * 6 * Math.PI);
     updatedPos.y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 
-    if (t >= 1.0) floatText.running = false;
+    if (t >= 1) floatText.running = false;
 
     this.alpha = 1 - t;
     this.move(updatedPos);

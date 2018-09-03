@@ -15,7 +15,7 @@ import {
 import { animateEnergy } from "./animations";
 import { lerp } from "./helpers";
 
-const BLINK_THRESHOLD = 0.2;
+const BLINK_THRESHOLD = .2;
 
 export default class EnergyBar implements IDrawable {
   public energyText: Text;
@@ -24,9 +24,9 @@ export default class EnergyBar implements IDrawable {
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
-  public percentFull: number = 1.0;
+  public percentFull: number = 1;
   public lastBlinkAt: number = 0;
-  public alpha = 1.0;
+  public alpha = 1;
 
   private box: Box;
   private animations: IAnimations = {};
@@ -60,8 +60,8 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: updatedPos.x + SQUARE_SIZE / 2 + 0.5,
-      y: updatedPos.y + SQUARE_SIZE / 2 + 0.5,
+      x: updatedPos.x + SQUARE_SIZE / 2 + .5,
+      y: updatedPos.y + SQUARE_SIZE / 2 + .5,
     });
   }
 
@@ -99,7 +99,7 @@ export default class EnergyBar implements IDrawable {
 
     let level = lerp(this.animations.level.startLevel, this.animations.level.endLevel, t);
 
-    if (t >= 1.0) {
+    if (t >= 1) {
       level = this.animations.level.endLevel;
       this.animations.level.running = false;
     }

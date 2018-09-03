@@ -46,14 +46,14 @@ export default class Buddy implements IDrawable, IInteractable {
   public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
   public pos: IPoint = { x: TILE_SIZE, y: TILE_SIZE };
   public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
-  public alpha: 1.0;
+  public alpha: number;
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather", "pastries", "france", "cats", "sports", "math"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
   public interactableType: string = "buddy";
-  public energy: number = 1.0;
+  public energy: number = 1;
 
   private animations: IAnimations = {};
   private rot: number = Math.PI;
@@ -168,7 +168,7 @@ export default class Buddy implements IDrawable, IInteractable {
 
     this.animations.walking.t = t;
 
-    if (t >= 1.0) {
+    if (t >= 1) {
       x = this.animations.walking.endPos.x;
       y = this.animations.walking.endPos.y;
       this.animations.walking.running = false;
@@ -184,21 +184,21 @@ export default class Buddy implements IDrawable, IInteractable {
     const t = this.animations.walking.t;
 
     context.translate(
-      this.drawingSize.width / 2.0,
-      this.drawingSize.height / 2.0,
+      this.drawingSize.width / 2,
+      this.drawingSize.height / 2,
     );
 
     context.rotate(this.rot);
 
     context.translate(
-      -this.drawingSize.width / 2.0,
-      -this.drawingSize.height / 2.0,
+      -this.drawingSize.width / 2,
+      -this.drawingSize.height / 2,
     );
 
     context.fillStyle = this.color;
 
     let growAmount = t;
-    if (t > 0.5) growAmount = 1 - t;
+    if (t > .5) growAmount = 1 - t;
 
     context.fillRect(
       0,
@@ -251,7 +251,7 @@ export default class Buddy implements IDrawable, IInteractable {
   private runBlinkingAnimation(blinking, timestamp) {
     const t = (timestamp - blinking.startTime) / blinking.duration;
     blinking.openness = twoPhaseClerp(t, 0, 1, true);
-    if (t >= 1.0) blinking.running = false;
+    if (t >= 1) blinking.running = false;
   }
 
   private drawEye(context, whichOne, openness, lookAwayOffset) {

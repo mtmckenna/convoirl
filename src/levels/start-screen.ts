@@ -7,7 +7,7 @@ import Level from "./level";
 const TEXT_TILE = ["CONVO IRL", "", "TAP TO PLAY"];
 
 export default class StartScreen extends Level {
-  public panDirection = 1.0;
+  public panDirection = 1;
 
   protected tileTypeMap = ["green", "flowers", "grass", "tree"];
   protected tileIndexes = [[]];

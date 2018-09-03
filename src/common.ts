@@ -55,10 +55,10 @@ export interface IInputBuffer {
 export const TILE_SIZE: number = 8;
 export const HALF_TILE_SIZE: number = TILE_SIZE / 2;
 export const SQUARE_SIZE = 5;
-export const MS_PER_UPDATE = 1.0 / 60.0;
+export const MS_PER_UPDATE = 1 / 60;
 export const NUM_TILES_ON_LONG_SIDE = 16;
 export const BLINK_DURATION = 750;
 export const LINE_HEIGHT = 8;
-export const DISABLED_ALPHA = 0.5;
+export const DISABLED_ALPHA = .5;
 export const THROTTLE_TIME = 120;
 export const LETTER_HEIGHT = 5;

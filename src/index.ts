@@ -29,6 +29,7 @@ SPACE SAVING THOUGHTS
   - dedupe some lerp stuff (buddy/energybar)
   - move canThingMoveToPosition to buddy
   - might be able to remove drawingSize on some things
+  - drawingSize for buddy can be hardcoded
 */
 
 import Camera from "./camera";
@@ -44,7 +45,7 @@ import {
 
 import StartScreen from "./levels/start-screen";
 
-const PAN_SPEED = 0.05;
+const PAN_SPEED = .05;
 
 const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
@@ -69,7 +70,7 @@ const keyActions = {
 function resize() {
   const aspectRatio = window.innerWidth / window.innerHeight;
 
-  if (aspectRatio >= 1.0) {
+  if (aspectRatio >= 1) {
     width = sideLength;
     height = width / aspectRatio;
   } else {

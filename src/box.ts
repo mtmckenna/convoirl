@@ -19,7 +19,7 @@ export default class Box implements ITouchable {
   public size: ISize = { height: SQUARE_SIZE, width: SQUARE_SIZE };
   public drawingSize: ISize;
   public visible: boolean = true;
-  public alpha = 1.0;
+  public alpha = 1;
 
   private strokePos: IPoint = { x: 0, y: 0 };
   private color: string;
@@ -49,8 +49,8 @@ export default class Box implements ITouchable {
 
     // tslint:disable-next-line
     // https://stackoverflow.com/questions/28057881/javascript-either-strokerect-or-fillrect-blurry-depending-on-translation
-    this.strokePos.x = Math.floor(this.pos.x) + 0.5;
-    this.strokePos.y = Math.floor(this.pos.y) + 0.5;
+    this.strokePos.x = Math.floor(this.pos.x) + .5;
+    this.strokePos.y = Math.floor(this.pos.y) + .5;
     this.moveTexts();
   }
 

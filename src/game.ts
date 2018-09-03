@@ -32,7 +32,7 @@ export default class Game {
   public squareSize: number = SQUARE_SIZE;
   public size: ISize;
   public transition: IAnimation;
-  public scaleFactor: number = 1.0;
+  public scaleFactor: number = 1;
 
   private context: CanvasRenderingContext2D;
   private nextLevel: null | Level = null;
@@ -150,11 +150,11 @@ export default class Game {
   private updateTransition(timestamp) {
     const t = (timestamp - this.transition.startTime) / this.transition.duration;
 
-    this.transition.prevLevelScale = clerp(1.0, MAX_PREV_IMAGE_SIZE, 1.0, MAX_PREV_IMAGE_SIZE, t);
-    this.transition.prevLevelAlpha = clerp(1.0, 0.0, 0.0, 1.0, t);
-    this.transition.nextLevelAlpha = clerp(0.0, 1.0, 0.0, 1.0, t);
+    this.transition.prevLevelScale = clerp(1, MAX_PREV_IMAGE_SIZE, 1, MAX_PREV_IMAGE_SIZE, t);
+    this.transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
+    this.transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
 
-    if (t >= 1.0) {
+    if (t >= 1) {
       this.transition = Object.assign({}, transition);
       this.imageOfPreviousLevel = null;
     }
@@ -182,7 +182,7 @@ export default class Game {
 
         // Bitwise operator is supposedly the fastest way to land on whole pixels:
         // https://www.html5rocks.com/en/tutorials/canvas/performance/
-        this.context.translate((x + 0.5) | 0, (y + 0.5) | 0);
+        this.context.translate((x + .5) | 0, (y + .5) | 0);
 
         this.context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
 
@@ -192,7 +192,7 @@ export default class Game {
       });
     });
 
-    this.context.globalAlpha = 1.0;
+    this.context.globalAlpha = 1;
 
     if (this.imageOfPreviousLevel) {
       this.context.globalAlpha = this.transition.prevLevelAlpha;
@@ -206,7 +206,7 @@ export default class Game {
         this.canvas.width * scaleFactor,
         this.canvas.height * scaleFactor,
       );
-      this.context.globalAlpha = 1.0;
+      this.context.globalAlpha = 1;
     }
   }
 
@@ -224,7 +224,7 @@ export default class Game {
       drawable.draw(this.context, timestamp);
     });
 
-    this.context.globalAlpha = 1.0;
+    this.context.globalAlpha = 1;
   }
 
   private clearCanvasContext(): void {

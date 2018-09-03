@@ -37,8 +37,8 @@ export default class Convo extends Level {
   private buddy: Buddy;
   private energyBar: EnergyBar;
   private convoBar: EnergyBar;
-  private convoLevel: number = 0.0;
-  private convoPerTurn: number = 0.25;
+  private convoLevel: number = 0;
+  private convoPerTurn: number = .25;
 
   constructor(game: Game) {
     super(game);
@@ -92,7 +92,7 @@ export default class Convo extends Level {
     this.game.player.convoLook("right");
 
     this.energyBar.animateToLevel(this.game.player.energy);
-    this.convoLevel = 0.0;
+    this.convoLevel = 0;
     this.convoBar.animateToLevel(this.convoLevel);
 
     this.buddies = [this.game.player, this.buddy];
@@ -114,7 +114,7 @@ export default class Convo extends Level {
     super.update(timestamp);
     this.updateText();
     this.updateFloatyText();
-    if (this.convoLevel >= 1.0 && !this.convoBar.animating) {
+    if (this.convoLevel >= 1 && !this.convoBar.animating) {
       this.game.queueNextLevel(this.game.levels.world);
     }
   }
@@ -165,15 +165,15 @@ export default class Convo extends Level {
   private moveSkillCursor(amountToMoveBy) {
     const updatedIndex = this.currentSkillIndex + amountToMoveBy;
     const updatedSkill = this.skills[updatedIndex];
-    this.downArrow.alpha = 1.0;
-    this.upArrow.alpha = 1.0;
+    this.downArrow.alpha = 1;
+    this.upArrow.alpha = 1;
     this.skills.forEach((skill) => skill.alpha = DISABLED_ALPHA);
 
     if (updatedSkill) {
-      updatedSkill.alpha = 1.0;
+      updatedSkill.alpha = 1;
       this.currentSkillIndex = updatedIndex;
     } else {
-      this.skills[this.currentSkillIndex].alpha = 1.0;
+      this.skills[this.currentSkillIndex].alpha = 1;
     }
 
     if (this.currentSkillIndex === 0) this.downArrow.alpha = DISABLED_ALPHA;
