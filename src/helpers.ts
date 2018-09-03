@@ -1,21 +1,4 @@
-import { IAnimation, IPoint, IPositionable, TS } from "./common";
-
-import Level from "./levels/level";
-
-function canThingMoveToPosition(thing: IPositionable, position: IPoint, level: Level): boolean {
-  const inMap = position.x >= 0 &&
-    position.x <= level.size.width - thing.size.width &&
-    position.y >= 0 &&
-    position.y < level.size.height;
-
-  let { x, y } = position;
-  x /= TS;
-  y /= TS;
-
-  const { walkable } = level.tilesGrid[y][x];
-
-  return inMap && walkable;
-}
+import { IAnimation, TS } from "./common";
 
 function shouldDoAnimation(animation: IAnimation, timestamp: number): boolean {
   if (animation.running) return false;
@@ -86,7 +69,6 @@ function throttle(func, limit) {
 }
 
 export {
-  canThingMoveToPosition,
   clerp,
   throttle,
   flatten,

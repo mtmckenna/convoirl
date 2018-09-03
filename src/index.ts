@@ -1,6 +1,5 @@
 /*
 TODO
-  - players have words come out their bodies
   - add mouths
   - sfx
   - readme
@@ -23,11 +22,8 @@ BACKBURNER
   - did I get rowindex/colindex backwards on tile?
 
 SPACE SAVING THOUGHTS
-  - get rid of some of the requirements in interfaces that go unused (e.g. alpha)
-  - can remove some of the code around palcing skills
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
-  - move canThingMoveToPosition to buddy
   - might be able to remove drawingSize on some things
   - drawingSize for buddy can be hardcoded
   - remove debug
@@ -39,15 +35,9 @@ import Camera from "./camera";
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import {
-  MS_PER,
-  SQUARE_SIZE,
-  TS,
-} from "./common";
+import { MS_PER, SQUARE_SIZE, TS } from "./common";
 
 import StartScreen from "./levels/start-screen";
-
-const PAN_SPEED = .05;
 
 const gameLoop = gameLoopFunction(MS_PER, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
@@ -63,8 +53,6 @@ let touchDown: boolean = false;
 let booted: boolean = false;
 
 game.camera = camera;
-
-const keyActions = { s: camera.shakeScreen.bind(camera)};
 
 function resize() {
   const aspectRatio = window.innerWidth / window.innerHeight;
@@ -94,7 +82,7 @@ function update(timestamp: number): void {
 
   if (game.currentLevel === game.levels.startScreen) {
     const level = game.levels.startScreen as StartScreen;
-    camera.pos.x -= level.panDirection * PAN_SPEED;
+    camera.pos.x -= level.panDirection * 0.5;
     if (camera.pos.x < -game.canvas.width) level.panDirection = -1;
     if (camera.pos.x > 0) level.panDirection = 1;
   } else {
@@ -117,7 +105,6 @@ function handleTouchDown(event) {
 function handleTouchMove(event) {
   let touch: MouseEvent | Touch = event;
   if (event.touches) touch = event.changedTouches[0];
-
   currentTouch = touch as Touch;
 }
 
@@ -129,16 +116,7 @@ function handleTouchUp() {
 requestAnimationFrame(animate);
 
 window.addEventListener("resize", () => resize());
-
-window.addEventListener("keydown", (event) => {
-  const key = event.key;
-  if (keyActions[key]) {
-    keyActions[key]();
-  } else {
-    game.handleInput(key);
-  }
-});
-
+window.addEventListener("keydown", (event) => game.handleInput(event.key));
 window.addEventListener("mousedown", handleTouchDown, false);
 window.addEventListener("touchstart", handleTouchDown, false);
 window.addEventListener("mouseup", handleTouchUp, false);

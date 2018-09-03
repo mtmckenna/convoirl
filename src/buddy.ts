@@ -157,8 +157,7 @@ export default class Buddy implements IDrawable, IInteractable {
 
     const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
-    const canMove = canThingMoveToPosition(this, endPos, this.game.currentLevel);
-    if (canMove) this.configureWalkingAnimation(startPos, endPos);
+    if (this.canMoveToPosition(endPos)) this.configureWalkingAnimation(startPos, endPos);
   }
 
   public configureWalkingAnimation(startPos, endPos) {
@@ -293,5 +292,19 @@ export default class Buddy implements IDrawable, IInteractable {
       scaledEyeReflectionSize,
       scaledEyeReflectionSize * openness,
     );
+  }
+
+  private canMoveToPosition(position: IPoint): boolean {
+    const level = this.game.currentLevel;
+    const inMap = position.x >= 0 &&
+      position.x <= level.size.width - this.size.width &&
+      position.y >= 0 &&
+      position.y < level.size.height;
+
+    let { x, y } = position;
+    x /= TS;
+    y /= TS;
+
+    return inMap && level.tilesGrid[y][x].walkable;
   }
 }

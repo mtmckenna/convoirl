@@ -18,8 +18,6 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
-const MAX_PREV_IMAGE_SIZE = 5;
-
 export default class Game {
   public camera: Camera;
   public canvas: HTMLCanvasElement;
@@ -73,8 +71,8 @@ export default class Game {
 
   public boot(timestamp) {
     this.timestamp = timestamp;
-    // this.switchLevel(this.levels.startScreen);
-    this.switchLevel(this.levels.world);
+    this.switchLevel(this.levels.startScreen);
+    // this.switchLevel(this.levels.world);
     // this.switchLevel(this.levels.convo);
   }
 
@@ -131,23 +129,13 @@ export default class Game {
   }
 
   private setSize() {
-    this.size = {
-      height: this.canvas.height / this.squareSize,
-      width: this.canvas.width / this.squareSize,
-    };
-
-    this.drawingSize = {
-      height: this.canvas.height,
-      width: this.canvas.width,
-    };
-
     this.scaleFactor = window.innerWidth / this.canvas.width;
   }
 
   private updateTransition(timestamp) {
     const t = (timestamp - this.transition.startTime) / this.transition.duration;
 
-    this.transition.prevLevelScale = clerp(1, MAX_PREV_IMAGE_SIZE, 1, MAX_PREV_IMAGE_SIZE, t);
+    this.transition.prevLevelScale = clerp(1, 5, 1, 5, t);
     this.transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
     this.transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
 
