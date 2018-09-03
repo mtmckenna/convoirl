@@ -235,41 +235,28 @@ export default class World extends Level {
   private processInput() {
     const timeSinceInput = this.game.timestamp - this.inputBuffer.pressedAt;
     if (timeSinceInput > 50) return;
-
-    switch (this.inputBuffer.key) {
-      case "ArrowUp":
-        this.walk("up");
-        break;
-      case "ArrowDown":
-        this.walk("down");
-        break;
-      case "ArrowRight":
-        this.walk("right");
-        break;
-      case "ArrowLeft":
-        this.walk("left");
-        break;
-    }
-  }
-
-  private walk(direction: "up" | "down" | "left" | "right") {
     if (this.game.player.walking) return;
 
-    // Get the tile index that we'd be walking onto
+      // Get the tile index that we'd be walking onto
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
-    switch (direction) {
-      case "up":
-      tileIndex.y -= 1;
-      break;
-      case "down":
-      tileIndex.y += 1;
-      break;
-      case "left":
-      tileIndex.x -= 1;
-      break;
-      case "right":
-      tileIndex.x += 1;
-      break;
+    let direction = null;
+    switch (this.inputBuffer.key) {
+      case "ArrowUp":
+        direction = "up";
+        tileIndex.y -= 1;
+        break;
+      case "ArrowDown":
+        direction = "down";
+        tileIndex.y += 1;
+        break;
+      case "ArrowRight":
+        direction = "right";
+        tileIndex.x += 1;
+        break;
+      case "ArrowLeft":
+        direction = "left";
+        tileIndex.x -= 1;
+        break;
     }
 
     let levelToQueue = null;
@@ -298,6 +285,53 @@ export default class World extends Level {
     // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
   }
+
+  // private walk(direction: "up" | "down" | "left" | "right") {
+  //   if (this.game.player.walking) return;
+
+  //   // Get the tile index that we'd be walking onto
+  //   const tileIndex = Object.assign({}, this.game.player.tileIndex);
+  //   switch (direction) {
+  //     case "up":
+  //     tileIndex.y -= 1;
+  //     break;
+  //     case "down":
+  //     tileIndex.y += 1;
+  //     break;
+  //     case "left":
+  //     tileIndex.x -= 1;
+  //     break;
+  //     case "right":
+  //     tileIndex.x += 1;
+  //     break;
+  //   }
+
+  //   let levelToQueue = null;
+
+  //   // Check if we're overlapping interactables like buddies
+  //   const overlappedInteractable = this.interactables.find((interactable) => {
+  //     return interactable.tileIndex.x === tileIndex.x &&
+  //     interactable.tileIndex.y === tileIndex.y;
+  //   });
+
+  //   if (overlappedInteractable) {
+  //     this.currentBuddy = overlappedInteractable as Buddy;
+  //     levelToQueue = this.game.levels.convo;
+  //   }
+
+  //   // Check if we're overlapping an interactable tile
+  //   if (this.tileAtIndex(tileIndex).interactable) this.sleep();
+
+  //   if (levelToQueue) {
+  //     this.playerSpawnPosition.x = this.game.player.pos.x;
+  //     this.playerSpawnPosition.y = this.game.player.pos.y;
+  //     this.game.queueNextLevel(levelToQueue);
+  //     return;
+  //   }
+
+  //   // If we're not overlapping anything fun, just walk
+  //   this.game.player.walk(direction);
+  // }
 
   private sleep() {
     this.game.player.energy = 1;
