@@ -35,8 +35,8 @@ export default class World extends Level {
   protected tileIndexes = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
     [3, 3, 3, 3, 3, 3, 3,  ,  ,  , 3, 3, 3, 3,  ,  ,  ,  ,  , 3, 3, 3, 3, 3, 3, 3, 3, 3],
-    [3, 3, 3, 3, 3, 3, 3, 2,  ,  , 3, 3, 3, 3,  , 1,  ,  ,  ,  , 3, 3, 3, 3,  ,  , 3, 3],
-    [3, 3, 3, 4, 5, 5, 3,  ,  , 2,  , 3, 3, 3,  ,  ,  ,  ,  ,  , 3, 3, 3,  ,  ,  , 3, 3],
+    [3, 3, 3, 3, 3, 3, 3, 2,  ,  , 3, 3, 3, 3,  , 1,  ,  ,  , 3, 3, 3, 3, 3,  ,  , 3, 3],
+    [3, 3, 3, 4, 5, 5, 3,  ,  , 2,  , 3, 3, 3,  ,  ,  ,  ,  , 3, 3, 3, 3,  ,  ,  , 3, 3],
     [3, 3, 3, 5, 5, 5, 3,  , 1,  ,  , 3, 3, 2,  ,  ,  , 2,  ,  ,  , 3,  ,  ,  , 3, 3, 3],
     [3, 3, 3, 5, 6, 5, 3,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3, 3, 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
@@ -60,7 +60,8 @@ export default class World extends Level {
   private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
   private textIntros: string[][] = TEXT_INTROS;
-  private state: string = "intro";
+  // private state: string = "intro";
+  private state: string = "play";
 
   constructor(game: Game) {
     super(game);
@@ -73,8 +74,7 @@ export default class World extends Level {
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
 
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
-
-    this.createBuddies();
+    this.box.visible = false; // TODO: remove this debug code
   }
 
   public handleInput(key) {
@@ -125,6 +125,7 @@ export default class World extends Level {
 
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
+    this.createBuddies();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.game.player.dusts, 1);
     this.addDrawables([this.game.player], 2);
@@ -138,6 +139,7 @@ export default class World extends Level {
   }
 
   public levelStarted() {
+
     this.energyBar.animateToLevel(this.game.player.energy);
     this.game.player.move(this.playerSpawnPosition);
     this.game.player.setConvoMode(false);
@@ -159,10 +161,40 @@ export default class World extends Level {
   }
 
   private createBuddies() {
-    const buddy = new Buddy(this.game);
-    buddy.move({ x: TS * 10, y: TS * 10 });
-    buddy.skills.push("listen");
-    this.buddies = [buddy];
+    const listenBuddy = new Buddy(this.game);
+    listenBuddy.move({ x: TS * 10, y: TS * 10 });
+    listenBuddy.skills.push("listen");
+
+    const pastryBuddy = new Buddy(this.game);
+    pastryBuddy.move({ x: TS * 8, y: TS * 1 });
+    listenBuddy.skills.push("pastries");
+
+    const travelBuddy = new Buddy(this.game);
+    travelBuddy.move({ x: TS * 18, y: TS * 3 });
+    travelBuddy.skills.push("france");
+
+    const sportsBuddy = new Buddy(this.game);
+    sportsBuddy.move({ x: TS * 25, y: TS * 2 });
+    sportsBuddy.skills.push("sports");
+
+    const specialBuddy = new Buddy(this.game);
+    specialBuddy.move({ x: TS * 23, y: TS * 18 });
+    specialBuddy.look("left");
+    specialBuddy.skills.push("gymnastics");
+
+    const booksBuddy = new Buddy(this.game);
+    booksBuddy.move({ x: TS * 15, y: TS * 18 });
+    booksBuddy.skills.push("books");
+    booksBuddy.look("up");
+
+    this.buddies = [
+      listenBuddy,
+      pastryBuddy,
+      travelBuddy,
+      sportsBuddy,
+      specialBuddy,
+      booksBuddy,
+    ];
   }
 
   private handleBoxInput(): boolean {
@@ -182,6 +214,7 @@ export default class World extends Level {
   }
 
   private showNextIntroBox() {
+    if (this.state !== "intro") return; // TODO: remove this debug code!
     const words = this.textIntros[0];
     if (!words) {
       this.state = "play";
@@ -307,22 +340,22 @@ export default class World extends Level {
     const pos = Object.assign({}, thing.pos);
     switch (direction) {
       case "up":
-      pos.y -= this.game.tileSize;
+      pos.y -= TS;
       break;
       case "down":
-      pos.y += this.game.tileSize;
+      pos.y += TS;
       break;
       case "left":
-      pos.x -= this.game.tileSize;
+      pos.x -= TS;
       break;
       case "right":
-      pos.x += this.game.tileSize;
+      pos.x += TS;
       break;
     }
 
     // Make sure we're on a tile boundary by subtracting the remainder
-    pos.x = pos.x - pos.x % this.game.tileSize;
-    pos.y = pos.y - pos.y % this.game.tileSize;
+    pos.x = pos.x - pos.x % TS;
+    pos.y = pos.y - pos.y % TS;
 
     return canThingMoveToPosition(thing, pos, this);
   }

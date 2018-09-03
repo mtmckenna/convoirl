@@ -24,13 +24,10 @@ export default class Game {
   public camera: Camera;
   public canvas: HTMLCanvasElement;
   public currentLevel: Level;
-  public drawingSize: ISize;
   public timestamp: number = 0;
-  public tileSize: number = TS;
   public levels: { [key: string]: Level; };
   public player: Buddy;
   public squareSize: number = SQUARE_SIZE;
-  public size: ISize;
   public transition: IAnimation;
   public scaleFactor: number = 1;
 
@@ -76,8 +73,8 @@ export default class Game {
 
   public boot(timestamp) {
     this.timestamp = timestamp;
-    this.switchLevel(this.levels.startScreen);
-    // this.switchLevel(this.levels.world);
+    // this.switchLevel(this.levels.startScreen);
+    this.switchLevel(this.levels.world);
     // this.switchLevel(this.levels.convo);
   }
 

@@ -34,7 +34,7 @@ const CONVO_LOOK_RIGHT_OFFSET = 6;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
 
-// ["weather", "pastries", "france", "cats", "sports", "math"]
+// ["weather", "pastries", "france", "cats", "sports", "math", "books", "gymnastics"]
 
 export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
@@ -69,10 +69,6 @@ export default class Buddy implements IDrawable, IInteractable {
     };
 
     this.squareSize = this.game.squareSize;
-  }
-
-  get blinking() {
-    return this.animations.blinking.running;
   }
 
   get walking() {
@@ -120,25 +116,42 @@ export default class Buddy implements IDrawable, IInteractable {
     this.tileIndex.y = Math.ceil(this.pos.y / TS);
   }
 
+  public look(direction: "up" | "down" | "left" | "right") {
+    switch (direction) {
+      case "left":
+        this.rot = -Math.PI / 2;
+        break;
+      case "right":
+        this.rot = Math.PI / 2;
+        break;
+      case "down":
+        this.rot = Math.PI;
+        break;
+      case "up":
+        this.rot = 0;
+        break;
+    }
+  }
+
   public walk(direction: "up" | "down" | "left" | "right") {
     let { x, y } = this.pos;
 
     switch (direction) {
       case "left":
-        this.rot = -Math.PI / 2;
-        x -= this.game.tileSize;
+        this.look("left");
+        x -= TS;
         break;
       case "right":
-        this.rot = Math.PI / 2;
-        x += this.game.tileSize;
+        this.look("right");
+        x += TS;
         break;
       case "down":
-        this.rot = Math.PI;
-        y += this.game.tileSize;
+        this.look("down");
+        y += TS;
         break;
       case "up":
-        this.rot = 0;
-        y -= this.game.tileSize;
+        this.look("up");
+        y -= TS;
         break;
     }
 
