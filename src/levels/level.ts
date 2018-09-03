@@ -9,7 +9,7 @@ import {
   ISize,
   ITouchable,
   IUpdateable,
-  TILE_SIZE,
+  TS,
  } from "../common";
 
 import { flatten, randomIndexFromArray } from "../helpers";
@@ -62,8 +62,8 @@ export default abstract class Level {
   }
 
   protected generateTiles() {
-    const width = this.tileIndexes[0].length * TILE_SIZE;
-    const height = this.tileIndexes.length * TILE_SIZE;
+    const width = this.tileIndexes[0].length * TS;
+    const height = this.tileIndexes.length * TS;
 
     this.size = { width, height };
     this.drawingSize = { width: width * this.game.squareSize, height: height * this.game.squareSize };

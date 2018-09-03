@@ -11,13 +11,13 @@ import {
   DISABLED_ALPHA,
   LINE_HEIGHT,
   THROTTLE_TIME,
-  TILE_SIZE,
+  TS,
 } from "../common";
 
 import { randomIndexFromArray, throttle } from "../helpers";
 
 const BUDDY_Y_FROM_BOX = 4;
-const BUDDY_DISTANCE = 4 * TILE_SIZE;
+const BUDDY_DISTANCE = 4 * TS;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
 

@@ -51,8 +51,8 @@ export interface IInputBuffer {
   key: string;
 }
 
-export const TILE_SIZE: number = 8;
-export const HALF_TILE_SIZE: number = TILE_SIZE / 2;
+export const TS: number = 8;
+export const HALF_TILE_SIZE: number = TS / 2;
 export const SQUARE_SIZE = 5;
 export const MS_PER_UPDATE = 1 / 60;
 export const NUM_TILES_ON_LONG_SIDE = 16;

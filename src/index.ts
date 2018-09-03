@@ -42,7 +42,7 @@ import {
   MS_PER_UPDATE,
   NUM_TILES_ON_LONG_SIDE,
   SQUARE_SIZE,
-  TILE_SIZE,
+  TS,
 } from "./common";
 
 import StartScreen from "./levels/start-screen";
@@ -54,7 +54,7 @@ const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasE
 
 const game: Game = new Game(canvas);
 const camera: Camera = new Camera(game);
-const sideLength: number = NUM_TILES_ON_LONG_SIDE * TILE_SIZE * SQUARE_SIZE;
+const sideLength: number = NUM_TILES_ON_LONG_SIDE * TS * SQUARE_SIZE;
 
 let width: number = sideLength;
 let height: number = sideLength;

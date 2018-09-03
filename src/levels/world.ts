@@ -13,7 +13,7 @@ import {
   IPoint,
   IPositionable,
   THROTTLE_TIME,
-  TILE_SIZE,
+  TS,
 } from "../common";
 
 import { canThingMoveToPosition, throttle } from "../helpers";
@@ -57,7 +57,7 @@ export default class World extends Level {
 
   private buddies: Buddy[];
   private box: Box;
-  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
+  private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
   private textIntros: string[][] = TEXT_INTROS;
   private state: string = "intro";
@@ -161,7 +161,7 @@ export default class World extends Level {
 
   private createBuddies() {
     const buddy = new Buddy(this.game);
-    buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
+    buddy.move({ x: TS * 10, y: TS * 10 });
     buddy.skills.push("listening");
     this.buddies = [buddy];
   }

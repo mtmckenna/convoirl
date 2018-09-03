@@ -16,7 +16,7 @@ import {
   IPoint,
   ISize,
   SQUARE_SIZE,
-  TILE_SIZE,
+  TS,
 } from "./common";
 
 import {
@@ -40,7 +40,7 @@ export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
   public drawingSize: ISize;
   public pos: IPoint = { x: 0, y: 0 };
-  public size: ISize = { height: TILE_SIZE, width: TILE_SIZE };
+  public size: ISize = { height: TS, width: TS };
   public alpha: number;
   public visible: boolean = true;
   public dusts: Dust[];
@@ -65,8 +65,8 @@ export default class Buddy implements IDrawable, IInteractable {
     this.color = randomElementFromArray(COLORS);
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize = {
-      height: TILE_SIZE * this.game.squareSize,
-      width: TILE_SIZE * this.game.squareSize,
+      height: TS * this.game.squareSize,
+      width: TS * this.game.squareSize,
     };
 
     this.squareSize = this.game.squareSize;
@@ -91,8 +91,8 @@ export default class Buddy implements IDrawable, IInteractable {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;
     this.squareSize = this.game.squareSize;
-    this.size.width = TILE_SIZE;
-    this.size.height = TILE_SIZE;
+    this.size.width = TS;
+    this.size.height = TS;
     this.drawingSize.width = this.size.width * this.game.squareSize;
     this.drawingSize.height = this.size.height * this.game.squareSize;
 
@@ -116,8 +116,8 @@ export default class Buddy implements IDrawable, IInteractable {
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
-    this.tileIndex.x = Math.ceil(this.pos.x / TILE_SIZE);
-    this.tileIndex.y = Math.ceil(this.pos.y / TILE_SIZE);
+    this.tileIndex.x = Math.ceil(this.pos.x / TS);
+    this.tileIndex.y = Math.ceil(this.pos.y / TS);
   }
 
   public walk(direction: "up" | "down" | "left" | "right") {

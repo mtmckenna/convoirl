@@ -1,4 +1,4 @@
-import { IAnimation, IPoint, IPositionable, TILE_SIZE } from "./common";
+import { IAnimation, IPoint, IPositionable, TS } from "./common";
 
 import Level from "./levels/level";
 
@@ -9,8 +9,8 @@ function canThingMoveToPosition(thing: IPositionable, position: IPoint, level: L
     position.y < level.size.height;
 
   let { x, y } = position;
-  x /= TILE_SIZE;
-  y /= TILE_SIZE;
+  x /= TS;
+  y /= TS;
 
   const { walkable } = level.tilesGrid[y][x];
 
@@ -73,7 +73,7 @@ function twoPhaseClerp(t: number, min: number, max: number, reverse = false): nu
 }
 
 function singleColorTileArray(colorIndex) {
-  return new Array(TILE_SIZE).fill(null).map(() => new Array(TILE_SIZE).fill(colorIndex));
+  return new Array(TS).fill(null).map(() => new Array(TS).fill(colorIndex));
 }
 
 function throttle(func, limit) {

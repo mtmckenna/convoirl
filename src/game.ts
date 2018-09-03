@@ -5,7 +5,7 @@ import {
   LETTER_HEIGHT,
   LINE_HEIGHT,
   SQUARE_SIZE,
-  TILE_SIZE,
+  TS,
 } from "./common";
 
 import { transition } from "./animations";
@@ -26,7 +26,7 @@ export default class Game {
   public currentLevel: Level;
   public drawingSize: ISize;
   public timestamp: number = 0;
-  public tileSize: number = TILE_SIZE;
+  public tileSize: number = TS;
   public levels: { [key: string]: Level; };
   public player: Buddy;
   public squareSize: number = SQUARE_SIZE;
@@ -120,8 +120,8 @@ export default class Game {
   }
 
   public sizeInTiles(): ISize {
-    const width = Math.ceil(this.canvas.width / this.squareSize / TILE_SIZE);
-    const height = Math.ceil(this.canvas.height / this.squareSize / TILE_SIZE);
+    const width = Math.ceil(this.canvas.width / this.squareSize / TS);
+    const height = Math.ceil(this.canvas.height / this.squareSize / TS);
     return { width, height };
   }
 

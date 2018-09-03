@@ -1,4 +1,4 @@
-import { TILE_SIZE } from "../common";
+import { TS } from "../common";
 import { singleColorTileArray } from "../helpers";
 
 const E = null;
@@ -67,7 +67,7 @@ export default {
       [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6],
       [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6],
     ],
-    tileLength: 3 * TILE_SIZE,
+    tileLength: 3 * TS,
   },
   sky: {
     canvas: null,

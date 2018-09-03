@@ -7,15 +7,15 @@ import {
   IDrawable,
   IInteractable,
   IPoint,
-  TILE_SIZE,
+  TS,
 } from "../common";
 import { flatten } from "../helpers";
 
 export default class Tile implements IDrawable, IInteractable {
-  public drawingSize = { width: TILE_SIZE, height: TILE_SIZE };
+  public drawingSize = { width: TS, height: TS };
   public pos = { x: 0, y: 0 };
   public alpha = 1;
-  public size = { width: TILE_SIZE, height: TILE_SIZE };
+  public size = { width: TS, height: TS };
   public walkable: boolean = true;
   public visible: boolean = true;
   public game: Game;
@@ -23,12 +23,12 @@ export default class Tile implements IDrawable, IInteractable {
   public interactable: boolean = false;
   public name: string;
 
-  protected tileLength: number = TILE_SIZE;
+  protected tileLength: number = TS;
   protected colorMatrix: number[][];
 
   constructor(game: Game, name: string, rowIndex: number, columnIndex: number) {
     this.game = game;
-    this.pos = { x: rowIndex * TILE_SIZE, y: columnIndex * TILE_SIZE };
+    this.pos = { x: rowIndex * TS, y: columnIndex * TS };
     this.tileIndex = { x: rowIndex, y: columnIndex };
 
     this.name = name;
