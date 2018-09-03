@@ -34,11 +34,14 @@ export interface IInteractable {
   tileIndex: IPoint;
 }
 
+export interface IFadeable {
+  alpha: number;
+}
+
 export interface IDrawable extends IPositionable {
   drawingSize: ISize;
   visible: boolean;
   game: Game;
-  alpha: number;
   draw(context: CanvasRenderingContext2D, timestamp: number): void;
 }
 

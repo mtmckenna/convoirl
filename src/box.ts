@@ -16,7 +16,6 @@ export default class Box implements ITouchable {
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
-  public alpha = 1;
 
   private strokePos: IPoint;
   private color: string;
@@ -60,8 +59,6 @@ export default class Box implements ITouchable {
   }
 
   public draw(context, timestamp) {
-    const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
-    context.globalAlpha = alpha;
     context.fillStyle = this.color;
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
     context.strokeStyle = colorMap[1];

@@ -41,7 +41,6 @@ export default class Buddy implements IDrawable, IInteractable {
   public drawingSize: ISize;
   public pos: IPoint = { x: 0, y: 0 };
   public size: ISize = { height: TS, width: TS };
-  public alpha: number;
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather"];

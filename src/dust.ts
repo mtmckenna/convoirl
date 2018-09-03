@@ -1,10 +1,10 @@
 import colorMap from "./colors";
 import Game from "./game";
 
-import { IDrawable, IUpdateable } from "./common";
+import { IDrawable, IFadeable, IUpdateable } from "./common";
 import { clerp } from "./helpers";
 
-export default class Dust implements IDrawable, IUpdateable {
+export default class Dust implements IDrawable, IFadeable, IUpdateable {
   public game: Game;
 
   public drawingSize;

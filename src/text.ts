@@ -4,6 +4,7 @@ import letters from "./letters";
 
 import {
   IAnimations,
+  IFadeable,
   IPoint,
   ISize,
   ITouchable,
@@ -13,7 +14,7 @@ import { floatText as floatTextAnimation } from "./animations";
 import { lerp } from "./helpers";
 
 // Text from https://github.com/PaulBGD/PixelFont
-export default class Text implements ITouchable {
+export default class Text implements ITouchable, IFadeable {
   public game: Game;
   public words: string = "";
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
@@ -23,7 +24,6 @@ export default class Text implements ITouchable {
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
-  public alpha = 1;
 
   private animations: IAnimations = {};
   private upToIndex: number = null;
