@@ -82,7 +82,7 @@ function update(timestamp: number): void {
 
   if (game.currentLevel === game.levels.startScreen) {
     const level = game.levels.startScreen as StartScreen;
-    camera.pos.x -= level.panDirection * 0.5;
+    camera.pos.x -= level.panDirection * 0.05;
     if (camera.pos.x < -game.canvas.width) level.panDirection = -1;
     if (camera.pos.x > 0) level.panDirection = 1;
   } else {
