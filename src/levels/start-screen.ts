@@ -4,8 +4,6 @@ import Text from "../text";
 
 import Level from "./level";
 
-const TEXT_TILE = ["CONVO IRL", "", "TAP TO PLAY"];
-
 export default class StartScreen extends Level {
   public panDirection = 1;
 
@@ -21,7 +19,7 @@ export default class StartScreen extends Level {
     super(game);
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.box.touched = () => this.handleInput();
-    this.box.setWords(TEXT_TILE);
+    this.box.setWords(["CONVO IRL", "", "TAP TO PLAY"]);
   }
 
   public resize() {

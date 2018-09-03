@@ -11,8 +11,6 @@ import {
   SQUARE_SIZE,
  } from "./common";
 
-const TEXT_SPEED = 50;
-
 export default class Box implements ITouchable {
   public game: Game;
   public pos: IPoint = { x: 0, y: 0 };
@@ -75,7 +73,7 @@ export default class Box implements ITouchable {
 
     if (this.startTime) {
       // TODO: gotta be a simpler way of doing the animation here
-      const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / TEXT_SPEED), this.textLength);
+      const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / 50), this.textLength);
       indexes = this.texts.map((text, i) => {
         // Add up lengths of previous texts
         const prevSum = this.texts.slice(0, i).reduce((prev, toCount) => toCount.words.length + prev, 0);

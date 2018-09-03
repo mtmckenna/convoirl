@@ -27,19 +27,12 @@ import {
 
 const EYE_SIZE = 2;
 const EYE_REFLECTION_SIZE = 1;
-const EYE_REFLECTION_COLOR = "rgb(255, 255, 255)";
-const EYE_COLOR = "rgb(0, 0, 0)";
 const RIGHT_EYE_OFFSET = 4;
 const EYE_OFFSET = 1;
 const EYE_OFFSET_CONVO = 4;
 const CONVO_LOOK_RIGHT_OFFSET = 6;
-const NUM_DUSTS = 50;
-const TIME_BETWEEN_DUSTS = 30;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
-
-const LEFT = "left";
-const RIGHT = "right";
 
 export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
@@ -69,7 +62,7 @@ export default class Buddy implements IDrawable, IInteractable {
     this.animations.walking = Object.assign({}, walkingAnimation, { endPos: this.pos });
     this.animations.lookAway = Object.assign({}, lookAwayAnimation);
     this.color = randomElementFromArray(COLORS);
-    this.dusts = Array.from(Array(NUM_DUSTS).keys()).map(() => new Dust(this.game));
+    this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize.width = TILE_SIZE * this.game.squareSize;
     this.drawingSize.height = TILE_SIZE * this.game.squareSize;
     this.squareSize = this.game.squareSize;
@@ -209,10 +202,10 @@ export default class Buddy implements IDrawable, IInteractable {
 
     this.maybeDoEyeAnimations(timestamp);
 
-    this.drawEye(context, LEFT, this.animations.blinking.openness, this.animations.lookAway.offset);
-    this.drawEye(context, RIGHT, this.animations.blinking.openness, this.animations.lookAway.offset);
+    this.drawEye(context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
+    this.drawEye(context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
 
-    if (this.walking && (timestamp - this.lastDustAt) > TIME_BETWEEN_DUSTS) {
+    if (this.walking && (timestamp - this.lastDustAt) > 30) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
       if (dust) {
         const xOffset = this.size.width / 2 * Math.random() + this.size.width / 4;
@@ -255,9 +248,9 @@ export default class Buddy implements IDrawable, IInteractable {
   }
 
   private drawEye(context, whichOne, openness, lookAwayOffset) {
-    const leftRightOffset = whichOne === LEFT ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
+    const leftRightOffset = whichOne === "left" ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
 
-    context.fillStyle = EYE_COLOR;
+    context.fillStyle = "rgb(0, 0, 0)";
 
     let offset = EYE_OFFSET;
     let convoLookRightOffset = 0;
@@ -275,7 +268,7 @@ export default class Buddy implements IDrawable, IInteractable {
       scaledEyeSize * openness,
     );
 
-    context.fillStyle = EYE_REFLECTION_COLOR;
+    context.fillStyle = "rgb(255, 255, 255)";
 
     context.fillRect(
       scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.squareSize) - convoLookRightOffset,
