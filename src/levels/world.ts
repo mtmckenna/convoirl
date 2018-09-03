@@ -73,10 +73,9 @@ export default class World extends Level {
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
     this.game.player.energy =  .6;
 
-    const buddy = new Buddy(game);
-    buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
-    this.buddies = [buddy];
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
+
+    this.createBuddies();
   }
 
   public handleInput(key) {
@@ -158,6 +157,13 @@ export default class World extends Level {
 
     sequence.loop = false;
     sequence.play();
+  }
+
+  private createBuddies() {
+    const buddy = new Buddy(this.game);
+    buddy.move({ x: TILE_SIZE * 10, y: TILE_SIZE * 10 });
+    buddy.skills.push("listening");
+    this.buddies = [buddy];
   }
 
   private handleBoxInput(): boolean {

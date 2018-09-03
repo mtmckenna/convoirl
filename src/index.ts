@@ -31,6 +31,7 @@ SPACE SAVING THOUGHTS
   - might be able to remove drawingSize on some things
   - drawingSize for buddy can be hardcoded
   - remove debug
+  - conslidate where flooring
 */
 
 import Camera from "./camera";

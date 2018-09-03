@@ -34,6 +34,8 @@ const CONVO_LOOK_RIGHT_OFFSET = 6;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
 
+// ["weather", "pastries", "france", "cats", "sports", "math"]
+
 export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
   public drawingSize: ISize;
@@ -42,7 +44,7 @@ export default class Buddy implements IDrawable, IInteractable {
   public alpha: number;
   public visible: boolean = true;
   public dusts: Dust[];
-  public skills: string[] = ["weather", "pastries", "france", "cats", "sports", "math"];
+  public skills: string[] = ["weather"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
   public energy: number = 1;

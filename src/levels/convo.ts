@@ -38,6 +38,7 @@ export default class Convo extends Level {
   private convoBar: EnergyBar;
   private convoLevel: number = 0;
   private convoPerTurn: number = .25;
+  private waiting: boolean = false;
 
   constructor(game: Game) {
     super(game);
@@ -63,8 +64,6 @@ export default class Convo extends Level {
       case "Enter":
         this.useSelectedSkill();
         break;
-      case "q":
-        this.game.queueNextLevel(this.game.levels.world);
     }
   }
 
@@ -84,7 +83,12 @@ export default class Convo extends Level {
   }
 
   public levelWillStart() {
-    if (!this.buddy) this.setBuddy(new Buddy(this.game));
+    // TODO: DELETE THIS DEBUG CODE
+    if (!this.buddy) {
+      this.setBuddy(new Buddy(this.game));
+      this.buddy.skills.push("listening");
+    }
+
     this.clearTouchables();
 
     this.game.player.setConvoMode(true);
@@ -163,33 +167,36 @@ export default class Convo extends Level {
 
   private moveSkillCursor(amountToMoveBy) {
     const updatedIndex = this.currentSkillIndex + amountToMoveBy;
-    const updatedSkill = this.skills[updatedIndex];
+    const skill = this.skills[updatedIndex] || this.skills[this.currentSkillIndex];
+    this.currentSkillIndex = this.skills.indexOf(skill);
     this.downArrow.alpha = 1;
     this.upArrow.alpha = 1;
-    this.skills.forEach((skill) => skill.alpha = DISABLED_ALPHA);
-
-    if (updatedSkill) {
-      updatedSkill.alpha = 1;
-      this.currentSkillIndex = updatedIndex;
-    } else {
-      this.skills[this.currentSkillIndex].alpha = 1;
-    }
+    this.skills.forEach((s) => s.alpha = DISABLED_ALPHA);
 
     if (this.currentSkillIndex === 0) this.downArrow.alpha = DISABLED_ALPHA;
     if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = DISABLED_ALPHA;
   }
 
   private useSelectedSkill() {
+    if (this.waiting) return;
     if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
-    const skill = this.skills[this.currentSkillIndex];
-    const text = new Text(this.game, skill.words, colorMap[9]);
-
-    const pos = { x: this.game.player.pos.x, y: this.game.player.pos.y };
-    text.startFloat(pos);
-    this.addDrawables([text], 2);
+    this.buddyExecuteSkillIndex(this.game.player, this.currentSkillIndex);
+    this.waiting = true;
+    setTimeout(() => {
+      this.buddyExecuteSkillIndex(this.buddy, randomIndexFromArray(this.buddy.skills));
+    }, 1000);
 
     this.convoLevel += this.convoPerTurn;
     this.convoBar.animateToLevel(this.convoLevel);
+  }
+
+  private buddyExecuteSkillIndex(buddy, skillIndex) {
+    const skill = buddy.skills[skillIndex];
+    const text = new Text(this.game, skill, colorMap[9]);
+    const pos = { x: buddy.pos.x, y: buddy.pos.y };
+    text.startFloat(pos);
+    this.addDrawables([text], 2);
+    if (buddy === this.buddy) this.waiting = false;
   }
 
   private moveBuddies() {
@@ -205,10 +212,7 @@ export default class Convo extends Level {
 
     const convoWidth = this.game.player.size.width + BUDDY_DISTANCE + buddy.size.width;
 
-    const playerPos = {
-      x: boxPosX + (boxSize.width - convoWidth) / 2,
-      y: boxPosY,
-    };
+    const playerPos = { x: boxPosX + (boxSize.width - convoWidth) / 2, y: boxPosY };
 
     const buddyPos = Object.assign({}, playerPos);
     buddyPos.x += BUDDY_DISTANCE + this.game.player.size.width;
@@ -250,6 +254,9 @@ export default class Convo extends Level {
 
     this.skills.forEach((skill, index) => {
       const indexDiff = this.currentSkillIndex - index;
+
+      skill.alpha = indexDiff === 0 && !this.waiting ? 1 : DISABLED_ALPHA;
+
       const skillX = Math.floor(
         this.box.pos.x +
         this.box.drawingSize.width / 2 -

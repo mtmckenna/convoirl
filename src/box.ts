@@ -8,7 +8,6 @@ import {
   ITouchable,
   LETTER_HEIGHT,
   LINE_HEIGHT,
-  SQUARE_SIZE,
  } from "./common";
 
 export default class Box implements ITouchable {
