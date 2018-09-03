@@ -84,6 +84,7 @@ export default class Buddy implements IDrawable, IInteractable {
     const buddy = new Buddy(this.game);
     buddy.move(this.pos);
     buddy.color = this.color;
+    buddy.skills = this.skills;
     return buddy;
   }
 

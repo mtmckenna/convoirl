@@ -93,7 +93,6 @@ export default class Convo extends Level {
     this.game.player.setConvoMode(true);
     this.game.player.convoLook("right");
 
-    this.energyBar.animateToLevel(this.game.player.energy);
     this.convoLevel = 0;
 
     this.buddies = [this.game.player, this.buddy];
@@ -105,6 +104,8 @@ export default class Convo extends Level {
 
   public levelStarted() {
     this.moveBuddies();
+    this.convoBar.animateToLevel(this.convoLevel);
+    this.energyBar.animateToLevel(this.game.player.energy);
   }
 
   public resize() {
