@@ -54,12 +54,9 @@ export interface IInputBuffer {
   key: string;
 }
 
-export const TS: number = 8;
-export const HALF_TILE_SIZE: number = TS / 2;
+export const TS = 8;
 export const SQUARE_SIZE = 5;
-export const MS_PER_UPDATE = 1 / 60;
-export const NUM_TILES_ON_LONG_SIDE = 16;
+export const MS_PER = 1 / 60;
 export const LINE_HEIGHT = 8;
-export const D_ALPHA = .5;
-export const THROTTLE_TIME = 120;
+export const T_TIME = 120;
 export const LETTER_HEIGHT = 5;

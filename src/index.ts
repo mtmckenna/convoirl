@@ -40,8 +40,7 @@ import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
 import {
-  MS_PER_UPDATE,
-  NUM_TILES_ON_LONG_SIDE,
+  MS_PER,
   SQUARE_SIZE,
   TS,
 } from "./common";
@@ -50,12 +49,12 @@ import StartScreen from "./levels/start-screen";
 
 const PAN_SPEED = .05;
 
-const gameLoop = gameLoopFunction(MS_PER_UPDATE, update, this);
+const gameLoop = gameLoopFunction(MS_PER, update, this);
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 
 const game: Game = new Game(canvas);
 const camera: Camera = new Camera(game);
-const sideLength: number = NUM_TILES_ON_LONG_SIDE * TS * SQUARE_SIZE;
+const sideLength: number = 16 * TS * SQUARE_SIZE;
 
 let width: number = sideLength;
 let height: number = sideLength;

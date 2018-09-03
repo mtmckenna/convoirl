@@ -4,7 +4,7 @@ import Game from "./game";
 import {
   canThingMoveToPosition,
   lerp,
-  randomElementFromArray,
+  randomIndexFromArray,
   shouldDoAnimation,
   twoPhaseClerp,
 } from "./helpers";
@@ -61,7 +61,7 @@ export default class Buddy implements IDrawable, IInteractable {
     this.animations.blinking = Object.assign({}, blinkingAnimation);
     this.animations.walking = Object.assign({}, walkingAnimation, { endPos: this.pos });
     this.animations.lookAway = Object.assign({}, lookAwayAnimation);
-    this.color = randomElementFromArray(COLORS);
+    this.color = COLORS[randomIndexFromArray(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize = {
       height: TS * this.game.squareSize,

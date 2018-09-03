@@ -8,9 +8,8 @@ import Game from "../game";
 import Text from "../text";
 
 import {
-  D_ALPHA,
   LINE_HEIGHT,
-  THROTTLE_TIME,
+  T_TIME,
   TS,
 } from "../common";
 
@@ -20,6 +19,7 @@ const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TS;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
+const D_ALPHA = .5;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -46,7 +46,7 @@ export default class Convo extends Level {
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.upArrow = new Text(this.game, "^");
     this.downArrow = new Text(this.game, "_");
-    const throttledHandleInput = throttle(this.handleInput.bind(this), THROTTLE_TIME);
+    const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
     this.handleInput = throttledHandleInput;
     this.upArrow.touched = () => this.handleInput("ArrowUp");
     this.downArrow.touched = () => this.handleInput("ArrowDown");

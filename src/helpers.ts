@@ -44,10 +44,6 @@ function flatten(arrayOfArrays) {
   return [].concat(...arrayOfArrays);
 }
 
-function randomElementFromArray(arrayToPullFrom: any[]) {
-  return arrayToPullFrom[Math.floor(Math.random() * arrayToPullFrom.length)];
-}
-
 function randomIndexFromArray(arrayToPullFrom: any[]) {
   return Math.floor(Math.random() * arrayToPullFrom.length);
 }
@@ -96,7 +92,6 @@ export {
   flatten,
   lerp,
   oneOrMinusOne,
-  randomElementFromArray,
   randomIndexFromArray,
   singleColorTileArray,
   shouldDoAnimation,

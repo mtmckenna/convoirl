@@ -8,10 +8,9 @@ import Game from "../game";
 import TinyMusic from "tinymusic";
 
 import {
-  HALF_TILE_SIZE,
   IInputBuffer,
   IPoint,
-  THROTTLE_TIME,
+  T_TIME,
   TS,
 } from "../common";
 
@@ -64,8 +63,8 @@ export default class World extends Level {
 
   constructor(game: Game) {
     super(game);
-    const throttledHandleTouch = throttle(this.handleTouch.bind(this), THROTTLE_TIME);
-    const throttledHandleInput = throttle(this.handleInput.bind(this), THROTTLE_TIME);
+    const throttledHandleTouch = throttle(this.handleTouch.bind(this), T_TIME);
+    const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
     this.handleTouch = throttledHandleTouch;
     this.handleInput = throttledHandleInput;
 
@@ -98,7 +97,7 @@ export default class World extends Level {
     const verticalDistance = tapYInCameraSpace - this.game.player.pos.y * this.game.squareSize;
     const absHorizontalDistance = Math.abs(horizontalDistance);
     const absVerticalDistance = Math.abs(verticalDistance);
-    const minMoveTheshold = this.game.squareSize * HALF_TILE_SIZE;
+    const minMoveTheshold = this.game.squareSize * TS / 2;
 
     if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
 
