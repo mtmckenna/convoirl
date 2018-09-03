@@ -11,12 +11,11 @@ import {
   HALF_TILE_SIZE,
   IInputBuffer,
   IPoint,
-  IPositionable,
   THROTTLE_TIME,
   TS,
 } from "../common";
 
-import { canThingMoveToPosition, throttle } from "../helpers";
+import { throttle } from "../helpers";
 
 const TEXT_INTROS = [
   ["great news! a", "new kid moved", "into the woods!"],
@@ -104,11 +103,9 @@ export default class World extends Level {
     if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
 
     if (absHorizontalDistance > absVerticalDistance) {
-      const couldMoveHorizontally = this.movePlayerHorizontally(horizontalDistance);
-      if (!couldMoveHorizontally) this.movePlayerVertically(verticalDistance);
+      this.movePlayerHorizontally(horizontalDistance);
     } else {
-      const couldMoveVertically = this.movePlayerVertically(verticalDistance);
-      if (!couldMoveVertically) this.movePlayerHorizontally(horizontalDistance);
+      this.movePlayerVertically(verticalDistance);
     }
   }
 
@@ -232,14 +229,17 @@ export default class World extends Level {
     this.box.updateSize(this.game.boxSize);
   }
 
-  private processInput() {
+  // This function is gigantic not because I'm a bad person but because
+  // I needed to de-dupe the switch statements to save space.
+  private processInput(): boolean {
     const timeSinceInput = this.game.timestamp - this.inputBuffer.pressedAt;
-    if (timeSinceInput > 50) return;
-    if (this.game.player.walking) return;
+    if (timeSinceInput > 50) return false; // For input buffering
+    if (this.game.player.walking) return false;
 
-      // Get the tile index that we'd be walking onto
+    // Get the tile index that we'd be walking onto
     const tileIndex = Object.assign({}, this.game.player.tileIndex);
     let direction = null;
+
     switch (this.inputBuffer.key) {
       case "ArrowUp":
         direction = "up";
@@ -249,13 +249,13 @@ export default class World extends Level {
         direction = "down";
         tileIndex.y += 1;
         break;
-      case "ArrowRight":
-        direction = "right";
-        tileIndex.x += 1;
-        break;
       case "ArrowLeft":
         direction = "left";
         tileIndex.x -= 1;
+        break;
+      case "ArrowRight":
+        direction = "right";
+        tileIndex.x += 1;
         break;
     }
 
@@ -284,6 +284,7 @@ export default class World extends Level {
 
     // If we're not overlapping anything fun, just walk
     this.game.player.walk(direction);
+    return true;
   }
 
   private sleep() {
@@ -296,12 +297,12 @@ export default class World extends Level {
   }
 
   private movePlayerVertically(touchDistance: number): boolean {
-    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, "up")) {
+    if (touchDistance < 0) {
       this.handleInput("ArrowUp");
       return true;
     }
 
-    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, "down")) {
+    if (touchDistance > 0) {
       this.handleInput("ArrowDown");
       return true;
     }
@@ -310,40 +311,16 @@ export default class World extends Level {
   }
 
   private movePlayerHorizontally(touchDistance: number): boolean {
-    if (touchDistance > 0 && this.canThingMoveInDirection(this.game.player, "right")) {
+    if (touchDistance > 0) {
       this.handleInput("ArrowRight");
       return true;
     }
 
-    if (touchDistance < 0 && this.canThingMoveInDirection(this.game.player, "left")) {
+    if (touchDistance < 0) {
       this.handleInput("ArrowLeft");
       return true;
     }
 
     return false;
-  }
-
-  private canThingMoveInDirection(thing: IPositionable, direction: "up" | "down" | "right" | "left") {
-    const pos = Object.assign({}, thing.pos);
-    switch (direction) {
-      case "up":
-      pos.y -= TS;
-      break;
-      case "down":
-      pos.y += TS;
-      break;
-      case "left":
-      pos.x -= TS;
-      break;
-      case "right":
-      pos.x += TS;
-      break;
-    }
-
-    // Make sure we're on a tile boundary by subtracting the remainder
-    pos.x = pos.x - pos.x % TS;
-    pos.y = pos.y - pos.y % TS;
-
-    return canThingMoveToPosition(thing, pos, this);
   }
 }
