@@ -8,13 +8,13 @@ import Game from "../game";
 import Text from "../text";
 
 import {
-  DISABLED_ALPHA,
+  D_ALPHA,
   LINE_HEIGHT,
   THROTTLE_TIME,
   TS,
 } from "../common";
 
-import { randomIndexFromArray, throttle } from "../helpers";
+import { randomElementFromArray, randomIndexFromArray, throttle } from "../helpers";
 
 const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TS;
@@ -36,8 +36,7 @@ export default class Convo extends Level {
   private buddy: Buddy;
   private energyBar: EnergyBar;
   private convoBar: EnergyBar;
-  private convoLevel: number = 0;
-  private convoPerTurn: number = .25;
+  private convoLevel: number;
   private waiting: boolean = false;
 
   constructor(game: Game) {
@@ -86,7 +85,7 @@ export default class Convo extends Level {
     // TODO: DELETE THIS DEBUG CODE
     if (!this.buddy) {
       this.setBuddy(new Buddy(this.game));
-      this.buddy.skills.push("listening");
+      this.buddy.skills.push("listen");
     }
 
     this.clearTouchables();
@@ -96,7 +95,6 @@ export default class Convo extends Level {
 
     this.energyBar.animateToLevel(this.game.player.energy);
     this.convoLevel = 0;
-    this.convoBar.animateToLevel(this.convoLevel);
 
     this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
@@ -171,31 +169,59 @@ export default class Convo extends Level {
     this.currentSkillIndex = this.skills.indexOf(skill);
     this.downArrow.alpha = 1;
     this.upArrow.alpha = 1;
-    this.skills.forEach((s) => s.alpha = DISABLED_ALPHA);
+    this.skills.forEach((s) => s.alpha = D_ALPHA);
 
-    if (this.currentSkillIndex === 0) this.downArrow.alpha = DISABLED_ALPHA;
-    if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = DISABLED_ALPHA;
+    if (this.currentSkillIndex === 0) this.downArrow.alpha = D_ALPHA;
+    if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = D_ALPHA;
   }
 
   private useSelectedSkill() {
     if (this.waiting) return;
     if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
-    this.buddyExecuteSkillIndex(this.game.player, this.currentSkillIndex);
-    this.waiting = true;
-    setTimeout(() => {
-      this.buddyExecuteSkillIndex(this.buddy, randomIndexFromArray(this.buddy.skills));
-    }, 1000);
+    const skillIndex = this.currentSkillIndex;
+    this.buddyExecuteSkillIndex(this.game.player, skillIndex);
 
-    this.convoLevel += this.convoPerTurn;
+    this.waiting = true;
+    setTimeout(() => this.react(skillIndex), 2000);
+
+    let buddySkillIndex = randomIndexFromArray(this.buddy.skills);
+
+    if (this.game.player.skills.length === 1) {
+      buddySkillIndex = this.buddy.skills.indexOf("listen");
+    }
+
+    setTimeout(() => {
+      this.buddyExecuteSkillIndex(this.buddy, buddySkillIndex);
+    }, 4000);
+  }
+
+  private react(skillIndex) {
+    const skill = this.game.player.skills[skillIndex];
+
+    if (skill === "weather" && this.game.player.skills.length === 1) {
+      this.convoLevel += .34;
+      this.game.player.energy -= .15;
+      this.buddyFloatText(this.buddy, "yeah...", colorMap[10]);
+    }
+
+    if (skill === "listen") {
+      this.convoLevel += 0.2;
+      this.buddyFloatText(this.buddy, ":)", colorMap[9]);
+    }
+
     this.convoBar.animateToLevel(this.convoLevel);
+    this.energyBar.animateToLevel(this.game.player.energy);
+  }
+
+  private buddyFloatText(buddy, word, color, goStraightUp = false) {
+    const text = new Text(this.game, word, color);
+    text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
+    this.addDrawables([text], 2);
   }
 
   private buddyExecuteSkillIndex(buddy, skillIndex) {
     const skill = buddy.skills[skillIndex];
-    const text = new Text(this.game, skill, colorMap[9]);
-    const pos = { x: buddy.pos.x, y: buddy.pos.y };
-    text.startFloat(pos);
-    this.addDrawables([text], 2);
+    this.buddyFloatText(buddy, skill, colorMap[1], skill === "listen");
     if (buddy === this.buddy) this.waiting = false;
   }
 
@@ -211,12 +237,9 @@ export default class Convo extends Level {
     };
 
     const convoWidth = this.game.player.size.width + BUDDY_DISTANCE + buddy.size.width;
-
     const playerPos = { x: boxPosX + (boxSize.width - convoWidth) / 2, y: boxPosY };
-
     const buddyPos = Object.assign({}, playerPos);
     buddyPos.x += BUDDY_DISTANCE + this.game.player.size.width;
-
     this.game.player.move(playerPos);
     buddy.move(buddyPos);
   }
@@ -255,7 +278,7 @@ export default class Convo extends Level {
     this.skills.forEach((skill, index) => {
       const indexDiff = this.currentSkillIndex - index;
 
-      skill.alpha = indexDiff === 0 && !this.waiting ? 1 : DISABLED_ALPHA;
+      skill.alpha = indexDiff === 0 && !this.waiting ? 1 : D_ALPHA;
 
       const skillX = Math.floor(
         this.box.pos.x +
@@ -280,7 +303,7 @@ export default class Convo extends Level {
 
     for (let i = floaties.length - 1; i >= 0; i--) {
       const floaty = floaties[i];
-      if (floaty.pos.y < 0) floaties.splice(i, 1);
+      if (floaty.pos.y + floaty.size.height < 0) floaties.splice(i, 1);
     }
   }
 }

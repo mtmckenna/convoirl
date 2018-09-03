@@ -32,6 +32,7 @@ SPACE SAVING THOUGHTS
   - drawingSize for buddy can be hardcoded
   - remove debug
   - conslidate where flooring
+  - could reduce common indexes in tiles
 */
 
 import Camera from "./camera";

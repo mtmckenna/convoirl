@@ -45,7 +45,7 @@ const transition: IAnimation = {
 };
 
 const floatText: IAnimation = {
-  duration: 1500,
+  duration: 4000,
   endPos: { x: 0, y: 0 },
   running: false,
   startPos: { x: 0, y: 0 },

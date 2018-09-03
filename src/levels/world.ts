@@ -71,7 +71,6 @@ export default class World extends Level {
 
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
-    this.game.player.energy =  .6;
 
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
 
@@ -133,7 +132,7 @@ export default class World extends Level {
     this.addOverlayDrawables([this.energyBar, this.box]);
     this.addInteractables(this.buddies);
     this.addTouchables([this.box]);
-    this.addUpdateables([...this.game.player.dusts, this.energyBar]);
+    this.addUpdateables([...this.game.player.dusts]);
 
     this.resize();
   }
@@ -162,7 +161,7 @@ export default class World extends Level {
   private createBuddies() {
     const buddy = new Buddy(this.game);
     buddy.move({ x: TS * 10, y: TS * 10 });
-    buddy.skills.push("listening");
+    buddy.skills.push("listen");
     this.buddies = [buddy];
   }
 

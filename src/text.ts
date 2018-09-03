@@ -36,10 +36,6 @@ export default class Text implements ITouchable {
     this.move(pos);
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
     this.updateSize();
-    this.drawingSize = {
-      height: this.size.height * this.game.squareSize,
-      width: this.size.width * this.game.squareSize,
-    };
 
     this.animations.floatText = Object.assign({}, floatTextAnimation);
   }
@@ -91,12 +87,22 @@ export default class Text implements ITouchable {
     this.upToIndex = index;
   }
 
-  public startFloat(updatedPos: IPoint) {
-    this.move(updatedPos);
+  public startFloat(updatedPos: IPoint, direction: "left" | "right", goStraightUp = false) {
+    let endX = this.game.canvas.width / this.game.squareSize;
+    let startX = updatedPos.x;
+
+    if (direction === "left") {
+      endX = 0;
+      startX = updatedPos.x - this.size.width;
+    }
+
+    if (goStraightUp) endX = startX;
+
     this.animations.floatText.startTime = this.game.timestamp;
-    this.animations.floatText.startPos = Object.assign({}, updatedPos);
-    this.animations.floatText.endPos = { x: updatedPos.x, y: -10 };
+    this.animations.floatText.startPos = { x: startX, y: updatedPos.y - this.size.height };
+    this.animations.floatText.endPos = { x: endX, y: -10 };
     this.animations.floatText.running = true;
+    this.move(this.animations.floatText.startPos);
   }
 
   public resize() {
@@ -110,7 +116,8 @@ export default class Text implements ITouchable {
     const t = (timestamp - floatText.startTime) / floatText.duration;
 
     const updatedPos = Object.assign({}, this.pos);
-    updatedPos.x = this.pos.x + t * Math.sin(t * 6 * Math.PI);
+    const x = lerp(floatText.startPos.x, floatText.endPos.x, t);
+    updatedPos.x = x + 10 * Math.sin(t * 6 * Math.PI);
     updatedPos.y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 
     if (t >= 1) floatText.running = false;
@@ -127,5 +134,10 @@ export default class Text implements ITouchable {
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
 
     this.size = { width, height: this.game.squareSize };
+
+    this.drawingSize = {
+      height: this.size.height * this.game.squareSize,
+      width: this.size.width * this.game.squareSize,
+    };
   }
 }

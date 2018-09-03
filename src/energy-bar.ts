@@ -21,8 +21,7 @@ export default class EnergyBar implements IDrawable {
   public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
-  public percentFull: number = 1;
-  public lastBlinkAt: number = 0;
+  public percentFull: number = 0;
   public alpha = 1;
 
   private box: Box;
@@ -76,18 +75,6 @@ export default class EnergyBar implements IDrawable {
     this.animations.level.startLevel = this.percentFull;
     this.animations.level.endLevel = updatedLevel;
     this.animations.level.running = true;
-  }
-
-  public update(timestamp) {
-    if (this.percentFull > .2) {
-      this.visible = true;
-      return;
-    }
-
-    if (timestamp - this.lastBlinkAt > 750) {
-      this.visible = !this.visible;
-      this.lastBlinkAt = timestamp;
-    }
   }
 
   private updateLevel(timestamp) {
