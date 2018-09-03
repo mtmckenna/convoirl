@@ -20,13 +20,12 @@ const BUDDY_Y_FROM_BOX = 4;
 const BUDDY_DISTANCE = 4 * TILE_SIZE;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
-const FLOATY_TEXT_INDEX = 2;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
 
   protected tileTypeMap = ["green", "flowers", "sky", "tree"];
-  protected tileIndexes = [[]];
+  protected tileIndexes;
 
   private box: Box;
   private buddies: Buddy[];
@@ -187,7 +186,7 @@ export default class Convo extends Level {
 
     const pos = { x: this.game.player.pos.x, y: this.game.player.pos.y };
     text.startFloat(pos);
-    this.addDrawables([text], FLOATY_TEXT_INDEX);
+    this.addDrawables([text], 2);
 
     this.convoLevel += this.convoPerTurn;
     this.convoBar.animateToLevel(this.convoLevel);
@@ -270,7 +269,7 @@ export default class Convo extends Level {
   }
 
   private updateFloatyText() {
-    const floaties = this.drawables[FLOATY_TEXT_INDEX];
+    const floaties = this.drawables[2];
 
     for (let i = floaties.length - 1; i >= 0; i--) {
       const floaty = floaties[i];

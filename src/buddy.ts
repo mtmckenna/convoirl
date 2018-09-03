@@ -36,16 +36,15 @@ const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"
 
 export default class Buddy implements IDrawable, IInteractable {
   public game: Game;
-  public drawingSize: ISize = { width: TILE_SIZE, height: TILE_SIZE };
-  public pos: IPoint = { x: TILE_SIZE, y: TILE_SIZE };
-  public size: ISize = { width: TILE_SIZE, height: TILE_SIZE };
+  public drawingSize: ISize;
+  public pos: IPoint = { x: 0, y: 0 };
+  public size: ISize = { height: TILE_SIZE, width: TILE_SIZE };
   public alpha: number;
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = ["weather", "pastries", "france", "cats", "sports", "math"];
 
   public tileIndex: IPoint = { x: 0, y: 0 };
-  public interactableType: string = "buddy";
   public energy: number = 1;
 
   private animations: IAnimations = {};
@@ -63,8 +62,11 @@ export default class Buddy implements IDrawable, IInteractable {
     this.animations.lookAway = Object.assign({}, lookAwayAnimation);
     this.color = randomElementFromArray(COLORS);
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
-    this.drawingSize.width = TILE_SIZE * this.game.squareSize;
-    this.drawingSize.height = TILE_SIZE * this.game.squareSize;
+    this.drawingSize = {
+      height: TILE_SIZE * this.game.squareSize,
+      width: TILE_SIZE * this.game.squareSize,
+    };
+
     this.squareSize = this.game.squareSize;
   }
 

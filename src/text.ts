@@ -12,9 +12,6 @@ import {
 import { floatText as floatTextAnimation } from "./animations";
 import { lerp } from "./helpers";
 
-const SHADOW_COLOR = colorMap[0];
-const SHADOW_OFFSET = 2;
-
 // Text from https://github.com/PaulBGD/PixelFont
 export default class Text implements ITouchable {
   public game: Game;
@@ -64,10 +61,10 @@ export default class Text implements ITouchable {
           if (!row[x]) continue;
 
           if (this.shadow) {
-            context.fillStyle = SHADOW_COLOR;
+            context.fillStyle = colorMap[0];
             context.fillRect(
-              currX + x * this.game.squareSize + SHADOW_OFFSET,
-              currY + SHADOW_OFFSET, this.game.squareSize, this.game.squareSize,
+              currX + x * this.game.squareSize + 2,
+              currY + 2, this.game.squareSize, this.game.squareSize,
             );
           }
           context.fillStyle = this.color;

@@ -21,11 +21,10 @@ export default class Tile implements IDrawable, IInteractable {
   public game: Game;
   public tileIndex: IPoint;
   public interactable: boolean = false;
-  public interactableType = "Tile";
   public name: string;
 
   protected tileLength: number = TILE_SIZE;
-  protected colorMatrix: number[][] = [[]];
+  protected colorMatrix: number[][];
 
   constructor(game: Game, name: string, rowIndex: number, columnIndex: number) {
     this.game = game;

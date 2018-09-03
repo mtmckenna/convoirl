@@ -30,6 +30,7 @@ SPACE SAVING THOUGHTS
   - move canThingMoveToPosition to buddy
   - might be able to remove drawingSize on some things
   - drawingSize for buddy can be hardcoded
+  - remove debug
 */
 
 import Camera from "./camera";
@@ -62,10 +63,7 @@ let booted: boolean = false;
 
 game.camera = camera;
 
-const keyActions = {
-  s: camera.shakeScreen.bind(camera),
-  t: () => game.queueNextLevel(game.levels.world),
-};
+const keyActions = { s: camera.shakeScreen.bind(camera)};
 
 function resize() {
   const aspectRatio = window.innerWidth / window.innerHeight;

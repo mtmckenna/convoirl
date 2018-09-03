@@ -10,10 +10,6 @@ import {
 
 import { oneOrMinusOne } from "./helpers";
 
-const SCREEN_SHAKE_FRICTION: number = .9;
-const SCREEN_SHAKE_MAX_AMPLITUDE: number = 10;
-const SCREEN_SHAKE_MIN_AMPLITUDE: number = .01;
-
 // Note that a stupid thing I did was make the size/pos of
 // camera be the drawing size/pos and not the non-scaled pos...
 export default class Camera implements IPositionable {
@@ -64,16 +60,16 @@ export default class Camera implements IPositionable {
 
   public shakeScreen(): void {
     this.shake.pos = { x: 0, y: 0 };
-    this.shake.amplitude = SCREEN_SHAKE_MAX_AMPLITUDE * this.game.squareSize;
+    this.shake.amplitude = 10 * this.game.squareSize;
     this.shake.dir.x = oneOrMinusOne();
     this.shake.dir.y = oneOrMinusOne();
   }
 
   public updateScreenShake(timestamp): void {
-    this.shake.amplitude *= SCREEN_SHAKE_FRICTION;
+    this.shake.amplitude *= .9;
     const { amplitude, dir } = this.shake;
 
-    if (Math.abs(amplitude) <= SCREEN_SHAKE_MIN_AMPLITUDE) {
+    if (Math.abs(amplitude) <= .01) {
       this.shake.pos.x = 0;
       this.shake.pos.y = 0;
     } else {

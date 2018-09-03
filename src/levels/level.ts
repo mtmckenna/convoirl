@@ -14,8 +14,6 @@ import {
 
 import { flatten, randomIndexFromArray } from "../helpers";
 
-const NUM_ZINDICES = 5;
-
 export default abstract class Level {
   public game: Game;
 
@@ -26,10 +24,10 @@ export default abstract class Level {
   public tilesGrid: Tile[][] = [];
 
   public drawables: IDrawable[][];
-  public overlayDrawables: IDrawable[] = [];
-  public updateables: IUpdateable[] = [];
-  public interactables: IInteractable[] = [];
-  public touchables: ITouchable[] = [];
+  public overlayDrawables: IDrawable[];
+  public updateables: IUpdateable[];
+  public interactables: IInteractable[];
+  public touchables: ITouchable[];
   public backgroundColor: string = colorMap[2];
 
   protected  tileIndexes: number[][];
@@ -102,7 +100,7 @@ export default abstract class Level {
   }
 
   protected clearDrawables() {
-    this.drawables = new Array(NUM_ZINDICES).fill(null).map(() => new Array().fill(null));
+    this.drawables = new Array(3).fill(null).map(() => new Array().fill(null));
   }
 
   protected clearOverlayDrawables() {

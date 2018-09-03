@@ -18,13 +18,6 @@ import {
 
 import { canThingMoveToPosition, throttle } from "../helpers";
 
-const INPUT_BUFFER_LENGTH = 50;
-const HOME_TILE = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
-
-const STATE_SLEEPING = "sleeping";
-const STATE_INTRO = "intro";
-const STATE_PLAY = "play";
-
 const TEXT_INTROS = [
   ["great news! a", "new kid moved", "into the woods!"],
   ["become friends", "by having a", "convo... irl!"],
@@ -64,10 +57,10 @@ export default class World extends Level {
 
   private buddies: Buddy[];
   private box: Box;
-  private playerSpawnPosition: IPoint = HOME_TILE;
+  private playerSpawnPosition: IPoint = { x: TILE_SIZE * 4, y: TILE_SIZE * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
   private textIntros: string[][] = TEXT_INTROS;
-  private state: string = STATE_INTRO;
+  private state: string = "intro";
 
   constructor(game: Game) {
     super(game);
@@ -168,17 +161,17 @@ export default class World extends Level {
   }
 
   private handleBoxInput(): boolean {
-    if (this.state === STATE_PLAY) return false;
+    if (this.state === "play") return false;
 
     // Sleeping
-    if (this.state === STATE_SLEEPING) {
-      this.state = STATE_PLAY;
+    if (this.state === "sleeping") {
+      this.state = "play";
       this.box.visible = false;
       this.walk("down");
     }
 
     // Run through intro
-    if (this.state === STATE_INTRO) this.showNextIntroBox();
+    if (this.state === "intro") this.showNextIntroBox();
 
     return true;
   }
@@ -186,7 +179,7 @@ export default class World extends Level {
   private showNextIntroBox() {
     const words = this.textIntros[0];
     if (!words) {
-      this.state = STATE_PLAY;
+      this.state = "play";
       this.box.visible = false;
       return;
     }
@@ -203,7 +196,7 @@ export default class World extends Level {
 
   private processInput() {
     const timeSinceInput = this.game.timestamp - this.inputBuffer.pressedAt;
-    if (timeSinceInput > INPUT_BUFFER_LENGTH) return;
+    if (timeSinceInput > 50) return;
 
     switch (this.inputBuffer.key) {
       case "ArrowUp":
@@ -274,7 +267,7 @@ export default class World extends Level {
     this.box.setWords(TEXT_SLEEP);
     this.box.animateTextIn(this.game.timestamp);
     this.box.visible = true;
-    this.state = STATE_SLEEPING;
+    this.state = "sleeping";
   }
 
   private movePlayerVertically(touchDistance: number): boolean {

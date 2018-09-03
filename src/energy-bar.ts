@@ -4,7 +4,6 @@ import Game from "./game";
 import Text from "./text";
 
 import {
-  BLINK_DURATION,
   IAnimations,
   IDrawable,
   IPoint,
@@ -14,8 +13,6 @@ import {
 
 import { animateEnergy } from "./animations";
 import { lerp } from "./helpers";
-
-const BLINK_THRESHOLD = .2;
 
 export default class EnergyBar implements IDrawable {
   public energyText: Text;
@@ -60,8 +57,8 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: updatedPos.x + SQUARE_SIZE / 2 + .5,
-      y: updatedPos.y + SQUARE_SIZE / 2 + .5,
+      x: Math.floor(updatedPos.x + SQUARE_SIZE / 2 + .5),
+      y: Math.floor(updatedPos.y + SQUARE_SIZE / 2 + .5),
     });
   }
 
@@ -82,12 +79,12 @@ export default class EnergyBar implements IDrawable {
   }
 
   public update(timestamp) {
-    if (this.percentFull > BLINK_THRESHOLD) {
+    if (this.percentFull > .2) {
       this.visible = true;
       return;
     }
 
-    if (timestamp - this.lastBlinkAt > BLINK_DURATION) {
+    if (timestamp - this.lastBlinkAt > 750) {
       this.visible = !this.visible;
       this.lastBlinkAt = timestamp;
     }

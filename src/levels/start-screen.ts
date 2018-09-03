@@ -6,13 +6,7 @@ import Level from "./level";
 
 export default class StartScreen extends Level {
   public panDirection = 1;
-
   protected tileTypeMap = ["green", "flowers", "grass", "tree"];
-  protected tileIndexes = [[]];
-  protected title: Text;
-  protected instructions: Text;
-  protected lastBlinkAt: number = 0;
-
   private box: Box;
 
   constructor(game: Game) {

@@ -13,13 +13,13 @@ import {
 
 export default class Box implements ITouchable {
   public game: Game;
-  public pos: IPoint = { x: 0, y: 0 };
-  public size: ISize = { height: SQUARE_SIZE, width: SQUARE_SIZE };
+  public pos: IPoint;
+  public size: ISize;
   public drawingSize: ISize;
   public visible: boolean = true;
   public alpha = 1;
 
-  private strokePos: IPoint = { x: 0, y: 0 };
+  private strokePos: IPoint;
   private color: string;
   private texts: Text[] = [];
   private startTime: number = null;
@@ -27,6 +27,7 @@ export default class Box implements ITouchable {
   constructor(game: Game, pos: IPoint, size: ISize, color: string = colorMap[8]) {
     this.game = game;
     this.pos = pos;
+    this.strokePos = pos;
     this.size = size;
     this.color = color;
     this.drawingSize = {
