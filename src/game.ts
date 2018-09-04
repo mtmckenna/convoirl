@@ -98,12 +98,13 @@ export default class Game {
     if (this.currentLevel) this.currentLevel.resize();
   }
 
-  public queueNextLevel(nextLevel: Level) {
+  public queueNextLevel(nextLevel: Level, state?: string) {
     if (nextLevel === this.levels.convo) {
       const { convo, world } = this.levels;
       (convo as Convo).setBuddy((world as World).currentBuddy.copy());
     }
     this.nextLevel = nextLevel;
+    if (state) this.nextLevel.state = state;
     this.startTransition();
   }
 

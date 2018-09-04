@@ -15,7 +15,7 @@ import {
   TS,
 } from "../common";
 
-import { throttle } from "../helpers";
+import { randomIndexFromArray, throttle } from "../helpers";
 
 const TEXT_INTROS = [
   ["great news! a", "new kid moved", "into the woods!"],
@@ -44,8 +44,8 @@ export default class World extends Level {
     [3, 3, 3, 5, 6, 5, 3,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3, 3, 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3, 3, 3,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
-    [3, 3, 3, 3,  ,  ,  ,  , 3, 3, 3, 3,  , 2,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
-    [3,  , 2, 3,  ,  , 2,  , 3, 3, 3,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
+    [3, 3, 3, 3,  ,  ,  , 3, 3, 3, 3, 3,  , 2,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
+    [3,  , 2, 3, 3,  , 2,  , 3, 3, 3,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3,  ,  , 3, 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3,  ,  , 2, 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3, 1,  , 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  ,  , 3,  ,  ,  ,  , 3],
@@ -63,14 +63,14 @@ export default class World extends Level {
   private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
   private textIntros: string[][] = TEXT_INTROS;
-  private state: string = "intro";
-  // private state: string = "play";
   private walkingBuddy: Buddy;
   private listenBuddy: Buddy;
   private specialBuddy: Buddy;
+  private learnedListen: boolean = false;
 
   constructor(game: Game) {
     super(game);
+    this.state = "intro";
     const throttledHandleTouch = throttle(this.handleTouch.bind(this), T_TIME);
     const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
     this.handleTouch = throttledHandleTouch;
@@ -80,7 +80,6 @@ export default class World extends Level {
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
 
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
-    this.box.visible = false; // TODO: remove this debug code
     this.createBuddies();
   }
 
@@ -146,7 +145,6 @@ export default class World extends Level {
     this.addInteractables(this.buddies);
     this.addTouchables([this.box]);
     this.addUpdateables([...this.game.player.dusts, this.game.player, this.walkingBuddy, ...this.walkingBuddy.dusts]);
-
     this.resize();
   }
 
@@ -156,6 +154,7 @@ export default class World extends Level {
     this.walkingBuddy.move(WB_START_POS);
     this.game.player.setConvoMode(false);
     this.showNextIntroBox();
+    this.learnFromConvo();
     this.showListenBox();
 
     // @ts-ignore
@@ -226,10 +225,15 @@ export default class World extends Level {
     if (this.state === "play") return false;
 
     // Sleeping
-    if (this.state === "sleeping") {
+    if (this.state === "sleeping" || this.state === "post-convo") {
       this.state = "play";
       this.box.visible = false;
-      this.handleInput("ArrowDown");
+    }
+
+    if (this.state === "sleeping") this.handleInput("ArrowDown");
+    if (this.state === "post-convo" && !this.learnedListen) {
+      this.showListenBox();
+      this.learnedListen = true;
     }
 
     // Run through intro
@@ -247,9 +251,26 @@ export default class World extends Level {
       return;
     }
 
+    this.box.visible = true;
     this.box.setWords(words);
     this.box.animateTextIn(this.game.timestamp);
     this.textIntros.shift();
+  }
+
+  private learnFromConvo() {
+    if (!this.currentBuddy) return;
+
+    const skill = this.currentBuddy.skills[randomIndexFromArray(this.currentBuddy.skills)];
+    this.box.visible = true;
+
+    if (this.game.player.skills.includes(skill)) {
+      this.box.setWords(["nice convo!", "that was a", "good time"]);
+    } else {
+      this.box.setWords(["nice convo!", "you learned", `${skill}!`]);
+      this.game.player.skills.push(skill);
+    }
+
+    this.box.animateTextIn(this.game.timestamp);
   }
 
   private showListenBox() {

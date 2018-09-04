@@ -116,7 +116,7 @@ export default class Convo extends Level {
     this.updateText();
     this.updateFloatyText();
     if (this.convoLevel >= 1 && !this.convoBar.animating) {
-      this.game.queueNextLevel(this.game.levels.world);
+      this.game.queueNextLevel(this.game.levels.world, "post-convo");
     }
   }
 
