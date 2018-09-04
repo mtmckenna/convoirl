@@ -1,3 +1,4 @@
+import Buddy from "./buddy";
 import colorMap from "./colors";
 import Game from "./game";
 import letters from "./letters";
@@ -25,6 +26,7 @@ export default class Text implements ITouchable, IFadeable {
   public visible: boolean = true;
   public shadow: boolean = true;
   public alpha = 1;
+  public buddy?: Buddy = null;
 
   private animations: IAnimations = {};
   private upToIndex: number = null;
@@ -90,7 +92,7 @@ export default class Text implements ITouchable, IFadeable {
 
   public startFloat(updatedPos: IPoint, direction: "left" | "right", goStraightUp = false) {
     let endX = this.game.canvas.width / this.game.squareSize;
-    let startX = updatedPos.x;
+    let startX = updatedPos.x + this.size.width;
 
     if (direction === "left") {
       endX = 0;

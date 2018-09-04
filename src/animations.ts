@@ -22,7 +22,7 @@ const walking: IAnimation = {
   duration: 250,
   endPos: { x: 0, y: 0 },
   running: false,
-  startPos: { x: 0, y: 0 },
+  startPos: { x: -1, y: -1 },
   startTime: 0,
   t: 0,
 };

@@ -9,6 +9,7 @@ import Text from "../text";
 
 import {
   LINE_HEIGHT,
+  LISTEN,
   T_TIME,
   TS,
 } from "../common";
@@ -77,21 +78,19 @@ export default class Convo extends Level {
 
   public setBuddy(buddy: Buddy) {
     this.buddy = buddy;
-    this.buddy.setConvoMode(true);
-    this.buddy.convoLook("left");
+    this.buddy.setConvoMode(true, "left");
   }
 
   public levelWillStart() {
     // TODO: DELETE THIS DEBUG CODE
     if (!this.buddy) {
       this.setBuddy(new Buddy(this.game));
-      this.buddy.skills.push("listen");
+      this.buddy.skills.push(LISTEN);
     }
 
     this.clearTouchables();
 
-    this.game.player.setConvoMode(true);
-    this.game.player.convoLook("right");
+    this.game.player.setConvoMode(true, "right");
 
     this.convoLevel = 0;
 
@@ -188,7 +187,7 @@ export default class Convo extends Level {
     let buddySkillIndex = randomIndexFromArray(this.buddy.skills);
 
     if (this.game.player.skills.length === 1) {
-      buddySkillIndex = this.buddy.skills.indexOf("listen");
+      buddySkillIndex = this.buddy.skills.indexOf(LISTEN);
     }
 
     setTimeout(() => {
@@ -202,13 +201,13 @@ export default class Convo extends Level {
     if (skill === "weather" && this.game.player.skills.length === 1) {
       this.convoLevel += .34;
       this.game.player.energy -= .15;
-      this.buddyFloatText(this.buddy, "yeah...", colorMap[10]);
+      this.buddyFloatText(this.buddy, "oh...", colorMap[10]);
       this.game.camera.shakeScreen();
     }
 
-    if (skill === "listen") {
+    if (skill === LISTEN) {
       this.convoLevel += 0.2;
-      this.buddyFloatText(this.buddy, ":)", colorMap[9]);
+      this.buddyFloatText(this.buddy, "cool!", colorMap[9]);
     }
 
     this.convoBar.animateToLevel(this.convoLevel);
@@ -217,13 +216,15 @@ export default class Convo extends Level {
 
   private buddyFloatText(buddy, word, color, goStraightUp = false) {
     const text = new Text(this.game, word, color);
+    text.buddy = buddy;
     text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
     this.addDrawables([text], 2);
   }
 
   private buddyExecuteSkillIndex(buddy, skillIndex) {
     const skill = buddy.skills[skillIndex];
-    this.buddyFloatText(buddy, skill, colorMap[1], skill === "listen");
+    const color = skill === LISTEN ? colorMap[9] : colorMap[1];
+    this.buddyFloatText(buddy, skill, color, skill === LISTEN);
     if (buddy === this.buddy) this.waiting = false;
   }
 
@@ -301,7 +302,8 @@ export default class Convo extends Level {
   }
 
   private updateFloatyText() {
-    const floaties = this.drawables[2];
+    const floaties = this.drawables[2] as Text[];
+    this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => floaty.buddy === buddy));
 
     for (let i = floaties.length - 1; i >= 0; i--) {
       const floaty = floaties[i];

@@ -34,7 +34,7 @@ const CONVO_LOOK_RIGHT_OFFSET = 6;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
 
-// ["weather", "pastries", "france", "cats", "sports", "math", "books", "gymnastics"]
+// ["weather", "pastries", "france", "cats", "sports", "math", "books", "anime"]
 
 export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public game: Game;
@@ -48,6 +48,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public animations: IAnimations = {};
   public tileIndex: IPoint = { x: 0, y: 0 };
   public energy: number = 1;
+  public talking: boolean = false;
 
   private rot: number = Math.PI;
   private color: string;
@@ -55,6 +56,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   private inConvoMode: boolean = false;
   private convoLookRight: boolean = false;
   private squareSize: number = SQUARE_SIZE;
+  private rando: number;
 
   constructor(game) {
     this.game = game;
@@ -69,6 +71,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     };
 
     this.squareSize = this.game.squareSize;
+    this.rando = Math.random() * 100;
   }
 
   get walking() {
@@ -83,7 +86,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     return buddy;
   }
 
-  public setConvoMode(inConvoMode: boolean) {
+  public setConvoMode(inConvoMode: boolean, direction?: "left" | "right") {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;
     this.squareSize = this.game.squareSize;
@@ -98,19 +101,14 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       this.size.height *= 2;
       this.drawingSize.width *= 2;
       this.drawingSize.height *= 2;
+    } else {
+      this.talking = false;
     }
-  }
 
-  public convoLook(direction: "left" | "right") {
-    if (direction === "right") {
-      this.convoLookRight = true;
-    } else if (direction === "left") {
-      this.convoLookRight = false;
-    }
+    this.convoLookRight = direction === "right";
   }
 
   public move(updatedPos: IPoint) {
-    // console.log(updatedPos);
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
     this.tileIndex.x = Math.ceil(this.pos.x / TS);
@@ -144,9 +142,11 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
         break;
     }
 
+    if (justLook || this.walking) return;
+
     const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
-    if (!this.walking && this.canMoveToPosition(endPos) && !justLook) this.configureWalkingAnimation(startPos, endPos);
+    if (this.canMoveToPosition(endPos)) this.configureWalkingAnimation(startPos, endPos);
   }
 
   public configureWalkingAnimation(startPos, endPos) {
@@ -159,6 +159,8 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public update(timestamp) {
+    if (this.animations.walking.startPos.x === -1) return;
+
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
     let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);
     let y = lerp(this.animations.walking.startPos.y, this.animations.walking.endPos.y, t);
@@ -174,7 +176,6 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     // TODO: avoid creating new objects
     this.move({ x, y });
-
   }
 
   public draw(context, timestamp) {
@@ -208,6 +209,18 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     this.drawEye(context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
     this.drawEye(context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
+
+    // draw mouth
+    if (this.talking) {
+      context.fillStyle = "#000";
+      const amountClosed = (Math.sin(timestamp / 80 + this.rando) + 1);
+      context.fillRect(
+        (this.convoLookRight ? 1 : 5) * this.squareSize,
+        this.squareSize + amountClosed / 4,
+        2 * this.squareSize + amountClosed,
+        2 * this.squareSize * amountClosed / 2,
+      );
+    }
 
     if (this.walking && (timestamp - this.lastDustAt) > 30) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
@@ -254,8 +267,9 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   private drawEye(context, whichOne, openness, lookAwayOffset) {
     const leftRightOffset = whichOne === "left" ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
 
-    context.fillStyle = "rgb(0, 0, 0)";
+    context.fillStyle = "#000";
 
+    // TODO: can make this smaller to save space vvvv
     let offset = EYE_OFFSET;
     let convoLookRightOffset = 0;
     if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
@@ -272,7 +286,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       scaledEyeSize * openness,
     );
 
-    context.fillStyle = "rgb(255, 255, 255)";
+    context.fillStyle = "#fff";
 
     context.fillRect(
       scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.squareSize) - convoLookRightOffset,

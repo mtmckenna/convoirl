@@ -29,6 +29,7 @@ SPACE SAVING THOUGHTS
   - conslidate where flooring
   - could reduce common indexes in tiles
   - try closure
+  - can replace two phase clerp with some sin stuff?
 */
 
 import Camera from "./camera";

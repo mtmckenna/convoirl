@@ -10,6 +10,7 @@ import TinyMusic from "tinymusic";
 import {
   IInputBuffer,
   IPoint,
+  LISTEN,
   T_TIME,
   TS,
 } from "../common";
@@ -143,9 +144,9 @@ export default class World extends Level {
   }
 
   public levelStarted() {
-
     this.energyBar.animateToLevel(this.game.player.energy);
     this.game.player.move(this.playerSpawnPosition);
+    this.walkingBuddy.move(WB_START_POS);
     this.game.player.setConvoMode(false);
     this.showNextIntroBox();
 
@@ -167,7 +168,7 @@ export default class World extends Level {
   private createBuddies() {
     const listenBuddy = new Buddy(this.game);
     listenBuddy.move({ x: TS * 10, y: TS * 10 });
-    listenBuddy.skills.push("listen");
+    listenBuddy.skills.push(LISTEN);
 
     const pastryBuddy = new Buddy(this.game);
     pastryBuddy.move({ x: TS * 8, y: TS * 1 });
@@ -184,7 +185,7 @@ export default class World extends Level {
     const specialBuddy = new Buddy(this.game);
     specialBuddy.move({ x: TS * 23, y: TS * 18 });
     specialBuddy.look("left");
-    specialBuddy.skills.push("gymnastics");
+    specialBuddy.skills.push("anime");
 
     const booksBuddy = new Buddy(this.game);
     booksBuddy.move({ x: TS * 15, y: TS * 18 });
@@ -196,12 +197,10 @@ export default class World extends Level {
     mathBuddy.skills.push("math");
     mathBuddy.look("left");
 
-    const fashionBuddy = new Buddy(this.game);
-    fashionBuddy.move(WB_START_POS);
-    fashionBuddy.skills.push("math");
-    fashionBuddy.look("left");
-    fashionBuddy.autoWalkDirection = "left";
-    this.walkingBuddy = fashionBuddy;
+    this.walkingBuddy = new Buddy(this.game);
+    this.walkingBuddy.autoWalkDirection = "left";
+    this.walkingBuddy.skills.push("math");
+    // this.walkingBuddy.walk("left");
     this.walkingBuddy.animations.walking.duration = 750;
 
     this.buddies = [
@@ -212,7 +211,7 @@ export default class World extends Level {
       specialBuddy,
       booksBuddy,
       mathBuddy,
-      fashionBuddy,
+      this.walkingBuddy,
     ];
   }
 
