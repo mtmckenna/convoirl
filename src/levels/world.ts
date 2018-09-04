@@ -24,6 +24,10 @@ const TEXT_INTROS = [
   ["talk to them", "about their", "interests!"],
 ];
 
+// const LISTEN_WORDS = [
+//   ["well done! you", "had a convo!"],
+// ];
+
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
 
 export default class World extends Level {
@@ -41,9 +45,9 @@ export default class World extends Level {
     [3, 3, 3, 1, 1, 1, 1, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3, 3, 3, 1, 1, 1, 1, 3, 3, 3, 3,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3, 3, 3, 3,  ,  ,  ,  , 3, 3, 3, 3,  , 2,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
-    [3,  , 2, 3,  ,  , 2,  ,  , 3, 3,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
-    [3,  ,  , 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
-    [3,  ,  , 2, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
+    [3,  , 2, 3,  ,  , 2,  , 3, 3, 3,  ,  ,  ,  ,  ,  , 1,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
+    [3,  ,  , 3, 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
+    [3,  ,  , 2, 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3],
     [3, 1,  , 3, 3, 3,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 1,  ,  , 3,  ,  ,  ,  , 3],
     [3,  ,  , 3, 3, 2,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3,  ,  , 2, 3,  ,  ,  , 3],
     [3,  ,  , 3, 3,  ,  ,  , 2,  ,  ,  ,  ,  ,  ,  ,  ,  ,  , 3, 3,  ,  , 2, 3, 3, 3, 3],
@@ -59,9 +63,11 @@ export default class World extends Level {
   private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
   private textIntros: string[][] = TEXT_INTROS;
-  // private state: string = "intro";
-  private state: string = "play";
+  private state: string = "intro";
+  // private state: string = "play";
   private walkingBuddy: Buddy;
+  private listenBuddy: Buddy;
+  private specialBuddy: Buddy;
 
   constructor(game: Game) {
     super(game);
@@ -75,6 +81,7 @@ export default class World extends Level {
 
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
     this.box.visible = false; // TODO: remove this debug code
+    this.createBuddies();
   }
 
   public handleInput(key) {
@@ -124,12 +131,12 @@ export default class World extends Level {
     // Make walking buddy walk
     if (this.walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) this.walkingBuddy.autoWalkDirection = "right";
     if (this.walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) this.walkingBuddy.autoWalkDirection = "left";
-    this.walkingBuddy.walk(this.walkingBuddy.autoWalkDirection);
+    this.walkingBuddy.update(timestamp);
+    this.listenBuddy.update(timestamp);
   }
 
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
-    this.createBuddies();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.game.player.dusts, 1);
     this.addDrawables(this.walkingBuddy.dusts, 1);
@@ -149,6 +156,7 @@ export default class World extends Level {
     this.walkingBuddy.move(WB_START_POS);
     this.game.player.setConvoMode(false);
     this.showNextIntroBox();
+    this.showListenBox();
 
     // @ts-ignore
     const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
@@ -166,13 +174,13 @@ export default class World extends Level {
   }
 
   private createBuddies() {
-    const listenBuddy = new Buddy(this.game);
-    listenBuddy.move({ x: TS * 10, y: TS * 10 });
-    listenBuddy.skills.push(LISTEN);
+    this.listenBuddy = new Buddy(this.game);
+    this.listenBuddy.move({ x: TS * 7, y: TS * 10 });
+    this.listenBuddy.skills.push(LISTEN);
 
     const pastryBuddy = new Buddy(this.game);
     pastryBuddy.move({ x: TS * 8, y: TS * 1 });
-    listenBuddy.skills.push("pastries");
+    pastryBuddy.skills.push("pastries");
 
     const travelBuddy = new Buddy(this.game);
     travelBuddy.move({ x: TS * 18, y: TS * 3 });
@@ -182,10 +190,10 @@ export default class World extends Level {
     sportsBuddy.move({ x: TS * 25, y: TS * 2 });
     sportsBuddy.skills.push("sports");
 
-    const specialBuddy = new Buddy(this.game);
-    specialBuddy.move({ x: TS * 23, y: TS * 18 });
-    specialBuddy.look("left");
-    specialBuddy.skills.push("anime");
+    this.specialBuddy = new Buddy(this.game);
+    this.specialBuddy.move({ x: TS * 23, y: TS * 18 });
+    this.specialBuddy.look("left");
+    this.specialBuddy.skills.push("anime");
 
     const booksBuddy = new Buddy(this.game);
     booksBuddy.move({ x: TS * 15, y: TS * 18 });
@@ -200,15 +208,14 @@ export default class World extends Level {
     this.walkingBuddy = new Buddy(this.game);
     this.walkingBuddy.autoWalkDirection = "left";
     this.walkingBuddy.skills.push("math");
-    // this.walkingBuddy.walk("left");
     this.walkingBuddy.animations.walking.duration = 750;
 
     this.buddies = [
-      listenBuddy,
+      this.listenBuddy,
       pastryBuddy,
       travelBuddy,
       sportsBuddy,
-      specialBuddy,
+      this.specialBuddy,
       booksBuddy,
       mathBuddy,
       this.walkingBuddy,
@@ -243,6 +250,11 @@ export default class World extends Level {
     this.box.setWords(words);
     this.box.animateTextIn(this.game.timestamp);
     this.textIntros.shift();
+  }
+
+  private showListenBox() {
+    if (this.currentBuddy !== this.listenBuddy) return;
+    this.listenBuddy.walk("right");
   }
 
   private updateBox() {

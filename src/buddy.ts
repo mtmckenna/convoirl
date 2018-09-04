@@ -159,7 +159,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public update(timestamp) {
-    if (this.animations.walking.startPos.x === -1) return;
+    if (this.autoWalkDirection) this.walk(this.autoWalkDirection);
 
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
     let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);

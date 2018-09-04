@@ -1,6 +1,5 @@
 /*
 TODO
-  - add mouths
   - sfx
   - readme
   - make house look nicer
