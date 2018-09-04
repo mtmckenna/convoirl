@@ -18,6 +18,15 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
+const SIDE_LENGTH = 16 * TS * SQUARE_SIZE;
+
+let width: number;
+let height: number;
+let booted: boolean = false;
+let context: CanvasRenderingContext2D;
+let nextLevel: null | Level = null;
+let imageOfPreviousLevel: HTMLImageElement = null;
+
 export default class Game {
   public camera: Camera;
   public canvas: HTMLCanvasElement;
@@ -29,19 +38,15 @@ export default class Game {
   public transition: IAnimation;
   public scaleFactor: number = 1;
 
-  private context: CanvasRenderingContext2D;
-  private nextLevel: null | Level = null;
-  private imageOfPreviousLevel: HTMLImageElement = null;
-
   constructor(canvas: HTMLCanvasElement) {
     this.player = new Buddy(this);
     this.player.skills.push("weather");
 
     this.canvas = canvas;
     this.setSize();
-    this.context = canvas.getContext("2d", { alpha: false });
-    this.context.mozImageSmoothingEnabled = false;
-    this.context.webkitImageSmoothingEnabled = false;
+    context = canvas.getContext("2d", { alpha: false });
+    context.mozImageSmoothingEnabled = false;
+    context.webkitImageSmoothingEnabled = false;
 
     this.levels = {
       convo: new Convo(this),
@@ -50,6 +55,7 @@ export default class Game {
     };
 
     this.transition = Object.assign({}, transition);
+    this.camera = new Camera(this);
   }
 
   get boxPos(): IPoint {
@@ -78,13 +84,29 @@ export default class Game {
   }
 
   public update(timestamp) {
+    if (!booted) {
+      this.boot(timestamp);
+      this.resize();
+      booted = true;
+    }
+
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
+
+    if (this.currentLevel === this.levels.startScreen) {
+      const level = this.levels.startScreen as StartScreen;
+      this.camera.pos.x -= level.panDirection * 0.05;
+      if (this.camera.pos.x < -this.canvas.width) level.panDirection = -1;
+      if (this.camera.pos.x > 0) level.panDirection = 1;
+    } else {
+      this.camera.move(this.player);
+    }
+
     if (this.transitioning) this.updateTransition(timestamp);
   }
 
   public draw(timestamp: number) {
-    if (!this.context || !this.camera) return;
+    if (!context || !this.camera) return;
     this.camera.updateScreenShake(timestamp);
 
     this.clearCanvasContext();
@@ -94,17 +116,31 @@ export default class Game {
   }
 
   public resize() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+
+    if (aspectRatio >= 1) {
+      width = SIDE_LENGTH;
+      height = width / aspectRatio;
+    } else {
+      height = SIDE_LENGTH;
+      width = height * aspectRatio;
+    }
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.camera.size = { width: this.canvas.width, height: this.canvas.height };
+
     this.setSize();
     if (this.currentLevel) this.currentLevel.resize();
   }
 
-  public queueNextLevel(nextLevel: Level, state?: string) {
+  public queueNextLevel(updatedLevel: Level, state?: string) {
     if (nextLevel === this.levels.convo) {
       const { convo, world } = this.levels;
       (convo as Convo).setBuddy((world as World).currentBuddy.copy());
     }
-    this.nextLevel = nextLevel;
-    if (state) this.nextLevel.state = state;
+    nextLevel = updatedLevel;
+    if (state) nextLevel.state = state;
     this.startTransition();
   }
 
@@ -117,17 +153,17 @@ export default class Game {
   }
 
   public sizeInTiles(): ISize {
-    const width = Math.ceil(this.canvas.width / this.squareSize / TS);
-    const height = Math.ceil(this.canvas.height / this.squareSize / TS);
-    return { width, height };
+    const w = Math.ceil(this.canvas.width / this.squareSize / TS);
+    const h = Math.ceil(this.canvas.height / this.squareSize / TS);
+    return { width: w, height: h };
   }
 
   private startTransition() {
     this.transition.startTime = this.timestamp;
     this.transition.running = true;
-    this.imageOfPreviousLevel = new Image();
-    this.imageOfPreviousLevel.src = this.canvas.toDataURL("png");
-    this.switchLevel(this.nextLevel);
+    imageOfPreviousLevel = new Image();
+    imageOfPreviousLevel.src = this.canvas.toDataURL("png");
+    this.switchLevel(nextLevel);
   }
 
   private setSize() {
@@ -143,15 +179,15 @@ export default class Game {
 
     if (t >= 1) {
       this.transition = Object.assign({}, transition);
-      this.imageOfPreviousLevel = null;
+      imageOfPreviousLevel = null;
     }
   }
 
-  private switchLevel(nextLevel) {
-    this.currentLevel = nextLevel;
-    nextLevel.levelWillStart();
-    nextLevel.configureDrawablesAndUpdateables();
-    nextLevel.levelStarted();
+  private switchLevel(updatedLevel) {
+    this.currentLevel = updatedLevel;
+    this.currentLevel.levelWillStart();
+    this.currentLevel.configureDrawablesAndUpdateables();
+    this.currentLevel.levelStarted();
   }
 
   private drawDrawables(timestamp: number) {
@@ -169,31 +205,31 @@ export default class Game {
 
         // Bitwise operator is supposedly the fastest way to land on whole pixels:
         // https://www.html5rocks.com/en/tutorials/canvas/performance/
-        this.context.translate((x + .5) | 0, (y + .5) | 0);
+        context.translate((x + .5) | 0, (y + .5) | 0);
 
-        this.context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
+        context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
 
-        drawable.draw(this.context, timestamp);
+        drawable.draw(context, timestamp);
 
-        this.context.setTransform(1, 0, 0, 1, 0, 0);
+        context.setTransform(1, 0, 0, 1, 0, 0);
       });
     });
 
-    this.context.globalAlpha = 1;
+    context.globalAlpha = 1;
 
-    if (this.imageOfPreviousLevel) {
-      this.context.globalAlpha = this.transition.prevLevelAlpha;
+    if (imageOfPreviousLevel) {
+      context.globalAlpha = this.transition.prevLevelAlpha;
       const scaleFactor = this.transition.prevLevelScale;
       const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
       const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
-      this.context.drawImage(
-        this.imageOfPreviousLevel,
+      context.drawImage(
+        imageOfPreviousLevel,
         -x,
         -y,
         this.canvas.width * scaleFactor,
         this.canvas.height * scaleFactor,
       );
-      this.context.globalAlpha = 1;
+      context.globalAlpha = 1;
     }
   }
 
@@ -205,18 +241,18 @@ export default class Game {
   }
 
   private drawOverlayDrawables(timestamp: number) {
-    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
+    if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
     this.currentLevel.overlayDrawables.forEach((drawable) => {
       if (!drawable.visible) return;
-      drawable.draw(this.context, timestamp);
+      drawable.draw(context, timestamp);
     });
 
-    this.context.globalAlpha = 1;
+    context.globalAlpha = 1;
   }
 
   private clearCanvasContext(): void {
-    if (this.transitioning) this.context.globalAlpha = this.transition.nextLevelAlpha;
-    this.context.fillStyle = this.currentLevel.backgroundColor;
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
+    context.fillStyle = this.currentLevel.backgroundColor;
+    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 }
