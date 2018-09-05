@@ -1,5 +1,6 @@
 /*
 TODO
+  - move animations into their classes
   - sfx
   - readme
   - make house look nicer
@@ -31,7 +32,7 @@ SPACE SAVING THOUGHTS
   - could reduce common indexes in tiles
   - try closure
   - can replace two phase clerp with some sin stuff?
-  - look for private members that can be singletons
+  - look for private members that can be singletons (all the levels/camera)
 */
 
 import Game from "./game";

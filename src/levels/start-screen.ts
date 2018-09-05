@@ -20,6 +20,13 @@ export default class StartScreen extends Level {
     this.configureDrawablesAndUpdateables();
   }
 
+  public update(timestamp) {
+    super.update(timestamp);
+    this.game.camera.pos.x -= this.panDirection * 0.05;
+    if (this.game.camera.pos.x < -this.game.canvas.width) this.panDirection = -1;
+    if (this.game.camera.pos.x > 0) this.panDirection = 1;
+  }
+
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
 

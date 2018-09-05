@@ -126,6 +126,7 @@ export default class World extends Level {
     super.update(timestamp);
     this.processInput();
     this.startConvo(this.game.player.tileIndex);
+    this.game.camera.moveToPlayer(this.game.player);
 
     // Make walking buddy walk
     if (this.walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) this.walkingBuddy.autoWalkDirection = "right";

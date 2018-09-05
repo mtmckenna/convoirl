@@ -17,10 +17,13 @@ import {
 import { randomIndexFromArray, throttle } from "../helpers";
 
 const BUDDY_Y_FROM_BOX = 4;
-const BUDDY_DISTANCE = 4 * TS;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
 const D_ALPHA = .5;
+
+// cameraOffset puts camera in the middle of the level so
+// screen shake looks decent
+let cameraOffset = 0;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
@@ -102,7 +105,6 @@ export default class Convo extends Level {
   }
 
   public levelStarted() {
-    this.moveBuddies();
     this.convoBar.animateToLevel(this.convoLevel);
     this.energyBar.animateToLevel(this.game.player.energy);
   }
@@ -113,6 +115,7 @@ export default class Convo extends Level {
 
   public update(timestamp) {
     super.update(timestamp);
+    this.game.camera.move({ x: cameraOffset, y: this.game.camera.pos.y });
     this.updateText();
     this.updateFloatyText();
     if (this.convoLevel >= 1 && !this.convoBar.animating) {
@@ -123,11 +126,20 @@ export default class Convo extends Level {
   public configureDrawablesAndUpdateables() {
     super.configureDrawablesAndUpdateables();
 
+    const sizeInTiles = this.game.sizeInTiles();
+    cameraOffset = -sizeInTiles.width * TS * this.game.squareSize / 2;
+    sizeInTiles.width *= 2;
+    sizeInTiles.height *= 2;
+
+    // Move the box to the bottom
+    // Align the buddies to be on top of the box
+    // Generate tiles so that they begin in the middle of buddies
     this.updateBoxes();
     this.updateText();
-    this.moveSkillCursor(0);
     this.moveBuddies();
-    this.generateTileIndexes();
+
+    this.moveSkillCursor(0);
+    this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.buddies, 1);
@@ -142,8 +154,7 @@ export default class Convo extends Level {
     this.addTouchables([this.upArrow, this.downArrow, ...this.skills]);
   }
 
-  protected generateTileIndexes() {
-    const sizeInTiles = this.game.sizeInTiles();
+  protected generateTileIndexes(sizeInTiles) {
     const playerTileIndexY = this.game.player.tileIndex.y;
 
     // Ground tiles
@@ -230,21 +241,18 @@ export default class Convo extends Level {
 
   private moveBuddies() {
     const buddy = this.buddies[1];
-
-    const boxPosX = this.box.pos.x / this.game.squareSize;
     const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
 
-    const boxSize = {
-      height: Math.floor(this.box.drawingSize.height / this.game.squareSize),
-      width: Math.floor(this.box.drawingSize.width / this.game.squareSize),
-    };
+    // Use cameraOffset to compsenate for the larger levelsize
+    const boxPosX = this.game.boxPos.x / this.game.squareSize -
+    buddy.size.width / 2 -
+    cameraOffset / this.game.squareSize;
 
-    const convoWidth = this.game.player.size.width + BUDDY_DISTANCE + buddy.size.width;
-    const playerPos = { x: boxPosX + (boxSize.width - convoWidth) / 2, y: boxPosY };
-    const buddyPos = Object.assign({}, playerPos);
-    buddyPos.x += BUDDY_DISTANCE + this.game.player.size.width;
+    const buddyX = boxPosX + this.box.drawingSize.width / this.game.squareSize - buddy.size.width / 2;
+    const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: boxPosY };
+
+    buddy.move({ x: buddyX, y: playerPos.y });
     this.game.player.move(playerPos);
-    buddy.move(buddyPos);
   }
 
   private updateBoxes() {

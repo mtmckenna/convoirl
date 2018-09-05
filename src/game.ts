@@ -93,15 +93,6 @@ export default class Game {
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
 
-    if (this.currentLevel === this.levels.startScreen) {
-      const level = this.levels.startScreen as StartScreen;
-      this.camera.pos.x -= level.panDirection * 0.05;
-      if (this.camera.pos.x < -this.canvas.width) level.panDirection = -1;
-      if (this.camera.pos.x > 0) level.panDirection = 1;
-    } else {
-      this.camera.move(this.player);
-    }
-
     if (this.transitioning) this.updateTransition(timestamp);
   }
 

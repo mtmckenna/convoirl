@@ -17,12 +17,10 @@ export default class Camera implements IPositionable {
   public size: ISize = { width: 0, height: 0 };
 
   private game: Game;
-  private player: Buddy;
   private shake: IScreenShakeProps;
 
   constructor(game) {
     this.game = game;
-    this.player = game.player;
     this.size = { width: game.canvas.width, height: game.canvas.height };
     this.shake = {
       amplitude: 0,
@@ -38,7 +36,12 @@ export default class Camera implements IPositionable {
     };
   }
 
-  public move(drawable: IDrawable): void {
+  public move(updatedPos: IPoint) {
+    this.pos.x = updatedPos.x;
+    this.pos.y = updatedPos.y;
+  }
+
+  public moveToPlayer(drawable: IDrawable): void {
     this.pos.x = this.game.canvas.width / 2 -
       drawable.pos.x * this.game.squareSize -
       drawable.drawingSize.width / 2;
