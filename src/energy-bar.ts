@@ -4,6 +4,7 @@ import Game from "./game";
 import Text from "./text";
 
 import {
+  IAnimation,
   IAnimations,
   IDrawable,
   IPoint,
@@ -11,7 +12,6 @@ import {
   SQUARE_SIZE,
 } from "./common";
 
-import { animateEnergy } from "./animations";
 import { lerp } from "./helpers";
 
 export default class EnergyBar implements IDrawable {
@@ -39,7 +39,15 @@ export default class EnergyBar implements IDrawable {
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
     this.box = new Box(game, pos, boxSize, colorMap[7]);
 
-    this.animations.level = Object.assign({}, animateEnergy);
+    const level: IAnimation = {
+      duration: 1000,
+      endLevel: 0,
+      running: false,
+      startLevel: 0,
+      startTime: 0,
+    };
+
+    this.animations.level = level;
 
     this.move(pos);
   }

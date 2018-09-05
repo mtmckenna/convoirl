@@ -9,6 +9,7 @@ import {
 } from "./helpers";
 
 import {
+  IAnimation,
   IAnimations,
   IDrawable,
   IInteractable,
@@ -18,12 +19,6 @@ import {
   SQUARE_SIZE,
   TS,
 } from "./common";
-
-import {
-  blinking as blinkingAnimation,
-  lookAway as lookAwayAnimation,
-  walking as walkingAnimation,
-} from "./animations";
 
 const EYE_SIZE = 2;
 const EYE_REFLECTION_SIZE = 1;
@@ -60,9 +55,38 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
   constructor(game) {
     this.game = game;
-    this.animations.blinking = Object.assign({}, blinkingAnimation);
-    this.animations.walking = Object.assign({}, walkingAnimation, { endPos: this.pos });
-    this.animations.lookAway = Object.assign({}, lookAwayAnimation);
+
+    const blinking: IAnimation =  {
+      duration: 300,
+      minTimeDelta: 3000,
+      openness: 1,
+      percentChance: .5,
+      running: false,
+      startTime: 0,
+    };
+
+    const lookAway: IAnimation = {
+      duration: 0,
+      minTimeDelta: 1000,
+      offset: 0,
+      percentChance: .008,
+      running: false,
+      startTime: 0,
+    };
+
+    const walking: IAnimation = {
+      duration: 250,
+      endPos: { x: 0, y: 0 },
+      running: false,
+      startPos: { x: -1, y: -1 },
+      startTime: 0,
+      t: 0,
+    };
+
+    this.animations.blinking = blinking;
+    this.animations.lookAway = lookAway;
+    this.animations.walking = walking;
+
     this.color = COLORS[randomIndexFromArray(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize = {
@@ -160,6 +184,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
   public update(timestamp) {
     if (this.autoWalkDirection) this.walk(this.autoWalkDirection);
+    if (this.animations.walking.startPos.x === -1) return;
 
     const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
     let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);

@@ -1,6 +1,5 @@
 /*
 TODO
-  - move animations into their classes
   - sfx
   - readme
   - make house look nicer

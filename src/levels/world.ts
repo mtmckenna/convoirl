@@ -151,8 +151,8 @@ export default class World extends Level {
 
   public levelStarted() {
     this.energyBar.animateToLevel(this.game.player.energy);
-    this.game.player.move(this.playerSpawnPosition);
     this.walkingBuddy.move(WB_START_POS);
+    this.game.player.move(this.playerSpawnPosition);
     this.game.player.setConvoMode(false);
     this.showNextIntroBox();
     this.learnFromConvo();

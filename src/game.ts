@@ -8,7 +8,6 @@ import {
   TS,
 } from "./common";
 
-import { transition } from "./animations";
 import { clerp } from "./helpers";
 
 import Buddy from "./buddy";
@@ -19,6 +18,15 @@ import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
 const SIDE_LENGTH = 16 * TS * SQUARE_SIZE;
+
+const transition: IAnimation = {
+  duration: 1000,
+  nextLevelAlpha: 0,
+  prevLevelAlpha: 1,
+  prevLevelScale: 1,
+  running: false,
+  startTime: 0,
+};
 
 let width: number;
 let height: number;

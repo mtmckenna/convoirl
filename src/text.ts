@@ -4,6 +4,7 @@ import Game from "./game";
 import letters from "./letters";
 
 import {
+  IAnimation,
   IAnimations,
   IFadeable,
   IPoint,
@@ -11,7 +12,6 @@ import {
   ITouchable,
   } from "./common";
 
-import { floatText as floatTextAnimation } from "./animations";
 import { lerp } from "./helpers";
 
 // Text from https://github.com/PaulBGD/PixelFont
@@ -40,7 +40,15 @@ export default class Text implements ITouchable, IFadeable {
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
     this.updateSize();
 
-    this.animations.floatText = Object.assign({}, floatTextAnimation);
+    const floatText: IAnimation = {
+      duration: 4000,
+      endPos: { x: 0, y: 0 },
+      running: false,
+      startPos: { x: 0, y: 0 },
+      startTime: 0,
+    };
+
+    this.animations.floatText = floatText;
   }
 
   public draw(context, timestamp) {
