@@ -170,7 +170,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
-    if (this.canMoveToPosition(endPos)) this.configureWalkingAnimation(startPos, endPos);
+    if (canMoveToPosition.call(this, endPos)) this.configureWalkingAnimation(startPos, endPos);
   }
 
   public configureWalkingAnimation(startPos, endPos) {
@@ -230,10 +230,10 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       this.drawingSize.height + this.drawingSize.height * growAmount,
     );
 
-    this.maybeDoEyeAnimations(timestamp);
+    maybeDoEyeAnimations.call(this, timestamp);
 
-    this.drawEye(context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
-    this.drawEye(context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
+    drawEye.call(this, context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
+    drawEye.call(this, context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
 
     // draw mouth
     if (this.talking) {
@@ -259,79 +259,79 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       }
     }
   }
+}
 
-  private maybeDoEyeAnimations(timestamp) {
-    const { blinking, lookAway } = this.animations;
+function maybeDoEyeAnimations(timestamp) {
+  const { blinking, lookAway } = this.animations;
 
-    if (shouldDoAnimation(blinking, timestamp)) {
-      blinking.running = true;
-      blinking.startTime = timestamp;
-    }
-
-    if (shouldDoAnimation(lookAway, timestamp)) {
-      lookAway.running = true;
-      lookAway.startTime = timestamp;
-    }
-
-    this.runBlinkingAnimation(blinking, timestamp);
-    this.runLookAwayAnimation(lookAway);
+  if (shouldDoAnimation(blinking, timestamp)) {
+    blinking.running = true;
+    blinking.startTime = timestamp;
   }
 
-  private runLookAwayAnimation(lookAway) {
-    if (!lookAway.running) return;
-    lookAway.offset = lookAway.offset === 0 ? 1 : 0;
-    lookAway.running = false;
+  if (shouldDoAnimation(lookAway, timestamp)) {
+    lookAway.running = true;
+    lookAway.startTime = timestamp;
   }
 
-  private runBlinkingAnimation(blinking, timestamp) {
-    const t = (timestamp - blinking.startTime) / blinking.duration;
-    blinking.openness = twoPhaseClerp(t, 0, 1, true);
-    if (t >= 1) blinking.running = false;
-  }
+  runBlinkingAnimation.call(this, blinking, timestamp);
+  runLookAwayAnimation.call(this, lookAway);
+}
 
-  private drawEye(context, whichOne, openness, lookAwayOffset) {
-    const leftRightOffset = whichOne === "left" ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
+function runLookAwayAnimation(lookAway) {
+  if (!lookAway.running) return;
+  lookAway.offset = lookAway.offset === 0 ? 1 : 0;
+  lookAway.running = false;
+}
 
-    context.fillStyle = "#000";
+function runBlinkingAnimation(blinking, timestamp) {
+  const t = (timestamp - blinking.startTime) / blinking.duration;
+  blinking.openness = twoPhaseClerp(t, 0, 1, true);
+  if (t >= 1) blinking.running = false;
+}
 
-    // TODO: can make this smaller to save space vvvv
-    let offset = EYE_OFFSET;
-    let convoLookRightOffset = 0;
-    if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
-    if (this.inConvoMode && this.convoLookRight) convoLookRightOffset = CONVO_LOOK_RIGHT_OFFSET * this.squareSize;
+function drawEye(context, whichOne, openness, lookAwayOffset) {
+  const leftRightOffset = whichOne === "left" ? 0 : (RIGHT_EYE_OFFSET * this.squareSize);
 
-    const scaledEyeOffset = offset * this.squareSize;
-    const scaledEyeSize = EYE_SIZE * this.squareSize;
-    const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.squareSize;
+  context.fillStyle = "#000";
 
-    context.fillRect(
-      scaledEyeOffset + leftRightOffset - convoLookRightOffset,
-      scaledEyeOffset,
-      scaledEyeSize,
-      scaledEyeSize * openness,
-    );
+  // TODO: can make this smaller to save space vvvv
+  let offset = EYE_OFFSET;
+  let convoLookRightOffset = 0;
+  if (this.inConvoMode) offset = EYE_OFFSET_CONVO;
+  if (this.inConvoMode && this.convoLookRight) convoLookRightOffset = CONVO_LOOK_RIGHT_OFFSET * this.squareSize;
 
-    context.fillStyle = "#fff";
+  const scaledEyeOffset = offset * this.squareSize;
+  const scaledEyeSize = EYE_SIZE * this.squareSize;
+  const scaledEyeReflectionSize = EYE_REFLECTION_SIZE * this.squareSize;
 
-    context.fillRect(
-      scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.squareSize) - convoLookRightOffset,
-      scaledEyeOffset,
-      scaledEyeReflectionSize,
-      scaledEyeReflectionSize * openness,
-    );
-  }
+  context.fillRect(
+    scaledEyeOffset + leftRightOffset - convoLookRightOffset,
+    scaledEyeOffset,
+    scaledEyeSize,
+    scaledEyeSize * openness,
+  );
 
-  private canMoveToPosition(position: IPoint): boolean {
-    const level = this.game.currentLevel;
-    const inMap = position.x >= 0 &&
-      position.x <= level.size.width - this.size.width &&
-      position.y >= 0 &&
-      position.y < level.size.height;
+  context.fillStyle = "#fff";
 
-    let { x, y } = position;
-    x /= TS;
-    y /= TS;
+  context.fillRect(
+    scaledEyeOffset + leftRightOffset + (lookAwayOffset * this.squareSize) - convoLookRightOffset,
+    scaledEyeOffset,
+    scaledEyeReflectionSize,
+    scaledEyeReflectionSize * openness,
+  );
+}
 
-    return inMap && level.tilesGrid[y][x].walkable;
-  }
+function canMoveToPosition(position: IPoint): boolean {
+  const level = this.game.currentLevel;
+  const inMap = position.x >= 0 &&
+    position.x <= level.size.width - this.size.width &&
+    position.y >= 0 &&
+    position.y < level.size.height;
+
+  let { x, y } = position;
+  x /= TS;
+  y /= TS;
+
+  return inMap && level.tilesGrid[y][x].walkable;
 }

@@ -59,13 +59,13 @@ export default class Convo extends Level {
   public handleInput(key) {
     switch (key) {
       case "ArrowUp":
-        this.moveSkillCursor(1);
+        moveSkillCursor.call(this, 1);
         break;
       case "ArrowDown":
-        this.moveSkillCursor(-1);
+        moveSkillCursor.call(this, -1);
         break;
       case "Enter":
-        this.useSelectedSkill();
+        useSelectedSkill.call(this);
         break;
     }
   }
@@ -116,8 +116,8 @@ export default class Convo extends Level {
   public update(timestamp) {
     super.update(timestamp);
     this.game.camera.move({ x: cameraOffset, y: this.game.camera.pos.y });
-    this.updateText();
-    this.updateFloatyText();
+    updateText.call(this);
+    updateFloatyText.call(this);
     if (this.convoLevel >= 1 && !this.convoBar.animating) {
       this.game.queueNextLevel(this.game.levels.world, "post-convo");
     }
@@ -134,11 +134,11 @@ export default class Convo extends Level {
     // Move the box to the bottom
     // Align the buddies to be on top of the box
     // Generate tiles so that they begin in the middle of buddies
-    this.updateBoxes();
-    this.updateText();
-    this.moveBuddies();
+    updateBoxes.call(this);
+    updateText.call(this);
+    moveBuddies.call(this);
 
-    this.moveSkillCursor(0);
+    moveSkillCursor.call(this, 0);
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.addDrawables(this.tiles, 0);
@@ -173,149 +173,149 @@ export default class Convo extends Level {
       this.tileIndexes[playerTileIndexY - 1] = treeRow.map(() => 3);
     }
   }
+}
 
-  private moveSkillCursor(amountToMoveBy) {
-    const updatedIndex = this.currentSkillIndex + amountToMoveBy;
-    const skill = this.skills[updatedIndex] || this.skills[this.currentSkillIndex];
-    this.currentSkillIndex = this.skills.indexOf(skill);
-    this.downArrow.alpha = 1;
-    this.upArrow.alpha = 1;
-    this.skills.forEach((s) => s.alpha = D_ALPHA);
+function moveSkillCursor(amountToMoveBy) {
+  const updatedIndex = this.currentSkillIndex + amountToMoveBy;
+  const skill = this.skills[updatedIndex] || this.skills[this.currentSkillIndex];
+  this.currentSkillIndex = this.skills.indexOf(skill);
+  this.downArrow.alpha = 1;
+  this.upArrow.alpha = 1;
+  this.skills.forEach((s) => s.alpha = D_ALPHA);
 
-    if (this.currentSkillIndex === 0) this.downArrow.alpha = D_ALPHA;
-    if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = D_ALPHA;
+  if (this.currentSkillIndex === 0) this.downArrow.alpha = D_ALPHA;
+  if (this.currentSkillIndex === this.skills.length - 1) this.upArrow.alpha = D_ALPHA;
+}
+
+function useSelectedSkill() {
+  if (this.waiting) return;
+  if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
+  const skillIndex = this.currentSkillIndex;
+  buddyExecuteSkillIndex.call(this, this.game.player, skillIndex);
+
+  this.waiting = true;
+  setTimeout(() => react.call(this, skillIndex), 2000);
+
+  let buddySkillIndex = randomIndexFromArray(this.buddy.skills);
+
+  if (this.game.player.skills.length === 1) {
+    buddySkillIndex = this.buddy.skills.indexOf(LISTEN);
   }
 
-  private useSelectedSkill() {
-    if (this.waiting) return;
-    if (this.game.player.energy <= 0 || this.convoLevel >= 1) return;
-    const skillIndex = this.currentSkillIndex;
-    this.buddyExecuteSkillIndex(this.game.player, skillIndex);
+  setTimeout(() => {
+    buddyExecuteSkillIndex.call(this, this.buddy, buddySkillIndex);
+  }, 4000);
+}
 
-    this.waiting = true;
-    setTimeout(() => this.react(skillIndex), 2000);
+function react(skillIndex) {
+  const skill = this.game.player.skills[skillIndex];
 
-    let buddySkillIndex = randomIndexFromArray(this.buddy.skills);
-
-    if (this.game.player.skills.length === 1) {
-      buddySkillIndex = this.buddy.skills.indexOf(LISTEN);
-    }
-
-    setTimeout(() => {
-      this.buddyExecuteSkillIndex(this.buddy, buddySkillIndex);
-    }, 4000);
+  if (skill === "weather" && this.game.player.skills.length === 1) {
+    this.convoLevel += .34;
+    this.game.player.energy -= .15;
+    buddyFloatText.call(this, this.buddy, "oh...", colorMap[10]);
+    this.game.camera.shakeScreen();
   }
 
-  private react(skillIndex) {
-    const skill = this.game.player.skills[skillIndex];
-
-    if (skill === "weather" && this.game.player.skills.length === 1) {
-      this.convoLevel += .34;
-      this.game.player.energy -= .15;
-      this.buddyFloatText(this.buddy, "oh...", colorMap[10]);
-      this.game.camera.shakeScreen();
-    }
-
-    if (skill === LISTEN) {
-      this.convoLevel += 0.2;
-      this.buddyFloatText(this.buddy, "cool!", colorMap[9]);
-    }
-
-    this.convoBar.animateToLevel(this.convoLevel);
-    this.energyBar.animateToLevel(this.game.player.energy);
+  if (skill === LISTEN) {
+    this.convoLevel += 0.2;
+    buddyFloatText.call(this, this.buddy, "cool!", colorMap[9]);
   }
 
-  private buddyFloatText(buddy, word, color, goStraightUp = false) {
-    const text = new Text(this.game, word, color);
-    text.buddy = buddy;
-    text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
-    this.addDrawables([text], 2);
-  }
+  this.convoBar.animateToLevel(this.convoLevel);
+  this.energyBar.animateToLevel(this.game.player.energy);
+}
 
-  private buddyExecuteSkillIndex(buddy, skillIndex) {
-    const skill = buddy.skills[skillIndex];
-    const color = skill === LISTEN ? colorMap[9] : colorMap[1];
-    this.buddyFloatText(buddy, skill, color, skill === LISTEN);
-    if (buddy === this.buddy) this.waiting = false;
-  }
+function buddyFloatText(buddy, word, color, goStraightUp = false) {
+  const text = new Text(this.game, word, color);
+  text.buddy = buddy;
+  text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
+  this.addDrawables([text], 2);
+}
 
-  private moveBuddies() {
-    const buddy = this.buddies[1];
-    const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
+function buddyExecuteSkillIndex(buddy, skillIndex) {
+  const skill = buddy.skills[skillIndex];
+  const color = skill === LISTEN ? colorMap[9] : colorMap[1];
+  buddyFloatText.call(this, buddy, skill, color, skill === LISTEN);
+  if (buddy === this.buddy) this.waiting = false;
+}
 
-    // Use cameraOffset to compsenate for the larger levelsize
-    const boxPosX = this.game.boxPos.x / this.game.squareSize -
-    buddy.size.width / 2 -
-    cameraOffset / this.game.squareSize;
+function moveBuddies() {
+  const buddy = this.buddies[1];
+  const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
 
-    const buddyX = boxPosX + this.box.drawingSize.width / this.game.squareSize - buddy.size.width / 2;
-    const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: boxPosY };
+  // Use cameraOffset to compsenate for the larger levelsize
+  const boxPosX = this.game.boxPos.x / this.game.squareSize -
+  buddy.size.width / 2 -
+  cameraOffset / this.game.squareSize;
 
-    buddy.move({ x: buddyX, y: playerPos.y });
-    this.game.player.move(playerPos);
-  }
+  const buddyX = boxPosX + this.box.drawingSize.width / this.game.squareSize - buddy.size.width / 2;
+  const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: boxPosY };
 
-  private updateBoxes() {
-    const y = this.game.canvas.height - this.game.boxSize.height * this.game.squareSize - this.game.squareSize * 2;
-    this.box.move({ x: this.game.boxPos.x, y });
-    this.box.updateSize(this.game.boxSize);
+  buddy.move({ x: buddyX, y: playerPos.y });
+  this.game.player.move(playerPos);
+}
 
-    const barWidth =
-    this.energyBar.drawingSize.width +
-    this.convoBar.drawingSize.width +
-    BAR_SPACING * this.game.squareSize;
+function updateBoxes() {
+  const y = this.game.canvas.height - this.game.boxSize.height * this.game.squareSize - this.game.squareSize * 2;
+  this.box.move({ x: this.game.boxPos.x, y });
+  this.box.updateSize(this.game.boxSize);
 
-    const energyX = (this.game.canvas.width - barWidth) / 2;
-    this.energyBar.move({ x: Math.floor(energyX), y: Math.floor(this.energyBar.pos.y) });
+  const barWidth =
+  this.energyBar.drawingSize.width +
+  this.convoBar.drawingSize.width +
+  BAR_SPACING * this.game.squareSize;
 
-    const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
-    this.convoBar.move({ x: Math.floor(convoX), y: Math.floor(this.convoBar.pos.y) });
-  }
+  const energyX = (this.game.canvas.width - barWidth) / 2;
+  this.energyBar.move({ x: Math.floor(energyX), y: Math.floor(this.energyBar.pos.y) });
 
-  private updateText() {
-    const spacing = ARROW_SPACING * this.game.squareSize;
-    const upX = Math.floor(this.box.pos.x +
-    this.box.drawingSize.width -
-    this.upArrow.drawingSize.width -
-    spacing);
+  const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
+  this.convoBar.move({ x: Math.floor(convoX), y: Math.floor(this.convoBar.pos.y) });
+}
 
-    const upY = Math.floor(this.box.pos.y + this.box.drawingSize.height / 2 - this.upArrow.drawingSize.height / 2);
-    const downX = Math.floor(this.box.pos.x + spacing);
-    const downY = Math.floor(upY);
+function updateText() {
+  const spacing = ARROW_SPACING * this.game.squareSize;
+  const upX = Math.floor(this.box.pos.x +
+  this.box.drawingSize.width -
+  this.upArrow.drawingSize.width -
+  spacing);
 
-    this.upArrow.move({ x: upX, y: upY });
-    this.downArrow.move({ x: downX, y: downY });
+  const upY = Math.floor(this.box.pos.y + this.box.drawingSize.height / 2 - this.upArrow.drawingSize.height / 2);
+  const downX = Math.floor(this.box.pos.x + spacing);
+  const downY = Math.floor(upY);
 
-    this.skills.forEach((skill, index) => {
-      const indexDiff = this.currentSkillIndex - index;
+  this.upArrow.move({ x: upX, y: upY });
+  this.downArrow.move({ x: downX, y: downY });
 
-      skill.alpha = indexDiff === 0 && !this.waiting ? 1 : D_ALPHA;
+  this.skills.forEach((skill, index) => {
+    const indexDiff = this.currentSkillIndex - index;
 
-      const skillX = Math.floor(
-        this.box.pos.x +
-        this.box.drawingSize.width / 2 -
-        skill.drawingSize.width / 2,
-      );
+    skill.alpha = indexDiff === 0 && !this.waiting ? 1 : D_ALPHA;
 
-      const skillY = Math.floor(
-        this.box.pos.y +
-        this.box.drawingSize.height / 2 -
-        skill.drawingSize.height / 2 +
-        indexDiff * LINE_HEIGHT * this.game.squareSize,
-      );
+    const skillX = Math.floor(
+      this.box.pos.x +
+      this.box.drawingSize.width / 2 -
+      skill.drawingSize.width / 2,
+    );
 
-      skill.move({ x: skillX, y: skillY });
-      skill.visible = Math.abs(indexDiff) > 1 ? false : true;
-    });
-  }
+    const skillY = Math.floor(
+      this.box.pos.y +
+      this.box.drawingSize.height / 2 -
+      skill.drawingSize.height / 2 +
+      indexDiff * LINE_HEIGHT * this.game.squareSize,
+    );
 
-  private updateFloatyText() {
-    const floaties = this.drawables[2] as Text[];
-    this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => floaty.buddy === buddy));
+    skill.move({ x: skillX, y: skillY });
+    skill.visible = Math.abs(indexDiff) > 1 ? false : true;
+  });
+}
 
-    for (let i = floaties.length - 1; i >= 0; i--) {
-      const floaty = floaties[i];
-      if (floaty.pos.y + floaty.size.height < 0) floaties.splice(i, 1);
-    }
+function updateFloatyText() {
+  const floaties = this.drawables[2] as Text[];
+  this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => floaty.buddy === buddy));
+
+  for (let i = floaties.length - 1; i >= 0; i--) {
+    const floaty = floaties[i];
+    if (floaty.pos.y + floaty.size.height < 0) floaties.splice(i, 1);
   }
 }

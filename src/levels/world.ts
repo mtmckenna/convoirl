@@ -166,7 +166,7 @@ export default class World extends Level {
     ]);
 
     sequence.loop = false;
-    sequence.play();
+    // sequence.play();
   }
 }
 
