@@ -229,7 +229,6 @@ function react(skillIndex) {
 function buddyFloatText(buddy, word, color, goStraightUp = false) {
   const text = new Text(this.game, word, color);
   text.buddy = buddy;
-  // console.log(buddy.skills);
   text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
   this.addDrawables([text], 2);
   this.addUpdateables([text]);
