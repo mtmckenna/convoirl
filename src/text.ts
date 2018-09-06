@@ -107,10 +107,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     let startX = updatedPos.x;
 
     if (direction === "left") {
-      const sizeInTiles = this.game.sizeInTiles();
-      const cameraOffset = sizeInTiles.width * TS  / 2;
-
-      endX = cameraOffset;
+      endX = this.game.sizeInTiles().width * TS  / 2;
       startX = updatedPos.x - this.size.width;
     }
 
