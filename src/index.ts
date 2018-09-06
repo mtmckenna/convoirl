@@ -3,23 +3,27 @@ TODO
   - sfx
   - readme
   - make house look nicer
-  - gamepad
   - clouds
   - make sure text comes from player pos in convo
   - fix weird lines in convo text
   - make drawingsize a getter? or subclass...
+  - panning on convo
+  - abstract out cinematics so input isn't handled until cinematic is over
+  - buddies have two skills
+  - logic for when someone runs out of energy
+  - special buddy logic
+  - some way to know you selected the right thing (fireworks?)
+  - don't go back to level until floaty text is done animating
 
 BACKBURNER
-  - move input stuff into its own class
   - add sun and clouds in convo
   - animate buttons when you press them
   - can probably consolidate a lot of the code around walking
   - add color effects on transition
   - have player be an instance on every level
   - use diff easing function for level transition
-  - panning on convo
-  - move camera into game
   - did I get rowindex/colindex backwards on tile?
+  - gamepad
 
 SPACE SAVING THOUGHTS
   - might be able to save space by using gameCoordsFrom/gameSizeFrom

@@ -60,4 +60,4 @@ export const MS_PER = 1 / 60;
 export const LINE_HEIGHT = 8;
 export const T_TIME = 120;
 export const LETTER_HEIGHT = 5;
-export const LISTEN = "*listen*";
+export const LISTEN = "*LISTEN*";

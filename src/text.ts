@@ -10,12 +10,16 @@ import {
   IPoint,
   ISize,
   ITouchable,
+  IUpdateable,
+  LETTER_HEIGHT,
+  LISTEN,
+  TS,
   } from "./common";
 
 import { lerp } from "./helpers";
 
 // Text from https://github.com/PaulBGD/PixelFont
-export default class Text implements ITouchable, IFadeable {
+export default class Text implements ITouchable, IFadeable, IUpdateable {
   public game: Game;
   public words: string = "";
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
@@ -28,7 +32,7 @@ export default class Text implements ITouchable, IFadeable {
   public alpha = 1;
   public buddy?: Buddy = null;
 
-  private animations: IAnimations = {};
+  public animations: IAnimations = {};
   private upToIndex: number = null;
 
   constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
@@ -41,7 +45,7 @@ export default class Text implements ITouchable, IFadeable {
     this.updateSize();
 
     const floatText: IAnimation = {
-      duration: 4000,
+      duration: 3000,
       endPos: { x: 0, y: 0 },
       running: false,
       startPos: { x: 0, y: 0 },
@@ -100,10 +104,13 @@ export default class Text implements ITouchable, IFadeable {
 
   public startFloat(updatedPos: IPoint, direction: "left" | "right", goStraightUp = false) {
     let endX = this.game.canvas.width / this.game.squareSize;
-    let startX = updatedPos.x + this.size.width;
+    let startX = updatedPos.x;
 
     if (direction === "left") {
-      endX = 0;
+      const sizeInTiles = this.game.sizeInTiles();
+      const cameraOffset = sizeInTiles.width * TS  / 2;
+
+      endX = cameraOffset;
       startX = updatedPos.x - this.size.width;
     }
 
@@ -111,7 +118,7 @@ export default class Text implements ITouchable, IFadeable {
 
     this.animations.floatText.startTime = this.game.timestamp;
     this.animations.floatText.startPos = { x: startX, y: updatedPos.y - this.size.height };
-    this.animations.floatText.endPos = { x: endX, y: -10 };
+    this.animations.floatText.endPos = { x: endX, y: -LETTER_HEIGHT };
     this.animations.floatText.running = true;
     this.move(this.animations.floatText.startPos);
   }
@@ -121,20 +128,26 @@ export default class Text implements ITouchable, IFadeable {
     this.drawingSize.height = this.size.height * this.game.squareSize;
   }
 
+  public update(timestamp) {
+    this.updateFloat(timestamp);
+  }
+
   private updateFloat(timestamp) {
     const { floatText } = this.animations;
     if (!floatText.running) return;
     const t = (timestamp - floatText.startTime) / floatText.duration;
 
-    const updatedPos = Object.assign({}, this.pos);
-    const x = lerp(floatText.startPos.x, floatText.endPos.x, t);
-    updatedPos.x = x + 10 * Math.sin(t * 6 * Math.PI);
-    updatedPos.y = lerp(floatText.startPos.y, floatText.endPos.y, t);
+    let x = lerp(floatText.startPos.x, floatText.endPos.x, t);
+
+    // If listening, go straight up; otherwise, zigzag
+    if (this.words !== LISTEN) x += 5 * Math.sin((t) * 6 * Math.PI);
+
+    const y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 
     if (t >= 1) floatText.running = false;
 
     this.alpha = 1 - t;
-    this.move(updatedPos);
+    this.move({ x, y });
   }
 
   private updateSize() {

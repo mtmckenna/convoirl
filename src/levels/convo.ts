@@ -204,7 +204,7 @@ function useSelectedSkill() {
 
   setTimeout(() => {
     buddyExecuteSkillIndex.call(this, this.buddy, buddySkillIndex);
-  }, 4000);
+  }, 4500);
 }
 
 function react(skillIndex) {
@@ -229,8 +229,10 @@ function react(skillIndex) {
 function buddyFloatText(buddy, word, color, goStraightUp = false) {
   const text = new Text(this.game, word, color);
   text.buddy = buddy;
+  // console.log(buddy.skills);
   text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
   this.addDrawables([text], 2);
+  this.addUpdateables([text]);
 }
 
 function buddyExecuteSkillIndex(buddy, skillIndex) {
@@ -312,10 +314,20 @@ function updateText() {
 
 function updateFloatyText() {
   const floaties = this.drawables[2] as Text[];
-  this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => floaty.buddy === buddy));
+
+  // Don't open mouth when listening (good tip)
+  this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => {
+    return floaty.words !== LISTEN && floaty.buddy === buddy;
+  }));
 
   for (let i = floaties.length - 1; i >= 0; i--) {
     const floaty = floaties[i];
-    if (floaty.pos.y + floaty.size.height < 0) floaties.splice(i, 1);
+    if (!floaty) break;
+    const running = floaty.animations.floatText.running;
+    if (!running) {
+      // Note: when we add another updateable, this logic will need to change...
+      floaties.splice(i, 1);
+      this.updateables.splice(i, 1);
+    }
   }
 }
