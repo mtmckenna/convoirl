@@ -58,6 +58,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public draw(context, timestamp) {
     let currX = this.pos.x;
     const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
+    const shadowOffset = Math.floor(this.game.squareSize / 2);
     context.globalAlpha = alpha;
 
     for (let i = 0; i < this.upToIndex; i++) {
@@ -72,10 +73,11 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
           if (!row[x]) continue;
 
           if (this.shadow) {
+
             context.fillStyle = colorMap[0];
             context.fillRect(
-              currX + x * this.game.squareSize + 2,
-              currY + 2, this.game.squareSize, this.game.squareSize,
+              currX + x * this.game.squareSize + shadowOffset,
+              currY + shadowOffset, this.game.squareSize, this.game.squareSize,
             );
           }
           context.fillStyle = this.color;
@@ -108,7 +110,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 
     if (direction === "left") {
       endX = this.game.sizeInTiles().width * TS  / 2;
-      startX = updatedPos.x - this.size.width;
+      startX -= this.size.width;
     }
 
     if (goStraightUp) endX = startX;
@@ -118,11 +120,6 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     this.animations.floatText.endPos = { x: endX, y: -LETTER_HEIGHT };
     this.animations.floatText.running = true;
     this.move(this.animations.floatText.startPos);
-  }
-
-  public resize() {
-    this.drawingSize.width = this.size.width * this.game.squareSize;
-    this.drawingSize.height = this.size.height * this.game.squareSize;
   }
 
   public update(timestamp) {
@@ -154,7 +151,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     // Add up the widths of all the letters + spaces
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
 
-    this.size = { width, height: this.game.squareSize };
+    this.size = { width, height: LETTER_HEIGHT };
 
     this.drawingSize = {
       height: this.size.height * this.game.squareSize,

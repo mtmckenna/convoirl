@@ -62,7 +62,6 @@ export default class World extends Level {
   private walkingBuddy: Buddy;
   private listenBuddy: Buddy;
   private specialBuddy: Buddy;
-  private learnedListen: boolean = false;
 
   constructor(game: Game) {
     super(game);
@@ -95,6 +94,7 @@ export default class World extends Level {
     const offset = camera.offset;
 
     // TODO: totally forgot how this works...
+    // TODO: can put VVV in a private function so perhaps it can be mangled easier? dunno...
     const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
     const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
     const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.squareSize;
@@ -127,8 +127,6 @@ export default class World extends Level {
     // Make walking buddy walk
     if (this.walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) this.walkingBuddy.autoWalkDirection = "right";
     if (this.walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) this.walkingBuddy.autoWalkDirection = "left";
-    this.walkingBuddy.update(timestamp);
-    this.listenBuddy.update(timestamp);
   }
 
   public configureDrawablesAndUpdateables() {
@@ -141,7 +139,13 @@ export default class World extends Level {
     this.addOverlayDrawables([this.energyBar, this.box]);
     this.addInteractables(this.buddies);
     this.addTouchables([this.box]);
-    this.addUpdateables([...this.game.player.dusts, this.game.player, this.walkingBuddy, ...this.walkingBuddy.dusts]);
+    this.addUpdateables([
+      ...this.game.player.dusts,
+      this.game.player,
+      this.walkingBuddy,
+      ...this.walkingBuddy.dusts,
+      this.listenBuddy,
+    ]);
     this.resize();
   }
 
@@ -152,7 +156,7 @@ export default class World extends Level {
     this.game.player.setConvoMode(false);
     showNextIntroBox.call(this);
     learnFromConvo.call(this);
-    showListenBox.call(this);
+    // showListenBox.call(this);
 
     // @ts-ignore
     const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
@@ -170,23 +174,34 @@ export default class World extends Level {
   }
 }
 
+function hideBox() {
+  this.box.visible = false;
+}
+
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
 
-  // Sleeping
-  if (this.state === "sleeping" || this.state === "post-convo") {
-    this.state = "play";
-    this.box.visible = false;
+  switch (this.state) {
+    case "sleeping":
+      hideBox.call(this);
+      this.state = "play";
+      this.handleInput("ArrowDown");
+      break;
+    case "post-convo":
+      hideBox.call(this);
+      this.state = "play";
+      break;
+    case "post-listen":
+      hideBox.call(this);
+      this.state = "play";
+      this.listenBuddy.walk("right");
+      this.listenBuddy.look("left");
+    case "intro":
+      showNextIntroBox.call(this);
+      break;
+    case "animating":
+      break;
   }
-
-  if (this.state === "sleeping") this.handleInput("ArrowDown");
-  if (this.state === "post-convo" && !this.learnedListen) {
-    showListenBox.call(this);
-    this.learnedListen = true;
-  }
-
-  // Run through intro
-  if (this.state === "intro") showNextIntroBox.call(this);
 
   return true;
 }
@@ -220,11 +235,6 @@ function learnFromConvo() {
   }
 
   this.box.animateTextIn(this.game.timestamp);
-}
-
-function showListenBox() {
-  if (this.currentBuddy !== this.listenBuddy) return;
-  this.listenBuddy.walk("right");
 }
 
 function updateBox() {
@@ -273,6 +283,7 @@ function createBuddies() {
   this.listenBuddy = new Buddy(this.game);
   this.listenBuddy.move({ x: TS * 7, y: TS * 10 });
   this.listenBuddy.skills.push(LISTEN);
+  this.listenBuddy.look("up");
 
   const pastryBuddy = new Buddy(this.game);
   pastryBuddy.move({ x: TS * 8, y: TS * 1 });
@@ -304,7 +315,7 @@ function createBuddies() {
   this.walkingBuddy = new Buddy(this.game);
   this.walkingBuddy.autoWalkDirection = "left";
   this.walkingBuddy.skills.push("math");
-  this.walkingBuddy.animations.walking.duration = 750;
+  this.walkingBuddy.animations.walking.duration = 600;
 
   this.buddies = [
     this.listenBuddy,
@@ -352,7 +363,7 @@ function processInput(): boolean {
   if (startConvo.call(this, tileIndex)) return;
 
   // Check if we're overlapping the door
-  if (this.tileAtIndex(tileIndex).interactable) this.sleep();
+  if (this.tileAtIndex(tileIndex).interactable) sleep.call(this);
 
   // If we're not overlapping anything fun, just walk
   this.game.player.walk(direction);

@@ -32,9 +32,11 @@ export default class EnergyBar implements IDrawable {
     this.energyText.shadow = false;
 
     this.size = Object.assign({}, this.energyText.size);
-    this.drawingSize = Object.assign({}, this.energyText.drawingSize);
-    this.drawingSize.width = (this.size.width + 1) * this.game.squareSize;
-    this.drawingSize.height = (this.size.height + 1) * this.game.squareSize;
+
+    this.drawingSize = {
+      height: (this.size.height + 1) * this.game.squareSize,
+      width: (this.size.width + 1) * this.game.squareSize,
+    };
 
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
     this.box = new Box(game, pos, boxSize, colorMap[7]);

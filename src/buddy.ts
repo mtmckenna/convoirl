@@ -135,8 +135,8 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
-    this.tileIndex.x = Math.ceil(this.pos.x / TS);
-    this.tileIndex.y = Math.ceil(this.pos.y / TS);
+    this.tileIndex.x = Math.floor(this.pos.x / TS);
+    this.tileIndex.y = Math.floor(this.pos.y / TS);
   }
 
   // TODO: can combine look and walk

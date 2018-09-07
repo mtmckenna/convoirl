@@ -119,7 +119,8 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
     if (this.convoLevel >= 1 && !this.convoBar.animating) {
-      this.game.queueNextLevel(this.game.levels.world, "post-convo");
+      const nextState = (this.buddy.skills.length === 1) ? "post-listen" : "post-convo";
+      this.game.queueNextLevel(this.game.levels.world, nextState);
     }
   }
 
@@ -211,7 +212,7 @@ function react(skillIndex) {
   const skill = this.game.player.skills[skillIndex];
 
   if (skill === "weather" && this.game.player.skills.length === 1) {
-    this.convoLevel += .34;
+    this.convoLevel += 1.0;
     this.game.player.energy -= .15;
     buddyFloatText.call(this, this.buddy, "oh...", colorMap[10]);
     this.game.camera.shakeScreen();
@@ -229,6 +230,7 @@ function react(skillIndex) {
 function buddyFloatText(buddy, word, color, goStraightUp = false) {
   const text = new Text(this.game, word, color);
   text.buddy = buddy;
+  console.log(buddy.skills)
   text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
   this.addDrawables([text], 2);
   this.addUpdateables([text]);
