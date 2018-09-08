@@ -101,11 +101,8 @@ export default class Convo extends Level {
     }
 
     this.clearTouchables();
-
     this.game.player.setConvoMode(true, "right");
-
     this.convoLevel = 0;
-
     this.buddies = [this.game.player, this.buddy];
     this.skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
     this.skills.forEach((skill) => skill.touched = () => {
@@ -124,7 +121,8 @@ export default class Convo extends Level {
 
   public update(timestamp) {
     super.update(timestamp);
-    this.game.camera.move({ x: cameraOffset, y: this.game.camera.pos.y });
+    this.game.camera.move({ x: cameraOffset, y: 0 });
+
     updateText.call(this);
     updateFloatyText.call(this);
     if (this.convoLevel >= 1 && !this.convoBar.animating) {
@@ -147,8 +145,8 @@ export default class Convo extends Level {
     updateBoxes.call(this);
     updateText.call(this);
     moveBuddies.call(this);
-
     moveSkillCursor.call(this, 0);
+
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.addDrawables(this.tiles, 0);
@@ -165,7 +163,7 @@ export default class Convo extends Level {
   }
 
   protected generateTileIndexes(sizeInTiles) {
-    const playerTileIndexY = this.game.player.tileIndex.y;
+    const playerTileIndexY = Math.min(this.game.player.tileIndex.y + 1, sizeInTiles.height);
 
     // Ground tiles
     this.tileIndexes = new Array(sizeInTiles.height)
@@ -282,7 +280,6 @@ function updateBoxes() {
   const y = this.game.canvas.height - this.game.boxSize.height * this.game.squareSize - this.game.squareSize * 2;
   this.box.move({ x: this.game.boxPos.x, y });
   this.box.updateSize(this.game.boxSize);
-
   const barWidth =
   this.energyBar.drawingSize.width +
   this.convoBar.drawingSize.width +
