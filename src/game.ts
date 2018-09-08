@@ -51,7 +51,7 @@ export default class Game {
     this.player.skills.push("weather");
 
     this.canvas = canvas;
-    this.setSize();
+    setSize.call(this);
     context = canvas.getContext("2d", { alpha: false });
     context.mozImageSmoothingEnabled = false;
     context.webkitImageSmoothingEnabled = false;
@@ -86,7 +86,7 @@ export default class Game {
 
   public boot(timestamp) {
     this.timestamp = timestamp;
-    this.switchLevel(this.levels.startScreen);
+    switchLevel.call(this, this.levels.startScreen);
     // this.switchLevel(this.levels.world);
     // this.switchLevel(this.levels.convo);
   }
@@ -101,17 +101,17 @@ export default class Game {
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
 
-    if (this.transitioning) this.updateTransition(timestamp);
+    if (this.transitioning) updateTransition.call(this, timestamp);
   }
 
   public draw(timestamp: number) {
     if (!context || !this.camera) return;
     this.camera.updateScreenShake(timestamp);
 
-    this.clearCanvasContext();
-    this.drawDrawables(timestamp);
-    this.drawOverlayDrawables(timestamp);
-    if (this.transitioning) this.updateTransition(timestamp);
+    clearCanvasContext.call(this);
+    drawDrawables.call(this, timestamp);
+    drawOverlayDrawables.call(this, timestamp);
+    if (this.transitioning) updateTransition.call(this, timestamp);
   }
 
   public resize() {
@@ -129,7 +129,7 @@ export default class Game {
     this.canvas.height = height;
     this.camera.size = { width: this.canvas.width, height: this.canvas.height };
 
-    this.setSize();
+    setSize.call(this);
     if (this.currentLevel) this.currentLevel.resize();
   }
 
@@ -140,7 +140,7 @@ export default class Game {
     }
     nextLevel = updatedLevel;
     if (state) nextLevel.state = state;
-    this.startTransition();
+    startTransition.call(this);
   }
 
   public handleInput(key: string) {
@@ -156,102 +156,100 @@ export default class Game {
     const h = Math.ceil(this.canvas.height / this.squareSize / TS);
     return { width: w, height: h };
   }
+}
 
-  private startTransition() {
-    this.transition.startTime = this.timestamp;
-    this.transition.running = true;
-    imageOfPreviousLevel = new Image();
-    imageOfPreviousLevel.src = this.canvas.toDataURL("png");
-    this.switchLevel(nextLevel);
+function startTransition() {
+  this.transition.startTime = this.timestamp;
+  this.transition.running = true;
+  imageOfPreviousLevel = new Image();
+  imageOfPreviousLevel.src = this.canvas.toDataURL("png");
+  switchLevel.call(this, nextLevel);
+}
+
+function setSize() {
+  this.scaleFactor = window.innerWidth / this.canvas.width;
+}
+
+function updateTransition(timestamp) {
+  const t = (timestamp - this.transition.startTime) / this.transition.duration;
+
+  this.transition.prevLevelScale = clerp(1, 5, 1, 5, t);
+  this.transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
+  this.transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
+
+  if (t >= 1) {
+    this.transition = Object.assign({}, transition);
+    imageOfPreviousLevel = null;
   }
+}
 
-  private setSize() {
-    this.scaleFactor = window.innerWidth / this.canvas.width;
-  }
+function switchLevel(updatedLevel) {
+  this.currentLevel = updatedLevel;
+  this.currentLevel.levelWillStart();
+  this.currentLevel.configureDrawablesAndUpdateables();
+  this.currentLevel.levelStarted();
+}
 
-  private updateTransition(timestamp) {
-    const t = (timestamp - this.transition.startTime) / this.transition.duration;
+function drawDrawables(timestamp: number) {
+  const offset = this.camera.offset;
+  this.currentLevel.drawables.forEach((drawablesAtZIndex) => {
+    drawablesAtZIndex.forEach((drawable) => {
+      // the !drawable is a hack to help reduce file size on levels with generated tiles
+      if (!drawable || !drawable.visible) return;
+      const x = drawable.pos.x * this.squareSize + offset.x;
+      const y = drawable.pos.y * this.squareSize + offset.y;
 
-    this.transition.prevLevelScale = clerp(1, 5, 1, 5, t);
-    this.transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
-    this.transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
+      if (isOffScreen.call(this, x, y, drawable.drawingSize)) return;
 
-    if (t >= 1) {
-      this.transition = Object.assign({}, transition);
-      imageOfPreviousLevel = null;
-    }
-  }
+      // Bitwise operator is supposedly the fastest way to land on whole pixels:
+      // https://www.html5rocks.com/en/tutorials/canvas/performance/
+      context.translate((x + .5) | 0, (y + .5) | 0);
 
-  private switchLevel(updatedLevel) {
-    this.currentLevel = updatedLevel;
-    this.currentLevel.levelWillStart();
-    this.currentLevel.configureDrawablesAndUpdateables();
-    this.currentLevel.levelStarted();
-  }
+      context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
 
-  private drawDrawables(timestamp: number) {
-
-    const offset = this.camera.offset;
-
-    this.currentLevel.drawables.forEach((drawablesAtZIndex) => {
-      drawablesAtZIndex.forEach((drawable) => {
-        // the !drawable is a hack to help reduce file size on levels with generated tiles
-        if (!drawable || !drawable.visible) return;
-        const x = drawable.pos.x * this.squareSize + offset.x;
-        const y = drawable.pos.y * this.squareSize + offset.y;
-
-        if (this.isOffScreen(x, y, drawable.drawingSize)) return;
-
-        // Bitwise operator is supposedly the fastest way to land on whole pixels:
-        // https://www.html5rocks.com/en/tutorials/canvas/performance/
-        context.translate((x + .5) | 0, (y + .5) | 0);
-
-        context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
-
-        drawable.draw(context, timestamp);
-
-        context.setTransform(1, 0, 0, 1, 0, 0);
-      });
-    });
-
-    context.globalAlpha = 1;
-
-    if (imageOfPreviousLevel) {
-      context.globalAlpha = this.transition.prevLevelAlpha;
-      const scaleFactor = this.transition.prevLevelScale;
-      const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
-      const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
-      context.drawImage(
-        imageOfPreviousLevel,
-        -x,
-        -y,
-        this.canvas.width * scaleFactor,
-        this.canvas.height * scaleFactor,
-      );
-      context.globalAlpha = 1;
-    }
-  }
-
-  private isOffScreen(x: number, y: number, drawingSize: ISize) {
-    return x + drawingSize.width < 0 ||
-      x > this.canvas.width ||
-      y + drawingSize.height < 0 ||
-      y > this.canvas.height;
-  }
-
-  private drawOverlayDrawables(timestamp: number) {
-    if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
-    this.currentLevel.overlayDrawables.forEach((drawable) => {
-      if (!drawable.visible) return;
       drawable.draw(context, timestamp);
-    });
 
+      context.setTransform(1, 0, 0, 1, 0, 0);
+    });
+  });
+
+  context.globalAlpha = 1;
+
+  if (imageOfPreviousLevel) {
+    context.globalAlpha = this.transition.prevLevelAlpha;
+    const scaleFactor = this.transition.prevLevelScale;
+    const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
+    const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
+    context.drawImage(
+      imageOfPreviousLevel,
+      -x,
+      -y,
+      this.canvas.width * scaleFactor,
+      this.canvas.height * scaleFactor,
+    );
     context.globalAlpha = 1;
   }
+}
 
-  private clearCanvasContext(): void {
-    if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
-    context.fillStyle = this.currentLevel.backgroundColor;
-    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-  }
+function isOffScreen(x: number, y: number, drawingSize: ISize) {
+  return x + drawingSize.width < 0 ||
+    x > this.canvas.width ||
+    y + drawingSize.height < 0 ||
+    y > this.canvas.height;
+}
+
+function drawOverlayDrawables(timestamp: number) {
+  if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
+  this.currentLevel.overlayDrawables.forEach((drawable) => {
+    if (!drawable.visible) return;
+    drawable.draw(context, timestamp);
+  });
+
+  context.globalAlpha = 1;
+}
+
+function clearCanvasContext(): void {
+  if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
+  context.fillStyle = this.currentLevel.backgroundColor;
+  context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }
