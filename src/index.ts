@@ -12,7 +12,7 @@ TODO
   - buddies have two skills
   - logic for when someone runs out of energy
   - special buddy logic
-  - some way to know you selected the right thing (fireworks?)
+  - some way to know you selected the right thing (fireworks? change color of sky)
   - don't go back to level until floaty text is done animating
 
 BACKBURNER

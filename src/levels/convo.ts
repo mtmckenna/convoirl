@@ -8,13 +8,18 @@ import Game from "../game";
 import Text from "../text";
 
 import {
+  LETTER_HEIGHT,
   LINE_HEIGHT,
   LISTEN,
   T_TIME,
   TS,
 } from "../common";
 
-import { randomIndexFromArray, throttle } from "../helpers";
+import {
+  randomIndexFromArray,
+  removeElementFromArray,
+  throttle,
+} from "../helpers";
 
 const BUDDY_Y_FROM_BOX = 4;
 const ARROW_SPACING = 2;
@@ -54,6 +59,10 @@ export default class Convo extends Level {
     this.handleInput = throttledHandleInput;
     this.upArrow.touched = () => this.handleInput("ArrowUp");
     this.downArrow.touched = () => this.handleInput("ArrowDown");
+  }
+
+  get boxPosY() {
+    return this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
   }
 
   public handleInput(key) {
@@ -212,7 +221,7 @@ function react(skillIndex) {
   const skill = this.game.player.skills[skillIndex];
 
   if (skill === "weather" && this.game.player.skills.length === 1) {
-    this.convoLevel += 1.0;
+    this.convoLevel += .5;
     this.game.player.energy -= .15;
     buddyFloatText.call(this, this.buddy, "oh...", colorMap[10]);
     this.game.camera.shakeScreen();
@@ -227,25 +236,35 @@ function react(skillIndex) {
   this.energyBar.animateToLevel(this.game.player.energy);
 }
 
-function buddyFloatText(buddy, word, color, goStraightUp = false) {
+function buddyFloatText(buddy, word, color) {
   const text = new Text(this.game, word, color);
   text.buddy = buddy;
-  console.log(buddy.skills)
-  text.startFloat(buddy.pos, buddy === this.buddy ? "left" : "right", goStraightUp);
-  this.addDrawables([text], 2);
+
+  const boxPosY = this.boxPosY * this.game.squareSize + this.game.player.drawingSize.height / 2 ;
+  const startPos = { x: this.box.pos.x + this.game.player.drawingSize.width / 2, y: boxPosY };
+  const endPos = { x: this.game.canvas.width, y: -LETTER_HEIGHT };
+
+  if (buddy !== this.game.player) {
+    startPos.x +=  this.box.drawingSize.width - text.drawingSize.width - this.game.player.drawingSize.width;
+    endPos.x = 0;
+  }
+
+  if (word === LISTEN) endPos.x = startPos.x;
+
+  text.startFloat(startPos, endPos);
+  this.addOverlayDrawables([text]);
   this.addUpdateables([text]);
 }
 
 function buddyExecuteSkillIndex(buddy, skillIndex) {
   const skill = buddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
-  buddyFloatText.call(this, buddy, skill, color, skill === LISTEN);
+  buddyFloatText.call(this, buddy, skill, color);
   if (buddy === this.buddy) this.waiting = false;
 }
 
 function moveBuddies() {
   const buddy = this.buddies[1];
-  const boxPosY = this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
 
   // Use cameraOffset to compsenate for the larger levelsize
   const boxPosX = this.game.boxPos.x / this.game.squareSize -
@@ -253,7 +272,7 @@ function moveBuddies() {
   cameraOffset / this.game.squareSize;
 
   const buddyX = boxPosX + this.box.drawingSize.width / this.game.squareSize - buddy.size.width / 2;
-  const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: boxPosY };
+  const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: this.boxPosY };
 
   buddy.move({ x: buddyX, y: playerPos.y });
   this.game.player.move(playerPos);
@@ -314,9 +333,9 @@ function updateText() {
 }
 
 function updateFloatyText() {
-  const floaties = this.drawables[2] as Text[];
+  const floaties = this.overlayDrawables.filter((drawable) => drawable instanceof Text && drawable.buddy);
 
-  // Don't open mouth when listening (good tip)
+  // Don't open mouth when listening (good tip for life too)
   this.buddies.forEach((buddy) => buddy.talking = !!floaties.find((floaty) => {
     return floaty.words !== LISTEN && floaty.buddy === buddy;
   }));
@@ -324,10 +343,8 @@ function updateFloatyText() {
   for (let i = floaties.length - 1; i >= 0; i--) {
     const floaty = floaties[i];
     if (!floaty) break;
-    const running = floaty.animations.floatText.running;
-    if (!running) {
-      // Note: when we add another updateable, this logic will need to change...
-      floaties.splice(i, 1);
+    if (!floaty.animations.floatText.running) {
+      removeElementFromArray(floaty, this.overlayDrawables);
       this.updateables.splice(i, 1);
     }
   }

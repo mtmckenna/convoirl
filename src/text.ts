@@ -13,7 +13,6 @@ import {
   IUpdateable,
   LETTER_HEIGHT,
   LISTEN,
-  TS,
   } from "./common";
 
 import { lerp } from "./helpers";
@@ -25,7 +24,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
   public drawingSize: ISize = { width: 0, height: 0 };
-  public pos: IPoint = { x: 0, y: 0 };
+  public pos: IPoint = { x: 0, y: 0 } ;
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
@@ -96,28 +95,18 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public touched() { return; }
 
   public move(updatedPos: IPoint) {
-    this.pos.x = updatedPos.x;
-    this.pos.y = updatedPos.y;
+    this.pos.x = Math.floor(updatedPos.x);
+    this.pos.y = Math.floor(updatedPos.y);
   }
 
   public showUpToIndex(index: number) {
     this.upToIndex = index;
   }
 
-  public startFloat(updatedPos: IPoint, direction: "left" | "right", goStraightUp = false) {
-    let endX = this.game.canvas.width / this.game.squareSize;
-    let startX = updatedPos.x;
-
-    if (direction === "left") {
-      endX = this.game.sizeInTiles().width * TS  / 2;
-      startX -= this.size.width;
-    }
-
-    if (goStraightUp) endX = startX;
-
+  public startFloat(startPos: IPoint, endPos: IPoint) {
     this.animations.floatText.startTime = this.game.timestamp;
-    this.animations.floatText.startPos = { x: startX, y: updatedPos.y - this.size.height };
-    this.animations.floatText.endPos = { x: endX, y: -LETTER_HEIGHT };
+    this.animations.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.height };
+    this.animations.floatText.endPos = { x: endPos.x, y: endPos.y };
     this.animations.floatText.running = true;
     this.move(this.animations.floatText.startPos);
   }
@@ -134,7 +123,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     let x = lerp(floatText.startPos.x, floatText.endPos.x, t);
 
     // If listening, go straight up; otherwise, zigzag
-    if (this.words !== LISTEN) x += 5 * Math.sin((t) * 6 * Math.PI);
+    if (this.words !== LISTEN) x += 10 * Math.sin((t) * 6 * Math.PI);
 
     const y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 

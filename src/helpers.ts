@@ -31,6 +31,17 @@ function randomIndexFromArray(arrayToPullFrom: any[]) {
   return Math.floor(Math.random() * arrayToPullFrom.length);
 }
 
+function removeElementFromArray(element, arrayToRemoveFrom: any[]): boolean {
+  const index = arrayToRemoveFrom.indexOf(element);
+
+  if (index > -1) {
+    arrayToRemoveFrom.splice(index, 1);
+    return true;
+  }
+
+  return false;
+}
+
 function twoPhaseClerp(t: number, min: number, max: number, reverse = false): number {
   let start = max;
   let end = min;
@@ -75,6 +86,7 @@ export {
   lerp,
   oneOrMinusOne,
   randomIndexFromArray,
+  removeElementFromArray,
   singleColorTileArray,
   shouldDoAnimation,
   twoPhaseClerp,
