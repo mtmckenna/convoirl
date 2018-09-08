@@ -35,8 +35,11 @@ export default class StartScreen extends Level {
     this.generateTiles();
     this.moveText();
     this.addDrawables(this.tiles, 0);
-    this.box.animateTextIn(this.game.timestamp);
     this.addOverlayDrawables([this.box]);
+  }
+
+  public levelStarted() {
+    window.setTimeout(() => this.box.animateTextIn(this.game.timestamp), 200);
   }
 
   public handleInput() {
