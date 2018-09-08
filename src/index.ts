@@ -11,12 +11,15 @@ TODO
   - logic for when someone runs out of energy
   - special buddy logic
   - some way to know you selected the right thing (fireworks? change color of sky)
-  - don't go back to level until floaty text is done animating
   - can touch on non selected texts
   - fix pressting enter bug
   - automatically go to sleep when run out of energy
   - fix walking buddy collision stuff
   - leave convo
+  - fix holding down the touch as you walk
+  - slightly delay on showing text on load
+  - movement looks more like a trail?
+  - use onload/onresize
 
 BACKBURNER
   - add sun and clouds in convo
@@ -39,6 +42,8 @@ SPACE SAVING THOUGHTS
   - try closure
   - can replace two phase clerp with some sin stuff?
   - look for private members that can be singletons (all the levels/camera)
+  - maybe remove either levelwillstart or levelstarted?
+  - rename drawingsize?
 */
 
 import Game from "./game";
@@ -67,6 +72,7 @@ function handleTouchDown(event) {
 }
 
 function handleTouchMove(event) {
+  event.preventDefault(); // Prevent iOS scroll bounce
   let touch: MouseEvent | Touch = event;
   if (event.touches) touch = event.changedTouches[0];
   currentTouch = touch as Touch;
@@ -79,14 +85,11 @@ function handleTouchUp() {
 
 requestAnimationFrame(animate);
 
-window.addEventListener("resize", () => game.resize());
-window.addEventListener("keydown", (event) => game.handleInput(event.key));
-window.addEventListener("mousedown", handleTouchDown, false);
-window.addEventListener("touchstart", handleTouchDown, false);
-window.addEventListener("mouseup", handleTouchUp, false);
-window.addEventListener("touchend", handleTouchUp, false);
-window.addEventListener("mousemove", handleTouchMove, false);
-window.addEventListener("touchmove", handleTouchMove, false);
-
-// Prevent iOS scroll bounce
-document.body.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });
+window.onresize = game.resize.bind(game);
+window.onkeydown = game.handleInput.bind(game);
+window.onmousedown = handleTouchDown;
+window.ontouchstart = handleTouchDown;
+window.onmouseup = handleTouchUp;
+window.ontouchend = handleTouchUp;
+window.onmousemove = handleTouchMove;
+window.ontouchmove = handleTouchMove;
