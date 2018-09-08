@@ -45,12 +45,8 @@ export default class Tile implements IDrawable, IInteractable {
     this.cacheOffscreenContext();
   }
 
-  get offscreenCanvas(): HTMLCanvasElement {
-    return TILES[this.name].canvas;
-  }
-
   public draw(context) {
-    context.drawImage(this.offscreenCanvas, 0, 0);
+    context.drawImage(TILES[this.name].canvas, 0, 0);
   }
 
   // It's faster to draw the tile as an image from an offscreen
@@ -73,3 +69,4 @@ export default class Tile implements IDrawable, IInteractable {
     TILES[this.name].canvas = offscreenCanvas;
   }
 }
+
