@@ -86,9 +86,9 @@ export default class Game {
 
   public boot(timestamp) {
     this.timestamp = timestamp;
-    // switchLevel.call(this, this.levels.startScreen);
+    switchLevel.call(this, this.levels.startScreen);
     // this.switchLevel(this.levels.world);
-    switchLevel.call(this, this.levels.convo);
+    // switchLevel.call(this, this.levels.convo);
   }
 
   public update(timestamp) {
@@ -204,11 +204,8 @@ function drawDrawables(timestamp: number) {
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
       context.translate((x + .5) | 0, (y + .5) | 0);
-
       context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
-
       drawable.draw(context, timestamp);
-
       context.setTransform(1, 0, 0, 1, 0, 0);
     });
   });

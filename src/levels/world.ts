@@ -138,7 +138,6 @@ export default class World extends Level {
     this.addDrawables(this.buddies, 2);
     this.addOverlayDrawables([this.energyBar, this.box]);
     this.addInteractables(this.buddies);
-    this.addTouchables([this.box]);
     this.addUpdateables([
       ...this.game.player.dusts,
       this.game.player,
