@@ -12,6 +12,7 @@ TODO
   - fix walking buddy collision stuff
   - fix holding down the touch as you walk
   - slightly delay on showing text on load
+  - flashbars when the change
 
 BACKBURNER
   - add sun and clouds in convo

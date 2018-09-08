@@ -12,7 +12,7 @@ import {
   TS,
  } from "../common";
 
-import { flatten, randomIndexFromArray } from "../helpers";
+import { flatten, randomIndex } from "../helpers";
 
 export default abstract class Level {
   public game: Game;
@@ -126,7 +126,7 @@ export default abstract class Level {
 
     this.tileIndexes = new Array(sizeInTiles.height)
       .fill(null).map(() => new Array(sizeInTiles.width)
-        .fill(null).map(() => randomIndexFromArray(this.tileTypeMap)));
+        .fill(null).map(() => randomIndex(this.tileTypeMap)));
   }
 
   protected touchedTouchable(touch: Touch): ITouchable {

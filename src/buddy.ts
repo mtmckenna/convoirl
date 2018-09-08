@@ -2,10 +2,9 @@ import Dust from "./dust";
 import Game from "./game";
 
 import {
+  clerp,
   lerp,
-  randomIndexFromArray,
-  shouldDoAnimation,
-  twoPhaseClerp,
+  randomIndex,
 } from "./helpers";
 
 import {
@@ -76,7 +75,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.a.lookAway = lookAway;
     this.stop();
 
-    this.color = COLORS[randomIndexFromArray(COLORS)];
+    this.color = COLORS[randomIndex(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize = {
       height: TS * this.game.ss,
@@ -329,4 +328,31 @@ function canMoveToPosition(position: IPoint): boolean {
   y /= TS;
 
   return inMap && level.tilesGrid[y][x].walkable;
+}
+
+function shouldDoAnimation(animation: IAnimation, timestamp: number): boolean {
+  if (animation.running) return false;
+  const enoughTimeHasPassed = timestamp - animation.startTime > animation.minTimeDelta;
+  const lucky = animation.percentChance > Math.random();
+  return enoughTimeHasPassed && lucky;
+}
+
+function twoPhaseClerp(t: number, min: number, max: number, reverse = false): number {
+  let start = max;
+  let end = min;
+
+  if (reverse) {
+    start = min;
+    end = max;
+  }
+
+  // if in second half of animation
+  if (t >= .5) {
+    const t2 = (t - .5) / .5;
+    return clerp(start, end, min, max, t2);
+  // else if in the first half of animation
+  } else {
+    const t2 = t / .5;
+    return clerp(end, start, min, max, t2);
+  }
 }

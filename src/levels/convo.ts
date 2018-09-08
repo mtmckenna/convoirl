@@ -16,8 +16,9 @@ import {
 } from "../common";
 
 import {
-  randomIndexFromArray,
-  removeElementFromArray,
+  clamp,
+  randomIndex,
+  removeElement,
   throttle,
 } from "../helpers";
 
@@ -124,7 +125,6 @@ export default class Convo extends Level {
       this.game.queueNextLevel(this.game.levels.world, nextState);
     // Lose
     } else if (this.game.player.energy <= 0) {
-      console.log(this.game.player.energy, " energgggy")
       this.game.queueNextLevel(this.game.levels.world, "nap");
     }
   }
@@ -166,7 +166,7 @@ export default class Convo extends Level {
     // Ground tiles
     this.tileIndexes = new Array(sizeInTiles.height)
       .fill(null).map(() => new Array(sizeInTiles.width)
-        .fill(null).map(() => randomIndexFromArray([0, 1]))); // Don't include the sky/tree tile
+        .fill(null).map(() => randomIndex([0, 1]))); // Don't include the sky/tree tile
 
     // Sky tiles
     for (let i = 0; i < playerTileIndexY; i++) {
@@ -197,6 +197,14 @@ function moveSkillCursor(amountToMoveBy) {
   if (currentSkillIndex === skills.length - 1) upArrow.alpha = D_ALPHA;
 }
 
+function updateConvoLevel(increment: number) {
+  convoLevel = clamp(Math.round((convoLevel + increment) * 100) / 100, 0, 1);
+}
+
+function updateEnergyLevel(buddyToUpdate: Buddy, increment) {
+  buddyToUpdate.energy = clamp(Math.round((buddyToUpdate.energy + increment) * 100) / 100, 0, 1);
+}
+
 function useSelectedSkill() {
   if (waiting) return;
 
@@ -207,7 +215,7 @@ function useSelectedSkill() {
 
   setTimeout(() => react.call(this, skillIndex), 2000);
 
-  let buddySkillIndex = randomIndexFromArray(buddy.skills);
+  let buddySkillIndex = randomIndex(buddy.skills);
 
   // If we're at the listenbuddy for the first time, just have them do listen
   if (this.game.player.skills.length === 1) buddySkillIndex = buddy.skills.indexOf(LISTEN);
@@ -216,14 +224,17 @@ function useSelectedSkill() {
 }
 
 function react(skillIndex) {
-  if (convoLevel >= 1) return;
   const skill = this.game.player.skills[skillIndex];
 
   // If haven't learend listen yet
-  if (skill === "WEATHER" && this.game.player.skills.length === 1) {
-    convoLevel += .4;
+  if (this.game.player.skills.length === 1) {
+    updateConvoLevel(.4);
     goodReaction.call(this);
-  // Otherwise..
+  // If the player only knows weather and listen
+  } else if (skill === LISTEN && this.game.player.skills.length === 2) {
+    updateConvoLevel(.4);
+    goodReaction.call(this);
+  // Otherwise...
   } else {
     if (skill === LISTEN) {
       listenReaction.call(this);
@@ -239,18 +250,18 @@ function react(skillIndex) {
 }
 
 function listenReaction() {
-  this.game.player.energy = Math.max(this.game.player.energy - .15, 0);
+  updateEnergyLevel(this.game.player, -.15);
 }
 
 function goodReaction() {
   buddyFloatText.call(this, buddy, "cool!", colorMap[2]);
-  this.game.player.energy = Math.max(this.game.player.energy - .1, 0);
-  convoLevel = Math.min(convoLevel + .2, 1);
+  updateEnergyLevel(this.game.player, -.1);
+  updateConvoLevel(.2);
 }
 
 function badReaction() {
   buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
-  this.game.player.energy = Math.max(this.game.player.energy - .2, 0);
+  updateEnergyLevel(this.game.player, -.2);
   this.game.camera.shakeScreen();
 }
 
@@ -275,7 +286,7 @@ function buddyFloatText(floatBuddy, word, color) {
 }
 
 function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
-  if (convoLevel >= 1) return;
+  if (convoLevel >= 1 || this.game.player.energy <= 0) return;
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
@@ -359,7 +370,7 @@ function updateFloatyText() {
     const floaty = floaties[i];
     if (!floaty) break;
     if (!floaty.animations.floatText.running) {
-      removeElementFromArray(floaty, this.overlayDrawables);
+      removeElement(floaty, this.overlayDrawables);
       this.updateables.splice(i, 1);
     }
   }

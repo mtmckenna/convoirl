@@ -16,8 +16,8 @@ import {
 } from "../common";
 
 import {
-  randomIndexFromArray,
-  removeElementFromArray,
+  randomIndex,
+  removeElement,
   throttle,
 } from "../helpers";
 
@@ -266,11 +266,11 @@ function showNextIntroBox() {
 function learnFromConvo() {
   if (!this.currentBuddy) return;
 
-  const skill = this.currentBuddy.skills[randomIndexFromArray(this.currentBuddy.skills)];
+  const skill = this.currentBuddy.skills[randomIndex(this.currentBuddy.skills)];
   box.visible = true;
 
   if (this.game.player.skills.includes(skill)) {
-    box.setWords(["nice convo!", "that was a", "good time"]);
+    box.setWords(["nice convo!", "that was a", "good time!"]);
   } else {
     box.setWords(["nice convo!", "you learned", `${skill}!`]);
     this.game.player.skills.push(skill);
@@ -321,9 +321,9 @@ function movePlayerHorizontally(touchDistance: number) {
   if (touchDistance < 0) this.handleInput("ArrowLeft");
 }
 
-function getSecondaryTopic(): string {
-  const topic = SECONDARY_TOPICS[randomIndexFromArray(SECONDARY_TOPICS)];
-  removeElementFromArray(topic, SECONDARY_TOPICS);
+function getSecondaryTopic(primaryTopic: string): string {
+  const topic = SECONDARY_TOPICS.find((secondaryTopic) => secondaryTopic !== primaryTopic);
+  removeElement(topic, SECONDARY_TOPICS);
   return topic;
 }
 
@@ -335,29 +335,29 @@ function createBuddies() {
 
   const pastryBuddy = new Buddy(this.game);
   pastryBuddy.move({ x: TS * 8, y: TS * 1 });
-  pastryBuddy.skills.push(TOPICS[0], getSecondaryTopic());
+  pastryBuddy.skills.push(TOPICS[0], getSecondaryTopic(TOPICS[0]));
 
   const travelBuddy = new Buddy(this.game);
   travelBuddy.move({ x: TS * 18, y: TS * 3 });
-  travelBuddy.skills.push(TOPICS[1], getSecondaryTopic());
+  travelBuddy.skills.push(TOPICS[1], getSecondaryTopic(TOPICS[1]));
 
   const sportsBuddy = new Buddy(this.game);
   sportsBuddy.move({ x: TS * 25, y: TS * 2 });
-  sportsBuddy.skills.push(TOPICS[2], getSecondaryTopic());
+  sportsBuddy.skills.push(TOPICS[2], getSecondaryTopic(TOPICS[2]));
 
   const booksBuddy = new Buddy(this.game);
   booksBuddy.move({ x: TS * 15, y: TS * 18 });
-  booksBuddy.skills.push(TOPICS[3], getSecondaryTopic());
+  booksBuddy.skills.push(TOPICS[3], getSecondaryTopic(TOPICS[3]));
   booksBuddy.look("up");
 
   const mathBuddy = new Buddy(this.game);
   mathBuddy.move({ x: TS * 26, y: TS * 8 });
-  mathBuddy.skills.push(TOPICS[4], getSecondaryTopic());
+  mathBuddy.skills.push(TOPICS[4], getSecondaryTopic(TOPICS[4]));
   mathBuddy.look("left");
 
   walkingBuddy = new Buddy(this.game);
   walkingBuddy.autoWalkDirection = "left";
-  walkingBuddy.skills.push(TOPICS[5], getSecondaryTopic());
+  walkingBuddy.skills.push(TOPICS[5], getSecondaryTopic(TOPICS[5]));
   walkingBuddy.a.walking.duration = 600;
 
   specialBuddy = new Buddy(this.game);

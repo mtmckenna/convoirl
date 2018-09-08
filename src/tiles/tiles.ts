@@ -1,12 +1,11 @@
 import { TS } from "../common";
-import { singleColorTileArray } from "../helpers";
 
 const E = null;
 
 export default {
   door: {
     canvas: null,
-    colorMatrix: singleColorTileArray(0),
+    colorMatrix: oneColorTiles(0),
     interactable: true,
   },
   flowers: {
@@ -37,7 +36,7 @@ export default {
   },
   green: {
     canvas: null,
-    colorMatrix: singleColorTileArray(2),
+    colorMatrix: oneColorTiles(2),
   },
   house: {
     canvas: null,
@@ -71,7 +70,7 @@ export default {
   },
   sky: {
     canvas: null,
-    colorMatrix: singleColorTileArray(9),
+    colorMatrix: oneColorTiles(9),
   },
   tree: {
     canvas: null,
@@ -93,3 +92,7 @@ export default {
     walkable: false,
   },
 };
+
+function oneColorTiles(colorIndex) {
+  return new Array(TS).fill(null).map(() => new Array(TS).fill(colorIndex));
+}
