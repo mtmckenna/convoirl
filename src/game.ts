@@ -48,7 +48,7 @@ export default class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.player = new Buddy(this);
-    this.player.skills.push("weather");
+    this.player.skills.push("WEATHER");
 
     this.canvas = canvas;
     setSize.call(this);
@@ -134,7 +134,7 @@ export default class Game {
   }
 
   public queueNextLevel(updatedLevel: Level, state?: string) {
-    if (nextLevel === this.levels.convo) {
+    if (updatedLevel === this.levels.convo) {
       const { convo, world } = this.levels;
       (convo as Convo).setBuddy((world as World).currentBuddy.copy());
     }

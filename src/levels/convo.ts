@@ -211,20 +211,39 @@ function useSelectedSkill() {
 function react(skillIndex) {
   const skill = this.game.player.skills[skillIndex];
 
-  if (skill === "weather" && this.game.player.skills.length === 1) {
-    convoLevel += .5;
-    this.game.player.energy -= .15;
-    buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
-    this.game.camera.shakeScreen();
+  // If haven't learend listen yet
+  if (skill === "WEATHER" && this.game.player.skills.length === 1) {
+    convoLevel += .4;
+    goodReaction.call(this);
+  // Otherwise..
+  } else {
+    if (skill === LISTEN) {
+      listenReaction.call(this);
+    } else if (buddy.skills.includes(skill)) {
+      goodReaction.call(this);
+    } else {
+      badReaction.call(this);
+    }
   }
 
-  if (skill === LISTEN) {
-    convoLevel += 0.2;
-    buddyFloatText.call(this, buddy, "cool!", colorMap[9]);
-  }
-
-  convoBar.animateToLevel(this.convoLevel);
+  convoBar.animateToLevel(convoLevel);
   energyBar.animateToLevel(this.game.player.energy);
+}
+
+function listenReaction() {
+  this.game.player.energy = Math.max(this.game.player.energy - .15, 0);
+}
+
+function goodReaction() {
+  buddyFloatText.call(this, buddy, "cool!", colorMap[2]);
+  this.game.player.energy = Math.max(this.game.player.energy - .1, 0);
+  convoLevel = Math.min(convoLevel + .2, 1);
+}
+
+function badReaction() {
+  buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
+  this.game.player.energy = Math.max(this.game.player.energy - .2, 0);
+  this.game.camera.shakeScreen();
 }
 
 function buddyFloatText(floatBuddy, word, color) {

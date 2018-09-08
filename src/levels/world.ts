@@ -15,7 +15,11 @@ import {
   TS,
 } from "../common";
 
-import { randomIndexFromArray, throttle } from "../helpers";
+import {
+  randomIndexFromArray,
+  removeElementFromArray,
+  throttle,
+} from "../helpers";
 
 const TEXT_INTROS = [
   ["great news! a", "new kid moved", "into the woods!"],
@@ -24,7 +28,22 @@ const TEXT_INTROS = [
   ["talk to them", "about their", "interests!"],
 ];
 
+const TEXT_FIRST_CONVO = [
+  ["keep at it", "and make", "new friends!"],
+  ["and if you are", "low on energy", "take a nap!"],
+];
+
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
+const TOPICS = [
+  "PASTRIES",
+  "FRANCE",
+  "SPORTS",
+  "ANIME",
+  "BOOKS",
+  "MATH",
+];
+
+const SECONDARY_TOPICS = TOPICS.slice();
 
 export default class World extends Level {
   public energyBar: EnergyBar;
@@ -58,7 +77,7 @@ export default class World extends Level {
   private box: Box;
   private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
-  private textIntros: string[][] = TEXT_INTROS;
+  // private textIntros: string[][] = TEXT_INTROS;
   private walkingBuddy: Buddy;
   private listenBuddy: Buddy;
   private specialBuddy: Buddy;
@@ -155,7 +174,6 @@ export default class World extends Level {
     this.game.player.setConvoMode(false);
     showNextIntroBox.call(this);
     learnFromConvo.call(this);
-    // showListenBox.call(this);
 
     // @ts-ignore
     const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
@@ -191,10 +209,8 @@ function handleBoxInput(): boolean {
       this.state = "play";
       break;
     case "post-listen":
-      hideBox.call(this);
-      this.state = "play";
-      this.listenBuddy.walk("right");
-      this.listenBuddy.look("left");
+      showPostListenBox.call(this);
+      break;
     case "intro":
       showNextIntroBox.call(this);
       break;
@@ -205,9 +221,25 @@ function handleBoxInput(): boolean {
   return true;
 }
 
+function showPostListenBox() {
+  const words = TEXT_FIRST_CONVO[0];
+  if (!words) {
+    this.state = "play";
+    this.box.visible = false;
+    this.listenBuddy.walk("right");
+    this.listenBuddy.look("left");
+    return;
+  }
+
+  this.box.visible = true;
+  this.box.setWords(words);
+  this.box.animateTextIn(this.game.timestamp);
+  TEXT_FIRST_CONVO.shift();
+}
+
 function showNextIntroBox() {
   if (this.state !== "intro") return; // TODO: remove this debug code!
-  const words = this.textIntros[0];
+  const words = TEXT_INTROS[0];
   if (!words) {
     this.state = "play";
     this.box.visible = false;
@@ -217,7 +249,7 @@ function showNextIntroBox() {
   this.box.visible = true;
   this.box.setWords(words);
   this.box.animateTextIn(this.game.timestamp);
-  this.textIntros.shift();
+  TEXT_INTROS.shift();
 }
 
 function learnFromConvo() {
@@ -278,6 +310,12 @@ function movePlayerHorizontally(touchDistance: number) {
   if (touchDistance < 0) this.handleInput("ArrowLeft");
 }
 
+function getSecondaryTopic(): string {
+  const topic = SECONDARY_TOPICS[randomIndexFromArray(SECONDARY_TOPICS)];
+  removeElementFromArray(topic, SECONDARY_TOPICS);
+  return topic;
+}
+
 function createBuddies() {
   this.listenBuddy = new Buddy(this.game);
   this.listenBuddy.move({ x: TS * 7, y: TS * 10 });
@@ -286,35 +324,35 @@ function createBuddies() {
 
   const pastryBuddy = new Buddy(this.game);
   pastryBuddy.move({ x: TS * 8, y: TS * 1 });
-  pastryBuddy.skills.push("pastries");
+  pastryBuddy.skills.push(TOPICS[0], getSecondaryTopic());
 
   const travelBuddy = new Buddy(this.game);
   travelBuddy.move({ x: TS * 18, y: TS * 3 });
-  travelBuddy.skills.push("france");
+  travelBuddy.skills.push(TOPICS[1], getSecondaryTopic());
 
   const sportsBuddy = new Buddy(this.game);
   sportsBuddy.move({ x: TS * 25, y: TS * 2 });
-  sportsBuddy.skills.push("sports");
-
-  this.specialBuddy = new Buddy(this.game);
-  this.specialBuddy.move({ x: TS * 23, y: TS * 18 });
-  this.specialBuddy.look("left");
-  this.specialBuddy.skills.push("anime");
+  sportsBuddy.skills.push(TOPICS[2], getSecondaryTopic());
 
   const booksBuddy = new Buddy(this.game);
   booksBuddy.move({ x: TS * 15, y: TS * 18 });
-  booksBuddy.skills.push("books");
+  booksBuddy.skills.push(TOPICS[3], getSecondaryTopic());
   booksBuddy.look("up");
 
   const mathBuddy = new Buddy(this.game);
   mathBuddy.move({ x: TS * 26, y: TS * 8 });
-  mathBuddy.skills.push("math");
+  mathBuddy.skills.push(TOPICS[4], getSecondaryTopic());
   mathBuddy.look("left");
 
   this.walkingBuddy = new Buddy(this.game);
   this.walkingBuddy.autoWalkDirection = "left";
-  this.walkingBuddy.skills.push("math");
+  this.walkingBuddy.skills.push(TOPICS[5], getSecondaryTopic());
   this.walkingBuddy.a.walking.duration = 600;
+
+  this.specialBuddy = new Buddy(this.game);
+  this.specialBuddy.move({ x: TS * 23, y: TS * 18 });
+  this.specialBuddy.look("left");
+  this.specialBuddy.skills.push(...TOPICS);
 
   this.buddies = [
     this.listenBuddy,

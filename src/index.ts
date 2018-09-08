@@ -13,6 +13,10 @@ TODO
   - some way to know you selected the right thing (fireworks? change color of sky)
   - don't go back to level until floaty text is done animating
   - can touch on non selected texts
+  - fix pressting enter bug
+  - automatically go to sleep when run out of energy
+  - fix walking buddy collision stuff
+  - leave convo
 
 BACKBURNER
   - add sun and clouds in convo
