@@ -45,9 +45,17 @@ const TOPICS = [
 ];
 
 const SECONDARY_TOPICS = TOPICS.slice();
+const playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
+
+let buddies: Buddy[];
+let box: Box;
+let inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
+let walkingBuddy: Buddy;
+let listenBuddy: Buddy;
+let specialBuddy: Buddy;
 
 export default class World extends Level {
-  public energyBar: EnergyBar;
+  public energyBar: EnergyBar; // TODO: needs to be public?
   public currentBuddy: Buddy;
 
   protected tileTypeMap = ["green", "flowers", "grass", "tree", "house", "unwalkable", "door"];
@@ -74,14 +82,6 @@ export default class World extends Level {
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
   ];
 
-  private buddies: Buddy[];
-  private box: Box;
-  private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
-  private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
-  private walkingBuddy: Buddy;
-  private listenBuddy: Buddy;
-  private specialBuddy: Buddy;
-
   constructor(game: Game) {
     super(game);
     this.state = "intro";
@@ -93,14 +93,14 @@ export default class World extends Level {
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
 
-    this.box = new Box(this.game, this.game.boxPos(), this.game.boxSize());
+    box = new Box(this.game, this.game.boxPos(), this.game.boxSize());
     createBuddies.call(this);
   }
 
   public handleInput(key) {
     if (this.game.transitioning()) return;
     if (handleBoxInput.call(this)) return;
-    this.inputBuffer = { pressedAt: this.game.timestamp, key };
+    inputBuffer = { pressedAt: this.game.timestamp, key };
   }
 
   public handleTouch(touch) {
@@ -143,33 +143,33 @@ export default class World extends Level {
     this.game.camera.moveToPlayer(this.game.player);
 
     // Make walking buddy walk
-    if (this.walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) this.walkingBuddy.autoWalkDirection = "right";
-    if (this.walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) this.walkingBuddy.autoWalkDirection = "left";
+    if (walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) walkingBuddy.autoWalkDirection = "right";
+    if (walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) walkingBuddy.autoWalkDirection = "left";
   }
 
   public configViz() {
     super.configViz();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.game.player.dusts, 1);
-    this.addDrawables(this.walkingBuddy.dusts, 1);
+    this.addDrawables(walkingBuddy.dusts, 1);
     this.addDrawables([this.game.player], 2);
-    this.addDrawables(this.buddies, 2);
-    this.addOverlayDrawables([this.energyBar, this.box]);
-    this.addInteractables(this.buddies);
+    this.addDrawables(buddies, 2);
+    this.addOverlayDrawables([this.energyBar, box]);
+    this.addInteractables(buddies);
     this.addUpdateables([
       ...this.game.player.dusts,
       this.game.player,
-      this.walkingBuddy,
-      ...this.walkingBuddy.dusts,
-      this.listenBuddy,
+      walkingBuddy,
+      ...walkingBuddy.dusts,
+      listenBuddy,
     ]);
     this.resize();
   }
 
   public levelStarted() {
     this.energyBar.animateToLevel(this.game.player.energy);
-    this.walkingBuddy.move(WB_START_POS);
-    this.game.player.move(this.playerSpawnPosition);
+    walkingBuddy.move(WB_START_POS);
+    this.game.player.move(playerSpawnPosition);
     this.game.player.stop();
     this.game.player.setConvoMode(false);
 
@@ -204,7 +204,7 @@ export default class World extends Level {
 }
 
 function hideBox() {
-  this.box.visible = false;
+  box.visible = false;
 }
 
 function handleBoxInput(): boolean {
@@ -237,15 +237,15 @@ function showPostListenBox() {
   const words = TEXT_FIRST_CONVO[0];
   if (!words) {
     this.state = "play";
-    this.box.visible = false;
-    this.listenBuddy.walk("right");
-    this.listenBuddy.look("left");
+    box.visible = false;
+    listenBuddy.walk("right");
+    listenBuddy.look("left");
     return;
   }
 
-  this.box.visible = true;
-  this.box.setWords(words);
-  this.box.animateTextIn(this.game.timestamp);
+  box.visible = true;
+  box.setWords(words);
+  box.animateTextIn(this.game.timestamp);
   TEXT_FIRST_CONVO.shift();
 }
 
@@ -253,13 +253,13 @@ function showNextIntroBox() {
   const words = TEXT_INTROS[0];
   if (!words) {
     this.state = "play";
-    this.box.visible = false;
+    box.visible = false;
     return;
   }
 
-  this.box.visible = true;
-  this.box.setWords(words);
-  this.box.animateTextIn(this.game.timestamp);
+  box.visible = true;
+  box.setWords(words);
+  box.animateTextIn(this.game.timestamp);
   TEXT_INTROS.shift();
 }
 
@@ -267,21 +267,21 @@ function learnFromConvo() {
   if (!this.currentBuddy) return;
 
   const skill = this.currentBuddy.skills[randomIndexFromArray(this.currentBuddy.skills)];
-  this.box.visible = true;
+  box.visible = true;
 
   if (this.game.player.skills.includes(skill)) {
-    this.box.setWords(["nice convo!", "that was a", "good time"]);
+    box.setWords(["nice convo!", "that was a", "good time"]);
   } else {
-    this.box.setWords(["nice convo!", "you learned", `${skill}!`]);
+    box.setWords(["nice convo!", "you learned", `${skill}!`]);
     this.game.player.skills.push(skill);
   }
 
-  this.box.animateTextIn(this.game.timestamp);
+  box.animateTextIn(this.game.timestamp);
 }
 
 function updateBox() {
-  this.box.move(this.game.boxPos());
-  this.box.updateSize(this.game.boxSize());
+  box.move(this.game.boxPos());
+  box.updateSize(this.game.boxSize());
 }
 
 function startConvo(tileIndex: IPoint): boolean {
@@ -293,8 +293,8 @@ function startConvo(tileIndex: IPoint): boolean {
 
   if (overlappedInteractable) {
     this.currentBuddy = overlappedInteractable as Buddy;
-    this.playerSpawnPosition.x = this.game.player.pos.x;
-    this.playerSpawnPosition.y = this.game.player.pos.y;
+    playerSpawnPosition.x = this.game.player.pos.x;
+    playerSpawnPosition.y = this.game.player.pos.y;
     this.game.queueNextLevel(this.game.levels.convo);
     return true;
   }
@@ -305,9 +305,9 @@ function startConvo(tileIndex: IPoint): boolean {
 function sleep() {
   this.game.player.energy = 1;
   this.energyBar.animateToLevel(this.game.player.energy);
-  this.box.setWords(["", "zzzzzz...", ""]);
-  this.box.animateTextIn(this.game.timestamp);
-  this.box.visible = true;
+  box.setWords(["", "zzzzzz...", ""]);
+  box.animateTextIn(this.game.timestamp);
+  box.visible = true;
   this.state = "sleeping";
 }
 
@@ -328,10 +328,10 @@ function getSecondaryTopic(): string {
 }
 
 function createBuddies() {
-  this.listenBuddy = new Buddy(this.game);
-  this.listenBuddy.move({ x: TS * 7, y: TS * 10 });
-  this.listenBuddy.skills.push(LISTEN);
-  this.listenBuddy.look("up");
+  listenBuddy = new Buddy(this.game);
+  listenBuddy.move({ x: TS * 7, y: TS * 10 });
+  listenBuddy.skills.push(LISTEN);
+  listenBuddy.look("up");
 
   const pastryBuddy = new Buddy(this.game);
   pastryBuddy.move({ x: TS * 8, y: TS * 1 });
@@ -355,32 +355,32 @@ function createBuddies() {
   mathBuddy.skills.push(TOPICS[4], getSecondaryTopic());
   mathBuddy.look("left");
 
-  this.walkingBuddy = new Buddy(this.game);
-  this.walkingBuddy.autoWalkDirection = "left";
-  this.walkingBuddy.skills.push(TOPICS[5], getSecondaryTopic());
-  this.walkingBuddy.a.walking.duration = 600;
+  walkingBuddy = new Buddy(this.game);
+  walkingBuddy.autoWalkDirection = "left";
+  walkingBuddy.skills.push(TOPICS[5], getSecondaryTopic());
+  walkingBuddy.a.walking.duration = 600;
 
-  this.specialBuddy = new Buddy(this.game);
-  this.specialBuddy.move({ x: TS * 23, y: TS * 18 });
-  this.specialBuddy.look("left");
-  this.specialBuddy.skills.push(...TOPICS);
+  specialBuddy = new Buddy(this.game);
+  specialBuddy.move({ x: TS * 23, y: TS * 18 });
+  specialBuddy.look("left");
+  specialBuddy.skills.push(...TOPICS);
 
-  this.buddies = [
-    this.listenBuddy,
+  buddies = [
+    listenBuddy,
     pastryBuddy,
     travelBuddy,
     sportsBuddy,
-    this.specialBuddy,
+    specialBuddy,
     booksBuddy,
     mathBuddy,
-    this.walkingBuddy,
+    walkingBuddy,
   ];
 }
 
 // This function is gigantic not because I'm a bad person but because
 // I needed to de-dupe the switch statements to save space.
 function processInput(): boolean {
-  const timeSinceInput = this.game.timestamp - this.inputBuffer.pressedAt;
+  const timeSinceInput = this.game.timestamp - inputBuffer.pressedAt;
   if (timeSinceInput > 50) return false; // For input buffering
   if (this.game.player.walking) return false;
 
@@ -388,7 +388,7 @@ function processInput(): boolean {
   const tileIndex = Object.assign({}, this.game.player.tileIndex);
   let direction = null;
 
-  switch (this.inputBuffer.key) {
+  switch (inputBuffer.key) {
     case "ArrowUp":
       direction = "up";
       tileIndex.y -= 1;
