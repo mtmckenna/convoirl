@@ -50,7 +50,7 @@ export default abstract class Level {
     this.updateables.forEach((updateable) => updateable.update(timestamp));
   }
 
-  public configureDrawablesAndUpdateables() {
+  public configViz() {
     this.clearDrawables();
     this.clearOverlayDrawables();
     this.clearUpdateables();

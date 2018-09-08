@@ -187,7 +187,7 @@ function updateTransition(timestamp) {
 function switchLevel(updatedLevel) {
   this.currentLevel = updatedLevel;
   this.currentLevel.levelWillStart();
-  this.currentLevel.configureDrawablesAndUpdateables();
+  this.currentLevel.configViz();
   this.currentLevel.levelStarted();
 }
 

@@ -147,8 +147,8 @@ export default class World extends Level {
     if (this.walkingBuddy.pos.x >= WB_START_POS.x + 5 * TS) this.walkingBuddy.autoWalkDirection = "left";
   }
 
-  public configureDrawablesAndUpdateables() {
-    super.configureDrawablesAndUpdateables();
+  public configViz() {
+    super.configViz();
     this.addDrawables(this.tiles, 0);
     this.addDrawables(this.game.player.dusts, 1);
     this.addDrawables(this.walkingBuddy.dusts, 1);

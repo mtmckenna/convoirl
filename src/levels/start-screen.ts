@@ -16,7 +16,7 @@ export default class StartScreen extends Level {
   }
 
   public resize() {
-    this.configureDrawablesAndUpdateables();
+    this.configViz();
   }
 
   public update(timestamp) {
@@ -26,8 +26,8 @@ export default class StartScreen extends Level {
     if (this.game.camera.pos.x > 0) this.panDirection = 1;
   }
 
-  public configureDrawablesAndUpdateables() {
-    super.configureDrawablesAndUpdateables();
+  public configViz() {
+    super.configViz();
 
     const sizeInTiles = this.game.sizeInTiles();
     sizeInTiles.width *= 2;
