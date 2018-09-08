@@ -34,6 +34,7 @@ const TEXT_FIRST_CONVO = [
 ];
 
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
+const SLEEP_POS = { x: TS * 4, y: TS * 5 };
 const TOPICS = [
   "PASTRIES",
   "FRANCE",
@@ -77,7 +78,6 @@ export default class World extends Level {
   private box: Box;
   private playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
   private inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
-  // private textIntros: string[][] = TEXT_INTROS;
   private walkingBuddy: Buddy;
   private listenBuddy: Buddy;
   private specialBuddy: Buddy;
@@ -171,9 +171,22 @@ export default class World extends Level {
     this.energyBar.animateToLevel(this.game.player.energy);
     this.walkingBuddy.move(WB_START_POS);
     this.game.player.move(this.playerSpawnPosition);
+    this.game.player.stop();
     this.game.player.setConvoMode(false);
-    showNextIntroBox.call(this);
-    learnFromConvo.call(this);
+
+    switch (this.state) {
+      case "intro":
+        showNextIntroBox.call(this);
+        break;
+      case "nap":
+        this.game.player.move(SLEEP_POS);
+        sleep.call(this);
+        break;
+      case "post-listen":
+      case "post-convo":
+        learnFromConvo.call(this);
+        break;
+    }
 
     // @ts-ignore
     const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
@@ -238,7 +251,6 @@ function showPostListenBox() {
 }
 
 function showNextIntroBox() {
-  if (this.state !== "intro") return; // TODO: remove this debug code!
   const words = TEXT_INTROS[0];
   if (!words) {
     this.state = "play";
@@ -394,6 +406,8 @@ function processInput(): boolean {
       direction = "right";
       tileIndex.x += 1;
       break;
+    default:
+      return;
   }
 
   // Start a convo if overlapping a buddy

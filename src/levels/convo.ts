@@ -87,12 +87,6 @@ export default class Convo extends Level {
   }
 
   public levelWillStart() {
-    // TODO: DELETE THIS DEBUG CODE
-    if (!buddy) {
-      this.setBuddy(new Buddy(this.game));
-      buddy.skills.push(LISTEN);
-    }
-
     waiting = false;
     this.clearTouchables();
     this.game.player.setConvoMode(true, "right");
@@ -120,10 +114,19 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
 
-    // Turn VVV into a method and then kick people out to the world if they run out of juice
-    if (convoLevel >= 1 && !convoBar.animating && floatiesInArray(this.overlayDrawables).length === 0) {
+    waiting = floatiesInArray(this.overlayDrawables).length > 0;
+
+    // Don't win or lose if we're still animating
+    if (!doneAnimating(this.overlayDrawables)) return;
+
+    // Win
+    if (convoLevel >= 1) {
       const nextState = (buddy.skills.length === 1) ? "post-listen" : "post-convo";
       this.game.queueNextLevel(this.game.levels.world, nextState);
+    // Lose
+    } else if (this.game.player.energy <= 0) {
+      console.log(this.game.player.energy, " energgggy")
+      this.game.queueNextLevel(this.game.levels.world, "nap");
     }
   }
 
@@ -179,6 +182,10 @@ export default class Convo extends Level {
   }
 }
 
+function doneAnimating(drawables): boolean {
+  return !convoBar.animating && floatiesInArray(drawables).length === 0;
+}
+
 function moveSkillCursor(amountToMoveBy) {
   const updatedIndex = currentSkillIndex + amountToMoveBy;
   const skill = skills[updatedIndex] || skills[currentSkillIndex];
@@ -193,22 +200,20 @@ function moveSkillCursor(amountToMoveBy) {
 
 function useSelectedSkill() {
   if (waiting) return;
-  if (this.game.player.energy <= 0 || convoLevel >= 1) return;
+
+  // if (this.game.player.energy <= 0 || convoLevel >= 1) return;
+  waiting = true;
   const skillIndex = currentSkillIndex;
   buddyExecuteSkillIndex.call(this, this.game.player, skillIndex);
 
-  waiting = true;
   setTimeout(() => react.call(this, skillIndex), 2000);
 
   let buddySkillIndex = randomIndexFromArray(buddy.skills);
 
-  if (this.game.player.skills.length === 1) {
-    buddySkillIndex = buddy.skills.indexOf(LISTEN);
-  }
+  // If we're at the listenbuddy for the first time, just have them do listen
+  if (this.game.player.skills.length === 1) buddySkillIndex = buddy.skills.indexOf(LISTEN);
 
-  setTimeout(() => {
-    buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex);
-  }, 4500);
+  setTimeout(() => buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex), 4500);
 }
 
 function react(skillIndex) {
@@ -275,7 +280,6 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
-  if (skillBuddy === buddy) waiting = false;
 }
 
 function moveBuddies() {

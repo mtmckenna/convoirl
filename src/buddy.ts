@@ -73,18 +73,9 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       startTime: 0,
     };
 
-    const walking: IAnimation = {
-      duration: 250,
-      endPos: { x: 0, y: 0 },
-      running: false,
-      startPos: { x: -1, y: -1 },
-      startTime: 0,
-      t: 0,
-    };
-
     this.a.blinking = blinking;
     this.a.lookAway = lookAway;
-    this.a.walking = walking;
+    this.stop();
 
     this.color = COLORS[randomIndexFromArray(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
@@ -129,6 +120,18 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     }
 
     this.convoLookRight = direction === "right";
+  }
+
+  public stop() {
+    const walking: IAnimation = {
+      duration: 250,
+      endPos: { x: 0, y: 0 },
+      running: false,
+      startPos: { x: -1, y: -1 },
+      startTime: 0,
+      t: 0,
+    };
+    this.a.walking = walking;
   }
 
   public move(updatedPos: IPoint) {
@@ -181,6 +184,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     walking.t = 0;
   }
 
+  // TODO: maybe save space by inlining statements
   public update(timestamp) {
     if (this.autoWalkDirection) this.walk(this.autoWalkDirection);
     if (this.a.walking.startPos.x === -1) return;
@@ -246,6 +250,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       );
     }
 
+    // TODO: maybe make this smaller by inlining the vars?
     if (this.walking && (timestamp - this.lastDustAt) > 30) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
       if (dust) {

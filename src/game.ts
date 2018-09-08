@@ -143,8 +143,9 @@ export default class Game {
     startTransition.call(this);
   }
 
-  public handleInput(key: string) {
-    this.currentLevel.handleInput(key);
+  // TODO: what's the best typescripty way of setting this event?
+  public handleInput(event) {
+    this.currentLevel.handleInput(event.key);
   }
 
   public handleTouch(touch: Touch) {
