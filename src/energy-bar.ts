@@ -64,8 +64,8 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: Math.floor(updatedPos.x + this.game.ss / 2 + .5),
-      y: Math.floor(updatedPos.y + this.game.ss / 2 + .5),
+      x: updatedPos.x + this.game.ss / 2 + .5,
+      y: updatedPos.y + this.game.ss / 2 + .5,
     });
   }
 

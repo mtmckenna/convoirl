@@ -305,22 +305,22 @@ function updateBoxes() {
   BAR_SPACING * this.game.ss;
 
   const energyX = (this.game.canvas.width - barWidth) / 2;
-  energyBar.move({ x: Math.floor(energyX), y: Math.floor(energyBar.pos.y) });
+  energyBar.move({ x: energyX, y: energyBar.pos.y });
 
   const convoX = energyBar.pos.x + energyBar.drawingSize.width + BAR_SPACING * this.game.ss;
-  convoBar.move({ x: Math.floor(convoX), y: Math.floor(convoBar.pos.y) });
+  convoBar.move({ x: convoX, y: convoBar.pos.y });
 }
 
 function updateText() {
   const spacing = ARROW_SPACING * this.game.ss;
-  const upX = Math.floor(box.pos.x +
+  const upX = box.pos.x +
   box.drawingSize.width -
   upArrow.drawingSize.width -
-  spacing);
+  spacing;
 
-  const upY = Math.floor(box.pos.y + box.drawingSize.height / 2 - upArrow.drawingSize.height / 2);
-  const downX = Math.floor(box.pos.x + spacing);
-  const downY = Math.floor(upY);
+  const upY = box.pos.y + box.drawingSize.height / 2 - upArrow.drawingSize.height / 2;
+  const downX = box.pos.x + spacing;
+  const downY = upY;
 
   upArrow.move({ x: upX, y: upY });
   downArrow.move({ x: downX, y: downY });
@@ -330,18 +330,14 @@ function updateText() {
 
     skill.alpha = indexDiff === 0 && !waiting ? 1 : D_ALPHA;
 
-    const skillX = Math.floor(
-      box.pos.x +
+    const skillX = box.pos.x +
       box.drawingSize.width / 2 -
-      skill.drawingSize.width / 2,
-    );
+      skill.drawingSize.width / 2;
 
-    const skillY = Math.floor(
-      box.pos.y +
+    const skillY = box.pos.y +
       box.drawingSize.height / 2 -
       skill.drawingSize.height / 2 +
-      indexDiff * L_SPACE * this.game.ss,
-    );
+      indexDiff * L_SPACE * this.game.ss;
 
     skill.move({ x: skillX, y: skillY });
     skill.visible = Math.abs(indexDiff) > 1 ? false : true;

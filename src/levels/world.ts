@@ -113,7 +113,6 @@ export default class World extends Level {
     const offset = camera.offset;
 
     // TODO: totally forgot how this works...
-    // TODO: can put VVV in a private function so perhaps it can be mangled easier? dunno...
     const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
     const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
     const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.ss;
@@ -132,7 +131,7 @@ export default class World extends Level {
   }
 
   public resize() {
-    const energyBarX = Math.floor((this.game.canvas.width - this.energyBar.drawingSize.width) / 2);
+    const energyBarX = (this.game.canvas.width - this.energyBar.drawingSize.width) / 2;
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
     updateBox.call(this);
   }

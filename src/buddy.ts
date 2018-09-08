@@ -141,7 +141,6 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.tileIndex.y = Math.floor(this.pos.y / TS);
   }
 
-  // TODO: can combine look and walk
   public look(direction: "up" | "down" | "left" | "right") {
     this.walk(direction, true);
   }
@@ -184,7 +183,6 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     walking.t = 0;
   }
 
-  // TODO: maybe save space by inlining statements
   public update(timestamp) {
     if (this.autoWalkDirection) this.walk(this.autoWalkDirection);
     if (this.a.walking.startPos.x === -1) return;
@@ -202,7 +200,6 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       this.a.walking.t = 0;
     }
 
-    // TODO: avoid creating new objects
     this.move({ x, y });
   }
 

@@ -104,8 +104,8 @@ function moveTexts() {
   // TODO: Why minus -2???
   const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
   this.texts.forEach((text, index) => {
-    const x = Math.floor(this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2);
-    const y = Math.floor(this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index);
+    const x = this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2;
+    const y = this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index;
     text.move({ x, y });
   });
 }
