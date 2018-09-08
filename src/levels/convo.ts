@@ -93,6 +93,7 @@ export default class Convo extends Level {
       buddy.skills.push(LISTEN);
     }
 
+    waiting = false;
     this.clearTouchables();
     this.game.player.setConvoMode(true, "right");
     convoLevel = 0;
@@ -118,6 +119,8 @@ export default class Convo extends Level {
 
     updateText.call(this);
     updateFloatyText.call(this);
+
+    // Turn VVV into a method and then kick people out to the world if they run out of juice
     if (convoLevel >= 1 && !convoBar.animating && floatiesInArray(this.overlayDrawables).length === 0) {
       const nextState = (buddy.skills.length === 1) ? "post-listen" : "post-convo";
       this.game.queueNextLevel(this.game.levels.world, nextState);
