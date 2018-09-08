@@ -118,7 +118,7 @@ export default class Convo extends Level {
 
     updateText.call(this);
     updateFloatyText.call(this);
-    if (convoLevel >= 1 && !convoBar.animating) {
+    if (convoLevel >= 1 && !convoBar.animating && floatiesInArray(this.overlayDrawables).length === 0) {
       const nextState = (buddy.skills.length === 1) ? "post-listen" : "post-convo";
       this.game.queueNextLevel(this.game.levels.world, nextState);
     }
@@ -209,6 +209,7 @@ function useSelectedSkill() {
 }
 
 function react(skillIndex) {
+  if (convoLevel >= 1) return;
   const skill = this.game.player.skills[skillIndex];
 
   // If haven't learend listen yet
@@ -267,6 +268,7 @@ function buddyFloatText(floatBuddy, word, color) {
 }
 
 function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
+  if (convoLevel >= 1) return;
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
@@ -339,8 +341,12 @@ function updateText() {
   });
 }
 
+function floatiesInArray(drawables) {
+  return drawables.filter((drawable) => drawable instanceof Text && drawable.buddy);
+}
+
 function updateFloatyText() {
-  const floaties = this.overlayDrawables.filter((drawable) => drawable instanceof Text && drawable.buddy);
+  const floaties = floatiesInArray(this.overlayDrawables);
 
   // Don't open mouth when listening (good tip for life too)
   buddies.forEach((talkingBuddy) => talkingBuddy.talking = !!floaties.find((floaty) => {

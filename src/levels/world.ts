@@ -29,7 +29,7 @@ const TEXT_INTROS = [
 ];
 
 const TEXT_FIRST_CONVO = [
-  ["keep at it", "and make", "new friends!"],
+  ["keep at it", "to make", "new friends!"],
   ["and if you are", "low on energy", "take a nap!"],
 ];
 
