@@ -63,6 +63,7 @@ export default class Convo extends Level {
   }
 
   public handleInput(key) {
+    if (this.game.transitioning()) return;
     switch (key) {
       case "ArrowUp":
         moveSkillCursor.call(this, 1);
@@ -77,6 +78,7 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
+    if (this.game.transitioning()) return;
     const touched = this.touchedTouchable(touch);
     if (touched) touched.touched();
   }

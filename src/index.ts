@@ -19,7 +19,6 @@ TODO
   - fix holding down the touch as you walk
   - slightly delay on showing text on load
   - movement looks more like a trail?
-  - don't allow input until transition in convo
 
 BACKBURNER
   - add sun and clouds in convo
