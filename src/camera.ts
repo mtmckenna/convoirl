@@ -7,8 +7,6 @@ import {
   ISize,
 } from "./common";
 
-import { oneOrMinusOne } from "./helpers";
-
 let game: Game;
 let shake: IScreenShakeProps;
 
@@ -79,6 +77,10 @@ export default class Camera implements IPositionable {
       shake.pos.y = Math.sin(timestamp / 50) * amplitude * dir.y;
     }
   }
+}
+
+function oneOrMinusOne(): number {
+  return Math.round(Math.random()) * 2 - 1;
 }
 
 interface IScreenShakeProps {

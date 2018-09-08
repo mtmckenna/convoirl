@@ -10,10 +10,6 @@ function clerp(start, end, min, max, t): number {
   return clamp(lerp(start, end, t), min, max);
 }
 
-function oneOrMinusOne(): number {
-  return Math.round(Math.random()) * 2 - 1;
-}
-
 function flatten(arrayOfArrays) {
   return [].concat(...arrayOfArrays);
 }
@@ -52,7 +48,6 @@ export {
   throttle,
   flatten,
   lerp,
-  oneOrMinusOne,
   randomIndex,
   removeElement,
 };

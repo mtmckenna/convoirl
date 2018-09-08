@@ -41,7 +41,14 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     this.color = color;
     this.move(pos);
     this.pixelLetters = this.words.split("").map((stringLetter) => letters[stringLetter]);
-    this.updateSize();
+
+    // Figure out the size of the text;
+    // Get the longest row per letter
+    const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));
+    // Add up the widths of all the letters + spaces
+    const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
+    this.size = { width, height: L_HEIGHT };
+    this.drawingSize = { height: this.size.height * this.game.ss, width: this.size.width * this.game.ss };
 
     const floatText: IAnimation = {
       duration: 3000,
@@ -89,7 +96,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
       currX += this.game.ss + maxX;
     }
 
-    this.updateFloat(timestamp);
+    updateFloat.call(this, timestamp);
   }
 
   public touched() { return; }
@@ -112,39 +119,24 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   }
 
   public update(timestamp) {
-    this.updateFloat(timestamp);
+    updateFloat.call(this, timestamp);
   }
+}
 
-  private updateFloat(timestamp) {
-    const { floatText } = this.animations;
-    if (!floatText.running) return;
-    const t = (timestamp - floatText.startTime) / floatText.duration;
+function updateFloat(timestamp) {
+  const { floatText } = this.animations;
+  if (!floatText.running) return;
+  const t = (timestamp - floatText.startTime) / floatText.duration;
 
-    let x = lerp(floatText.startPos.x, floatText.endPos.x, t);
+  let x = lerp(floatText.startPos.x, floatText.endPos.x, t);
 
-    // If listening, go straight up; otherwise, zigzag
-    if (this.words !== LISTEN) x += 10 * Math.sin((t) * 6 * Math.PI);
+  // If listening, go straight up; otherwise, zigzag
+  if (this.words !== LISTEN) x += 10 * Math.sin((t) * 6 * Math.PI);
 
-    const y = lerp(floatText.startPos.y, floatText.endPos.y, t);
+  const y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 
-    if (t >= 1) floatText.running = false;
+  if (t >= 1) floatText.running = false;
 
-    this.alpha = 1 - t;
-    this.move({ x, y });
-  }
-
-  private updateSize() {
-    // Get the longest row per letter
-    const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));
-
-    // Add up the widths of all the letters + spaces
-    const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
-
-    this.size = { width, height: L_HEIGHT };
-
-    this.drawingSize = {
-      height: this.size.height * this.game.ss,
-      width: this.size.width * this.game.ss,
-    };
-  }
+  this.alpha = 1 - t;
+  this.move({ x, y });
 }

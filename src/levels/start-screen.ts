@@ -1,7 +1,5 @@
 import Box from "../box";
 import Game from "../game";
-import Text from "../text";
-
 import Level from "./level";
 
 export default class StartScreen extends Level {
