@@ -50,8 +50,8 @@ export default class Convo extends Level {
 
   constructor(game: Game) {
     super(game);
-    this.energyBar = new EnergyBar(this.game, { x: this.game.squareSize, y: this.game.squareSize }, "ENERGY");
-    this.convoBar = new EnergyBar(this.game, { x: this.game.squareSize, y: this.game.squareSize }, "CONVO");
+    this.energyBar = new EnergyBar(this.game, { x: this.game.ss, y: this.game.ss }, "ENERGY");
+    this.convoBar = new EnergyBar(this.game, { x: this.game.ss, y: this.game.ss }, "CONVO");
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
     this.upArrow = new Text(this.game, "^");
     this.downArrow = new Text(this.game, "_");
@@ -62,7 +62,7 @@ export default class Convo extends Level {
   }
 
   get boxPosY() {
-    return this.box.pos.y / this.game.squareSize - this.game.player.size.height - BUDDY_Y_FROM_BOX;
+    return this.box.pos.y / this.game.ss - this.game.player.size.height - BUDDY_Y_FROM_BOX;
   }
 
   public handleInput(key) {
@@ -135,7 +135,7 @@ export default class Convo extends Level {
     super.configureDrawablesAndUpdateables();
 
     const sizeInTiles = this.game.sizeInTiles();
-    cameraOffset = -sizeInTiles.width * TS * this.game.squareSize / 2;
+    cameraOffset = -sizeInTiles.width * TS * this.game.ss / 2;
     sizeInTiles.width *= 2;
     sizeInTiles.height *= 2;
 
@@ -238,7 +238,7 @@ function buddyFloatText(buddy, word, color) {
   const text = new Text(this.game, word, color);
   text.buddy = buddy;
 
-  const boxPosY = this.boxPosY * this.game.squareSize + this.game.player.drawingSize.height / 2 ;
+  const boxPosY = this.boxPosY * this.game.ss + this.game.player.drawingSize.height / 2 ;
   const startPos = { x: this.box.pos.x + this.game.player.drawingSize.width / 2, y: boxPosY };
   const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
 
@@ -265,11 +265,11 @@ function moveBuddies() {
   const buddy = this.buddies[1];
 
   // Use cameraOffset to compsenate for the larger levelsize
-  const boxPosX = this.game.boxPos.x / this.game.squareSize -
+  const boxPosX = this.game.boxPos.x / this.game.ss -
   buddy.size.width / 2 -
-  cameraOffset / this.game.squareSize;
+  cameraOffset / this.game.ss;
 
-  const buddyX = boxPosX + this.box.drawingSize.width / this.game.squareSize - buddy.size.width / 2;
+  const buddyX = boxPosX + this.box.drawingSize.width / this.game.ss - buddy.size.width / 2;
   const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: this.boxPosY };
 
   buddy.move({ x: buddyX, y: playerPos.y });
@@ -277,23 +277,23 @@ function moveBuddies() {
 }
 
 function updateBoxes() {
-  const y = this.game.canvas.height - this.game.boxSize.height * this.game.squareSize - this.game.squareSize * 2;
+  const y = this.game.canvas.height - this.game.boxSize.height * this.game.ss - this.game.ss * 2;
   this.box.move({ x: this.game.boxPos.x, y });
   this.box.updateSize(this.game.boxSize);
   const barWidth =
   this.energyBar.drawingSize.width +
   this.convoBar.drawingSize.width +
-  BAR_SPACING * this.game.squareSize;
+  BAR_SPACING * this.game.ss;
 
   const energyX = (this.game.canvas.width - barWidth) / 2;
   this.energyBar.move({ x: Math.floor(energyX), y: Math.floor(this.energyBar.pos.y) });
 
-  const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.squareSize;
+  const convoX = this.energyBar.pos.x + this.energyBar.drawingSize.width + BAR_SPACING * this.game.ss;
   this.convoBar.move({ x: Math.floor(convoX), y: Math.floor(this.convoBar.pos.y) });
 }
 
 function updateText() {
-  const spacing = ARROW_SPACING * this.game.squareSize;
+  const spacing = ARROW_SPACING * this.game.ss;
   const upX = Math.floor(this.box.pos.x +
   this.box.drawingSize.width -
   this.upArrow.drawingSize.width -
@@ -321,7 +321,7 @@ function updateText() {
       this.box.pos.y +
       this.box.drawingSize.height / 2 -
       skill.drawingSize.height / 2 +
-      indexDiff * L_SPACE * this.game.squareSize,
+      indexDiff * L_SPACE * this.game.ss,
     );
 
     skill.move({ x: skillX, y: skillY });

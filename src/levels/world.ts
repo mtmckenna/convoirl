@@ -72,7 +72,7 @@ export default class World extends Level {
     this.handleInput = throttledHandleInput;
 
     this.generateTiles();
-    this.energyBar = new EnergyBar(this.game, { x: 0, y: game.squareSize }, "ENERGY");
+    this.energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
 
     this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
     createBuddies.call(this);
@@ -97,11 +97,11 @@ export default class World extends Level {
     // TODO: can put VVV in a private function so perhaps it can be mangled easier? dunno...
     const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
     const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
-    const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.squareSize;
-    const verticalDistance = tapYInCameraSpace - this.game.player.pos.y * this.game.squareSize;
+    const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.ss;
+    const verticalDistance = tapYInCameraSpace - this.game.player.pos.y * this.game.ss;
     const absHorizontalDistance = Math.abs(horizontalDistance);
     const absVerticalDistance = Math.abs(verticalDistance);
-    const minMoveTheshold = this.game.squareSize * TS / 2;
+    const minMoveTheshold = this.game.ss * TS / 2;
 
     if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
 

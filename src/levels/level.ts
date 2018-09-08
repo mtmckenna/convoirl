@@ -67,7 +67,7 @@ export default abstract class Level {
     const height = this.tileIndexes.length * TS;
 
     this.size = { width, height };
-    this.drawingSize = { width: width * this.game.squareSize, height: height * this.game.squareSize };
+    this.drawingSize = { width: width * this.game.ss, height: height * this.game.ss };
 
     for (let i = 0; i < this.tileIndexes.length; i++) {
       this.tilesGrid.push(new Array(this.tileIndexes[i].length));

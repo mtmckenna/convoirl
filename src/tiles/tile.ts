@@ -38,8 +38,8 @@ export default class Tile implements IDrawable, IInteractable {
     this.tileLength = TILES[name].hasOwnProperty("tileLength") ? TILES[name].tileLength : this.tileLength;
 
     this.drawingSize = {
-      height: this.tileLength * this.game.squareSize,
-      width: this.tileLength * this.game.squareSize,
+      height: this.tileLength * this.game.ss,
+      width: this.tileLength * this.game.ss,
     };
 
     this.cacheOffscreenContext();
@@ -65,9 +65,9 @@ export default class Tile implements IDrawable, IInteractable {
     colors.forEach((color, index) => {
       if (!color) return;
       offscreenContext.fillStyle = color;
-      const x = this.game.squareSize * (index % this.tileLength);
-      const y = this.game.squareSize * (Math.floor(index / this.tileLength));
-      offscreenContext.fillRect(x, y, this.game.squareSize, this.game.squareSize);
+      const x = this.game.ss * (index % this.tileLength);
+      const y = this.game.ss * (Math.floor(index / this.tileLength));
+      offscreenContext.fillRect(x, y, this.game.ss, this.game.ss);
     });
 
     TILES[this.name].canvas = offscreenCanvas;

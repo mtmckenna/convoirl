@@ -31,8 +31,8 @@ export default class Box implements ITouchable, IFadeable {
     this.size = size;
     this.color = color;
     this.drawingSize = {
-      height: this.size.height * this.game.squareSize,
-      width: this.size.width * this.game.squareSize,
+      height: this.size.height * this.game.ss,
+      width: this.size.width * this.game.ss,
     };
 
     this.move(pos);
@@ -56,8 +56,8 @@ export default class Box implements ITouchable, IFadeable {
   public updateSize(updatedSize: ISize) {
     this.size.height = updatedSize.height;
     this.size.width = updatedSize.width;
-    this.drawingSize.height = this.size.height * this.game.squareSize;
-    this.drawingSize.width = this.size.width * this.game.squareSize;
+    this.drawingSize.height = this.size.height * this.game.ss;
+    this.drawingSize.width = this.size.width * this.game.ss;
   }
 
   public draw(context, timestamp) {
@@ -67,7 +67,7 @@ export default class Box implements ITouchable, IFadeable {
     context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
     context.strokeStyle = colorMap[1];
     context.fillStyle = colorMap[1];
-    context.lineWidth = this.game.squareSize;
+    context.lineWidth = this.game.ss;
     context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);
 
     let indexes = new Array(this.texts.length).fill(0);
@@ -102,14 +102,14 @@ export default class Box implements ITouchable, IFadeable {
 
   private moveTexts() {
     if (!this.texts.length) return;
-    const drawingLineSize = L_SPACE * this.game.squareSize;
-    const drawingLetterSize = L_HEIGHT * this.game.squareSize;
+    const drawingLineSize = L_SPACE * this.game.ss;
+    const drawingLetterSize = L_HEIGHT * this.game.ss;
     const numLines = this.texts.length;
 
     // TODO: Why minus -2???
     const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
     this.texts.forEach((text, index) => {
-      const x = Math.floor(this.pos.x + this.game.squareSize * (this.size.width - text.size.width) / 2);
+      const x = Math.floor(this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2);
       const y = Math.floor(this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index);
       text.move({ x, y });
     });

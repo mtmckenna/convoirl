@@ -43,11 +43,11 @@ export default class Camera implements IPositionable {
 
   public moveToPlayer(drawable: IDrawable): void {
     this.pos.x = this.game.canvas.width / 2 -
-      drawable.pos.x * this.game.squareSize -
+      drawable.pos.x * this.game.ss -
       drawable.drawingSize.width / 2;
 
     this.pos.y = this.game.canvas.height / 2 -
-      drawable.pos.y * this.game.squareSize -
+      drawable.pos.y * this.game.ss -
       drawable.drawingSize.height / 2;
 
     // Stop camera at edges of level size
@@ -63,7 +63,7 @@ export default class Camera implements IPositionable {
 
   public shakeScreen(): void {
     this.shake.pos = { x: 0, y: 0 };
-    this.shake.amplitude = 10 * this.game.squareSize;
+    this.shake.amplitude = 10 * this.game.ss;
     this.shake.dir.x = oneOrMinusOne();
     this.shake.dir.y = oneOrMinusOne();
   }

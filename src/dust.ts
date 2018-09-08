@@ -20,8 +20,8 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
   constructor(game: Game) {
     this.game = game;
     this.drawingSize = {
-      height: this.size.height * this.game.squareSize,
-      width: this.size.width * this.game.squareSize,
+      height: this.size.height * this.game.ss,
+      width: this.size.width * this.game.ss,
     };
   }
 

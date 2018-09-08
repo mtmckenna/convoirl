@@ -42,7 +42,7 @@ export default class Game {
   public timestamp: number = 0;
   public levels: { [key: string]: Level; };
   public player: Buddy;
-  public squareSize: number = SQUARE_SIZE;
+  public ss: number = SQUARE_SIZE;
   public transition: IAnimation;
   public scaleFactor: number = 1;
 
@@ -68,8 +68,8 @@ export default class Game {
 
   get boxPos(): IPoint {
     return {
-      x: (this.canvas.width - this.boxSize.width * this.squareSize) / 2,
-      y: (this.canvas.height - this.boxSize.height * this.squareSize) / 2,
+      x: (this.canvas.width - this.boxSize.width * this.ss) / 2,
+      y: (this.canvas.height - this.boxSize.height * this.ss) / 2,
     };
   }
 
@@ -152,8 +152,8 @@ export default class Game {
   }
 
   public sizeInTiles(): ISize {
-    const w = Math.ceil(this.canvas.width / this.squareSize / TS);
-    const h = Math.ceil(this.canvas.height / this.squareSize / TS);
+    const w = Math.ceil(this.canvas.width / this.ss / TS);
+    const h = Math.ceil(this.canvas.height / this.ss / TS);
     return { width: w, height: h };
   }
 }
@@ -196,8 +196,8 @@ function drawDrawables(timestamp: number) {
     drawablesAtZIndex.forEach((drawable) => {
       // the !drawable is a hack to help reduce file size on levels with generated tiles
       if (!drawable || !drawable.visible) return;
-      const x = drawable.pos.x * this.squareSize + offset.x;
-      const y = drawable.pos.y * this.squareSize + offset.y;
+      const x = drawable.pos.x * this.ss + offset.x;
+      const y = drawable.pos.y * this.ss + offset.y;
 
       if (isOffScreen.call(this, x, y, drawable.drawingSize)) return;
 

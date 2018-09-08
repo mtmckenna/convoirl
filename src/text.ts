@@ -57,7 +57,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public draw(context, timestamp) {
     let currX = this.pos.x;
     const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
-    const shadowOffset = Math.floor(this.game.squareSize / 2);
+    const shadowOffset = Math.floor(this.game.ss / 2);
     context.globalAlpha = alpha;
 
     for (let i = 0; i < this.upToIndex; i++) {
@@ -75,18 +75,18 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 
             context.fillStyle = colorMap[0];
             context.fillRect(
-              currX + x * this.game.squareSize + shadowOffset,
-              currY + shadowOffset, this.game.squareSize, this.game.squareSize,
+              currX + x * this.game.ss + shadowOffset,
+              currY + shadowOffset, this.game.ss, this.game.ss,
             );
           }
           context.fillStyle = this.color;
-          context.fillRect(currX + x * this.game.squareSize, currY, this.game.squareSize, this.game.squareSize);
+          context.fillRect(currX + x * this.game.ss, currY, this.game.ss, this.game.ss);
         }
 
-        maxX = Math.max(maxX, row.length * this.game.squareSize);
-        currY = this.game.squareSize * (y + 1) + this.pos.y;
+        maxX = Math.max(maxX, row.length * this.game.ss);
+        currY = this.game.ss * (y + 1) + this.pos.y;
       }
-      currX += this.game.squareSize + maxX;
+      currX += this.game.ss + maxX;
     }
 
     this.updateFloat(timestamp);
@@ -143,8 +143,8 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     this.size = { width, height: L_HEIGHT };
 
     this.drawingSize = {
-      height: this.size.height * this.game.squareSize,
-      width: this.size.width * this.game.squareSize,
+      height: this.size.height * this.game.ss,
+      width: this.size.width * this.game.ss,
     };
   }
 }

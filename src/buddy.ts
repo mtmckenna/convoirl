@@ -89,11 +89,11 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.color = COLORS[randomIndexFromArray(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.drawingSize = {
-      height: TS * this.game.squareSize,
-      width: TS * this.game.squareSize,
+      height: TS * this.game.ss,
+      width: TS * this.game.ss,
     };
 
-    this.squareSize = this.game.squareSize;
+    this.squareSize = this.game.ss;
     this.rando = Math.random() * 100;
   }
 
@@ -112,11 +112,11 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public setConvoMode(inConvoMode: boolean, direction?: "left" | "right") {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;
-    this.squareSize = this.game.squareSize;
+    this.squareSize = this.game.ss;
     this.size.width = TS;
     this.size.height = TS;
-    this.drawingSize.width = this.size.width * this.game.squareSize;
-    this.drawingSize.height = this.size.height * this.game.squareSize;
+    this.drawingSize.width = this.size.width * this.game.ss;
+    this.drawingSize.height = this.size.height * this.game.ss;
 
     if (inConvoMode) {
       this.squareSize *= 2;

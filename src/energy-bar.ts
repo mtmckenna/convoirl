@@ -33,8 +33,8 @@ export default class EnergyBar implements IDrawable {
     this.size = Object.assign({}, this.energyText.size);
 
     this.drawingSize = {
-      height: (this.size.height + 1) * this.game.squareSize,
-      width: (this.size.width + 1) * this.game.squareSize,
+      height: (this.size.height + 1) * this.game.ss,
+      width: (this.size.width + 1) * this.game.ss,
     };
 
     const boxSize = { height: this.size.height + 1, width: this.size.width + 1 };
@@ -64,8 +64,8 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: Math.floor(updatedPos.x + this.game.squareSize / 2 + .5),
-      y: Math.floor(updatedPos.y + this.game.squareSize / 2 + .5),
+      x: Math.floor(updatedPos.x + this.game.ss / 2 + .5),
+      y: Math.floor(updatedPos.y + this.game.ss / 2 + .5),
     });
   }
 
