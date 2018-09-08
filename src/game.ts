@@ -86,9 +86,9 @@ export default class Game {
 
   public boot(timestamp) {
     this.timestamp = timestamp;
-    switchLevel.call(this, this.levels.startScreen);
+    // switchLevel.call(this, this.levels.startScreen);
     // this.switchLevel(this.levels.world);
-    // this.switchLevel(this.levels.convo);
+    switchLevel.call(this, this.levels.convo);
   }
 
   public update(timestamp) {
