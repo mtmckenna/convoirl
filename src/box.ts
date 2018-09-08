@@ -28,13 +28,8 @@ export default class Box implements ITouchable, IFadeable {
     this.game = game;
     this.pos = pos;
     this.strokePos = pos;
-    this.size = size;
     this.color = color;
-    this.drawingSize = {
-      height: this.size.height * this.game.ss,
-      width: this.size.width * this.game.ss,
-    };
-
+    this.updateSize(size);
     this.move(pos);
   }
 
@@ -54,10 +49,11 @@ export default class Box implements ITouchable, IFadeable {
   }
 
   public updateSize(updatedSize: ISize) {
-    this.size.height = updatedSize.height;
-    this.size.width = updatedSize.width;
-    this.drawingSize.height = this.size.height * this.game.ss;
-    this.drawingSize.width = this.size.width * this.game.ss;
+    this.size = { height: updatedSize.height, width: updatedSize.width };
+    this.drawingSize = {
+      height: this.size.height * this.game.ss,
+      width: this.size.width * this.game.ss,
+    };
   }
 
   public draw(context, timestamp) {
