@@ -12,7 +12,6 @@ export default class StartScreen extends Level {
   constructor(game: Game) {
     super(game);
     this.box = new Box(this.game, { x: 0, y: 0 }, { height: 0, width: 0 });
-    this.box.touched = () => this.handleInput();
     this.box.setWords(["CONVO IRL", "", "TAP TO PLAY"]);
   }
 
@@ -37,14 +36,13 @@ export default class StartScreen extends Level {
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.moveText();
-    this.addTouchables([this.box]);
     this.addDrawables(this.tiles, 0);
     this.box.animateTextIn(this.game.timestamp);
     this.addOverlayDrawables([this.box]);
   }
 
   public handleInput() {
-    if (this.game.transitioning) return;
+    if (this.game.transitioning()) return;
     this.game.queueNextLevel(this.game.levels.world);
   }
 
@@ -53,7 +51,7 @@ export default class StartScreen extends Level {
   }
 
   private moveText() {
-    this.box.move(this.game.boxPos);
-    this.box.updateSize(this.game.boxSize);
+    this.box.move(this.game.boxPos());
+    this.box.updateSize(this.game.boxSize());
   }
 }

@@ -66,21 +66,21 @@ export default class Game {
     this.camera = new Camera(this);
   }
 
-  get boxPos(): IPoint {
+  public boxPos(): IPoint {
     return {
-      x: (this.canvas.width - this.boxSize.width * this.ss) / 2,
-      y: (this.canvas.height - this.boxSize.height * this.ss) / 2,
+      x: (this.canvas.width - this.boxSize().width * this.ss) / 2,
+      y: (this.canvas.height - this.boxSize().height * this.ss) / 2,
     };
   }
 
-  get boxSize(): ISize {
+  public boxSize(): ISize {
     return {
       height: 3 * L_HEIGHT + 2 * L_SPACE,
       width:  L_HEIGHT * 12,
     };
   }
 
-  get transitioning(): boolean {
+  public transitioning(): boolean {
     return this.transition.running;
   }
 
@@ -101,7 +101,7 @@ export default class Game {
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
 
-    if (this.transitioning) updateTransition.call(this, timestamp);
+    if (this.transitioning()) updateTransition.call(this, timestamp);
   }
 
   public draw(timestamp: number) {
@@ -111,7 +111,7 @@ export default class Game {
     clearCanvasContext.call(this);
     drawDrawables.call(this, timestamp);
     drawOverlayDrawables.call(this, timestamp);
-    if (this.transitioning) updateTransition.call(this, timestamp);
+    if (this.transitioning()) updateTransition.call(this, timestamp);
   }
 
   public resize() {
@@ -204,7 +204,7 @@ function drawDrawables(timestamp: number) {
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
       context.translate((x + .5) | 0, (y + .5) | 0);
-      context.globalAlpha = this.transitioning ? this.transition.nextLevelAlpha : 1;
+      context.globalAlpha = this.transitioning() ? this.transition.nextLevelAlpha : 1;
       drawable.draw(context, timestamp);
       context.setTransform(1, 0, 0, 1, 0, 0);
     });
@@ -236,7 +236,7 @@ function isOffScreen(x: number, y: number, drawingSize: ISize) {
 }
 
 function drawOverlayDrawables(timestamp: number) {
-  if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
+  if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
   this.currentLevel.overlayDrawables.forEach((drawable) => {
     if (!drawable.visible) return;
     drawable.draw(context, timestamp);
@@ -246,7 +246,7 @@ function drawOverlayDrawables(timestamp: number) {
 }
 
 function clearCanvasContext(): void {
-  if (this.transitioning) context.globalAlpha = this.transition.nextLevelAlpha;
+  if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
   context.fillStyle = this.currentLevel.backgroundColor;
   context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }

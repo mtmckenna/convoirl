@@ -56,7 +56,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 
   public draw(context, timestamp) {
     let currX = this.pos.x;
-    const alpha = this.game.transitioning ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
+    const alpha = this.game.transitioning() ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
     const shadowOffset = Math.floor(this.game.ss / 2);
     context.globalAlpha = alpha;
 

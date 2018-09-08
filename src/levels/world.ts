@@ -74,18 +74,18 @@ export default class World extends Level {
     this.generateTiles();
     this.energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
 
-    this.box = new Box(this.game, this.game.boxPos, this.game.boxSize);
+    this.box = new Box(this.game, this.game.boxPos(), this.game.boxSize());
     createBuddies.call(this);
   }
 
   public handleInput(key) {
-    if (this.game.transitioning) return;
+    if (this.game.transitioning()) return;
     if (handleBoxInput.call(this)) return;
     this.inputBuffer = { pressedAt: this.game.timestamp, key };
   }
 
   public handleTouch(touch) {
-    if (this.game.transitioning) return;
+    if (this.game.transitioning()) return;
     if (this.game.player.walking) return;
     if (handleBoxInput.call(this)) return;
 
@@ -237,8 +237,8 @@ function learnFromConvo() {
 }
 
 function updateBox() {
-  this.box.move(this.game.boxPos);
-  this.box.updateSize(this.game.boxSize);
+  this.box.move(this.game.boxPos());
+  this.box.updateSize(this.game.boxSize());
 }
 
 function startConvo(tileIndex: IPoint): boolean {

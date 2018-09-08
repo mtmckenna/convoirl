@@ -256,7 +256,7 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
 
 function moveBuddies() {
   // Use cameraOffset to compsenate for the larger levelsize
-  const boxPosX = this.game.boxPos.x / this.game.ss -
+  const boxPosX = this.game.boxPos().x / this.game.ss -
   buddy.size.width / 2 -
   cameraOffset / this.game.ss;
 
@@ -268,9 +268,9 @@ function moveBuddies() {
 }
 
 function updateBoxes() {
-  const y = this.game.canvas.height - this.game.boxSize.height * this.game.ss - this.game.ss * 2;
-  box.move({ x: this.game.boxPos.x, y });
-  box.updateSize(this.game.boxSize);
+  const y = this.game.canvas.height - this.game.boxSize().height * this.game.ss - this.game.ss * 2;
+  box.move({ x: this.game.boxPos().x, y });
+  box.updateSize(this.game.boxSize());
   const barWidth =
   energyBar.drawingSize.width +
   convoBar.drawingSize.width +
