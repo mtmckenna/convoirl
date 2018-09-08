@@ -88,7 +88,6 @@ export default class Convo extends Level {
 
   public levelWillStart() {
     waiting = false;
-    this.clearTouchables();
     this.game.player.setConvoMode(true, "right");
     convoLevel = 0;
     buddies = [this.game.player, buddy];

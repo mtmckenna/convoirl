@@ -19,7 +19,7 @@ TODO
   - fix holding down the touch as you walk
   - slightly delay on showing text on load
   - movement looks more like a trail?
-  - use onload/onresize
+  - don't allow input until transition in convo
 
 BACKBURNER
   - add sun and clouds in convo
@@ -36,11 +36,8 @@ SPACE SAVING THOUGHTS
   - dedupe some lerp stuff (buddy/energybar)
   - might be able to remove drawingSize on some things
   - drawingSize for buddy can be hardcoded
-  - remove debug
-  - conslidate where flooring
   - could reduce common indexes in tiles
   - try closure
-  - can replace two phase clerp with some sin stuff?
   - look for private members that can be singletons (all the levels/camera)
   - maybe remove either levelwillstart or levelstarted?
   - rename drawingsize?
