@@ -63,7 +63,6 @@ export default class Convo extends Level {
   }
 
   public handleInput(key) {
-    if (this.game.transitioning()) return;
     switch (key) {
       case "ArrowUp":
         moveSkillCursor.call(this, 1);
@@ -78,7 +77,6 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
-    if (this.game.transitioning()) return;
     const touched = this.touchedTouchable(touch);
     if (touched) touched.touched();
   }
@@ -115,7 +113,7 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
 
-    waiting = floatiesInArray(this.overlayDrawables).length > 0;
+    waiting = floatiesInArray(this.overlayDrawables).length > 0 || this.game.transitioning();
 
     // Don't win or lose if we're still animating
     if (!doneAnimating(this.overlayDrawables)) return;
