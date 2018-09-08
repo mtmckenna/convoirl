@@ -5,15 +5,14 @@ TODO
   - make house look nicer
   - clouds
   - make sure text comes from player pos in convo
-  - fix weird lines in convo text
   - make drawingsize a getter? or subclass...
   - panning on convo
-  - abstract out cinematics so input isn't handled until cinematic is over
   - buddies have two skills
   - logic for when someone runs out of energy
   - special buddy logic
   - some way to know you selected the right thing (fireworks? change color of sky)
   - don't go back to level until floaty text is done animating
+  - can touch on non selected texts
 
 BACKBURNER
   - add sun and clouds in convo

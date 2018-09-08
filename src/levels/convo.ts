@@ -81,11 +81,7 @@ export default class Convo extends Level {
 
   public handleTouch(touch) {
     const touched = this.touchedTouchable(touch);
-    if (touched) {
-      touched.touched();
-    } else {
-      this.handleInput(null);
-    }
+    if (touched) touched.touched();
   }
 
   public setBuddy(buddy: Buddy) {

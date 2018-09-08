@@ -11,7 +11,7 @@ import {
   L_SPACE,
  } from "./common";
 
-export default class Box implements ITouchable, IFadeable {
+export default class Box implements IFadeable {
   public game: Game;
   public pos: IPoint;
   public size: ISize;
@@ -45,7 +45,7 @@ export default class Box implements ITouchable, IFadeable {
     // https://stackoverflow.com/questions/28057881/javascript-either-strokerect-or-fillrect-blurry-depending-on-translation
     this.strokePos.x = Math.floor(this.pos.x) + .5;
     this.strokePos.y = Math.floor(this.pos.y) + .5;
-    this.moveTexts();
+    moveTexts.call(this);
   }
 
   public updateSize(updatedSize: ISize) {
@@ -87,27 +87,25 @@ export default class Box implements ITouchable, IFadeable {
 
   public setWords(words: string[]) {
     this.texts = words.map((word) => new Text(this.game, word));
-    this.moveTexts();
+    moveTexts.call(this);
   }
 
   public animateTextIn(time: number) {
     this.startTime = time;
   }
+}
 
-  public touched() { return; }
+function moveTexts() {
+  if (!this.texts.length) return;
+  const drawingLineSize = L_SPACE * this.game.ss;
+  const drawingLetterSize = L_HEIGHT * this.game.ss;
+  const numLines = this.texts.length;
 
-  private moveTexts() {
-    if (!this.texts.length) return;
-    const drawingLineSize = L_SPACE * this.game.ss;
-    const drawingLetterSize = L_HEIGHT * this.game.ss;
-    const numLines = this.texts.length;
-
-    // TODO: Why minus -2???
-    const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
-    this.texts.forEach((text, index) => {
-      const x = Math.floor(this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2);
-      const y = Math.floor(this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index);
-      text.move({ x, y });
-    });
-  }
+  // TODO: Why minus -2???
+  const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
+  this.texts.forEach((text, index) => {
+    const x = Math.floor(this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2);
+    const y = Math.floor(this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index);
+    text.move({ x, y });
+  });
 }
