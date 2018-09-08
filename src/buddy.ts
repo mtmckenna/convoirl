@@ -114,6 +114,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       this.size.height *= 2;
       this.drawingSize.width *= 2;
       this.drawingSize.height *= 2;
+      this.a.walking.tw = 0;
     } else {
       this.talking = false;
     }
