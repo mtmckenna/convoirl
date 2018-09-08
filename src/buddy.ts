@@ -16,6 +16,7 @@ import {
   IPoint,
   ISize,
   IUpdateable,
+  MS_PER,
   TS,
 } from "./common";
 
@@ -27,8 +28,6 @@ const EYE_OFFSET_CONVO = 4;
 const CONVO_LOOK_RIGHT_OFFSET = 6;
 
 const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"];
-
-// ["weather", "pastries", "france", "cats", "sports", "math", "books", "anime"]
 
 export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public game: Game;
@@ -130,6 +129,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       startPos: { x: -1, y: -1 },
       startTime: 0,
       t: 0,
+      tw: 0, // tw tracks the time walking in order to make the trail
     };
     this.a.walking = walking;
   }
@@ -198,44 +198,37 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       y = this.a.walking.endPos.y;
       this.a.walking.running = false;
       this.a.walking.t = 0;
+      this.a.walking.tw = Math.max(this.a.walking.tw - MS_PER * 100, 0);
+    } else {
+      this.a.walking.tw = Math.min(this.a.walking.tw + MS_PER * 100, this.a.walking.duration);
     }
 
     this.move({ x, y });
   }
 
   public draw(context, timestamp) {
-    const t = this.a.walking.t;
-
-    context.translate(
-      this.drawingSize.width / 2,
-      this.drawingSize.height / 2,
-    );
-
+    context.translate(this.drawingSize.width / 2, this.drawingSize.height / 2);
     context.rotate(this.rot);
+    context.translate(-this.drawingSize.width / 2, -this.drawingSize.height / 2);
 
-    context.translate(
-      -this.drawingSize.width / 2,
-      -this.drawingSize.height / 2,
-    );
-
+    // Main body
     context.fillStyle = this.color;
+    context.fillRect(0, 0, this.drawingSize.width, this.drawingSize.height);
 
-    let growAmount = t;
-    if (t > .5) growAmount = 1 - t;
+    // Trail
+    const trail = this.a.walking.tw / this.a.walking.duration;
+    const gradient = context.createLinearGradient(0, this.drawingSize.height, 0, this.drawingSize.height * 1.5);
+    gradient.addColorStop(0, this.color);
+    gradient.addColorStop(trail, "rgba(150, 192, 131, 0)"); // grass color in rgba
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, this.drawingSize.width, 1.5 * this.drawingSize.height);
 
-    context.fillRect(
-      0,
-      0,
-      this.drawingSize.width,
-      this.drawingSize.height + this.drawingSize.height * growAmount,
-    );
-
+    // Eyes
     maybeDoEyeAnimations.call(this, timestamp);
-
     drawEye.call(this, context, "left", this.a.blinking.openness, this.a.lookAway.offset);
     drawEye.call(this, context, "right", this.a.blinking.openness, this.a.lookAway.offset);
 
-    // draw mouth
+    // Mouth
     if (this.talking) {
       context.fillStyle = "#000";
       const amountClosed = (Math.sin(timestamp / 80 + this.rando) + 1);
