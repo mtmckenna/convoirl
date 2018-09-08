@@ -4,21 +4,14 @@ TODO
   - readme
   - make house look nicer
   - clouds
-  - make sure text comes from player pos in convo
-  - make drawingsize a getter? or subclass...
   - panning on convo
-  - buddies have two skills
   - logic for when someone runs out of energy
   - special buddy logic
   - some way to know you selected the right thing (fireworks? change color of sky)
   - can touch on non selected texts
-  - fix pressting enter bug
-  - automatically go to sleep when run out of energy
   - fix walking buddy collision stuff
-  - leave convo
   - fix holding down the touch as you walk
   - slightly delay on showing text on load
-  - movement looks more like a trail?
 
 BACKBURNER
   - add sun and clouds in convo
@@ -31,6 +24,7 @@ BACKBURNER
   - gamepad
 
 SPACE SAVING THOUGHTS
+  - make drawingsize a getter? or subclass...
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
   - might be able to remove drawingSize on some things
@@ -88,4 +82,4 @@ window.ontouchstart = handleTouchDown;
 window.onmouseup = handleTouchUp;
 window.ontouchend = handleTouchUp;
 window.onmousemove = handleTouchMove;
-window.ontouchmove = handleTouchMove;
+window.addEventListener("touchmove", handleTouchMove, { passive: false });
