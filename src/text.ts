@@ -24,7 +24,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
   public drawingSize: ISize = { width: 0, height: 0 };
-  public pos: IPoint = { x: 0, y: 0 } ;
+  public pos: IPoint = { x: 0, y: 0 };
   public color: string;
   public visible: boolean = true;
   public shadow: boolean = true;
