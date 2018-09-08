@@ -315,7 +315,7 @@ function createBuddies() {
   this.walkingBuddy = new Buddy(this.game);
   this.walkingBuddy.autoWalkDirection = "left";
   this.walkingBuddy.skills.push("math");
-  this.walkingBuddy.animations.walking.duration = 600;
+  this.walkingBuddy.a.walking.duration = 600;
 
   this.buddies = [
     this.listenBuddy,

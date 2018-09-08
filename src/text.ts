@@ -11,7 +11,7 @@ import {
   ISize,
   ITouchable,
   IUpdateable,
-  LETTER_HEIGHT,
+  L_HEIGHT,
   LISTEN,
   } from "./common";
 
@@ -140,7 +140,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     // Add up the widths of all the letters + spaces
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
 
-    this.size = { width, height: LETTER_HEIGHT };
+    this.size = { width, height: L_HEIGHT };
 
     this.drawingSize = {
       height: this.size.height * this.game.squareSize,

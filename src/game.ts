@@ -2,9 +2,8 @@ import {
   IAnimation,
   IPoint,
   ISize,
-  LETTER_HEIGHT,
-  LINE_HEIGHT,
-  SQUARE_SIZE,
+  L_HEIGHT,
+  L_SPACE,
   TS,
 } from "./common";
 
@@ -17,6 +16,7 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
+const SQUARE_SIZE = 5;
 const SIDE_LENGTH = 16 * TS * SQUARE_SIZE;
 
 const transition: IAnimation = {
@@ -75,8 +75,8 @@ export default class Game {
 
   get boxSize(): ISize {
     return {
-      height: 3 * LETTER_HEIGHT + 2 * LINE_HEIGHT,
-      width:  LETTER_HEIGHT * 12,
+      height: 3 * L_HEIGHT + 2 * L_SPACE,
+      width:  L_HEIGHT * 12,
     };
   }
 

@@ -8,8 +8,8 @@ import Game from "../game";
 import Text from "../text";
 
 import {
-  LETTER_HEIGHT,
-  LINE_HEIGHT,
+  L_HEIGHT,
+  L_SPACE,
   LISTEN,
   T_TIME,
   TS,
@@ -240,7 +240,7 @@ function buddyFloatText(buddy, word, color) {
 
   const boxPosY = this.boxPosY * this.game.squareSize + this.game.player.drawingSize.height / 2 ;
   const startPos = { x: this.box.pos.x + this.game.player.drawingSize.width / 2, y: boxPosY };
-  const endPos = { x: this.game.canvas.width, y: -LETTER_HEIGHT };
+  const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
 
   if (buddy !== this.game.player) {
     startPos.x +=  this.box.drawingSize.width - text.drawingSize.width - this.game.player.drawingSize.width;
@@ -321,7 +321,7 @@ function updateText() {
       this.box.pos.y +
       this.box.drawingSize.height / 2 -
       skill.drawingSize.height / 2 +
-      indexDiff * LINE_HEIGHT * this.game.squareSize,
+      indexDiff * L_SPACE * this.game.squareSize,
     );
 
     skill.move({ x: skillX, y: skillY });

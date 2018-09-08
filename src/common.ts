@@ -55,9 +55,8 @@ export interface IInputBuffer {
 }
 
 export const TS = 8;
-export const SQUARE_SIZE = 5;
 export const MS_PER = 1 / 60;
-export const LINE_HEIGHT = 8;
+export const L_SPACE = 8;
 export const T_TIME = 120;
-export const LETTER_HEIGHT = 5;
+export const L_HEIGHT = 5;
 export const LISTEN = "*LISTEN*";

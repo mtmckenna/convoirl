@@ -16,7 +16,6 @@ import {
   IPoint,
   ISize,
   IUpdateable,
-  SQUARE_SIZE,
   TS,
 } from "./common";
 
@@ -40,7 +39,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public dusts: Dust[];
   public skills: string[] = [];
   public autoWalkDirection: "left" | "right" | "up" | "down";
-  public animations: IAnimations = {};
+  public a: IAnimations = {};
   public tileIndex: IPoint = { x: 0, y: 0 };
   public energy: number = 1;
   public talking: boolean = false;
@@ -50,7 +49,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   private lastDustAt: number = 0;
   private inConvoMode: boolean = false;
   private convoLookRight: boolean = false;
-  private squareSize: number = SQUARE_SIZE;
+  private squareSize: number;
   private rando: number;
 
   constructor(game) {
@@ -83,9 +82,9 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       t: 0,
     };
 
-    this.animations.blinking = blinking;
-    this.animations.lookAway = lookAway;
-    this.animations.walking = walking;
+    this.a.blinking = blinking;
+    this.a.lookAway = lookAway;
+    this.a.walking = walking;
 
     this.color = COLORS[randomIndexFromArray(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
@@ -99,7 +98,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   get walking() {
-    return this.animations.walking.running;
+    return this.a.walking.running;
   }
 
   public copy(): Buddy {
@@ -174,7 +173,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public configureWalkingAnimation(startPos, endPos) {
-    const { walking } = this.animations;
+    const { walking } = this.a;
     walking.startTime = this.game.timestamp;
     walking.endPos = endPos;
     walking.startPos = startPos;
@@ -184,19 +183,19 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
   public update(timestamp) {
     if (this.autoWalkDirection) this.walk(this.autoWalkDirection);
-    if (this.animations.walking.startPos.x === -1) return;
+    if (this.a.walking.startPos.x === -1) return;
 
-    const t = (timestamp - this.animations.walking.startTime) / this.animations.walking.duration;
-    let x = lerp(this.animations.walking.startPos.x, this.animations.walking.endPos.x, t);
-    let y = lerp(this.animations.walking.startPos.y, this.animations.walking.endPos.y, t);
+    const t = (timestamp - this.a.walking.startTime) / this.a.walking.duration;
+    let x = lerp(this.a.walking.startPos.x, this.a.walking.endPos.x, t);
+    let y = lerp(this.a.walking.startPos.y, this.a.walking.endPos.y, t);
 
-    this.animations.walking.t = t;
+    this.a.walking.t = t;
 
     if (t >= 1) {
-      x = this.animations.walking.endPos.x;
-      y = this.animations.walking.endPos.y;
-      this.animations.walking.running = false;
-      this.animations.walking.t = 0;
+      x = this.a.walking.endPos.x;
+      y = this.a.walking.endPos.y;
+      this.a.walking.running = false;
+      this.a.walking.t = 0;
     }
 
     // TODO: avoid creating new objects
@@ -204,7 +203,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public draw(context, timestamp) {
-    const t = this.animations.walking.t;
+    const t = this.a.walking.t;
 
     context.translate(
       this.drawingSize.width / 2,
@@ -232,8 +231,8 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     maybeDoEyeAnimations.call(this, timestamp);
 
-    drawEye.call(this, context, "left", this.animations.blinking.openness, this.animations.lookAway.offset);
-    drawEye.call(this, context, "right", this.animations.blinking.openness, this.animations.lookAway.offset);
+    drawEye.call(this, context, "left", this.a.blinking.openness, this.a.lookAway.offset);
+    drawEye.call(this, context, "right", this.a.blinking.openness, this.a.lookAway.offset);
 
     // draw mouth
     if (this.talking) {
@@ -262,7 +261,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 }
 
 function maybeDoEyeAnimations(timestamp) {
-  const { blinking, lookAway } = this.animations;
+  const { blinking, lookAway } = this.a;
 
   if (shouldDoAnimation(blinking, timestamp)) {
     blinking.running = true;

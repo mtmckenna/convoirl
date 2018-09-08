@@ -7,8 +7,8 @@ import {
   IPoint,
   ISize,
   ITouchable,
-  LETTER_HEIGHT,
-  LINE_HEIGHT,
+  L_HEIGHT,
+  L_SPACE,
  } from "./common";
 
 export default class Box implements ITouchable, IFadeable {
@@ -102,8 +102,8 @@ export default class Box implements ITouchable, IFadeable {
 
   private moveTexts() {
     if (!this.texts.length) return;
-    const drawingLineSize = LINE_HEIGHT * this.game.squareSize;
-    const drawingLetterSize = LETTER_HEIGHT * this.game.squareSize;
+    const drawingLineSize = L_SPACE * this.game.squareSize;
+    const drawingLetterSize = L_HEIGHT * this.game.squareSize;
     const numLines = this.texts.length;
 
     // TODO: Why minus -2???

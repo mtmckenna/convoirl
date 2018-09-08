@@ -9,7 +9,6 @@ import {
   IDrawable,
   IPoint,
   ISize,
-  SQUARE_SIZE,
 } from "./common";
 
 import { lerp } from "./helpers";
@@ -65,8 +64,8 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: Math.floor(updatedPos.x + SQUARE_SIZE / 2 + .5),
-      y: Math.floor(updatedPos.y + SQUARE_SIZE / 2 + .5),
+      x: Math.floor(updatedPos.x + this.game.squareSize / 2 + .5),
+      y: Math.floor(updatedPos.y + this.game.squareSize / 2 + .5),
     });
   }
 
