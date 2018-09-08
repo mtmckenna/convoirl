@@ -26,6 +26,7 @@ const BUDDY_Y_FROM_BOX = 4;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
 const D_ALPHA = .5;
+const SB_MULT = .2;
 
 let box: Box;
 let buddies: Buddy[];
@@ -39,9 +40,11 @@ let energyBar: EnergyBar;
 let skills: Text[];
 let upArrow: Text;
 let waiting: boolean = false;
+let multiplier: number = 1;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
+  public lastBuddyTopic: string = null;
 
   protected tileTypeMap = ["green", "flowers", "sky", "tree"];
   protected tileIndexes;
@@ -91,7 +94,11 @@ export default class Convo extends Level {
     waiting = false;
     this.game.player.setConvoMode(true, "right");
     convoLevel = 0;
+    this.lastBuddyTopic = null;
     buddies = [this.game.player, buddy];
+
+    if (buddy.skills.length > 2) multiplier = SB_MULT;
+
     skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
     skills.forEach((skill) => skill.touched = () => {
       if (skills[currentSkillIndex] === skill) this.handleInput("Enter");
@@ -208,7 +215,6 @@ function updateEnergyLevel(buddyToUpdate: Buddy, increment) {
 function useSelectedSkill() {
   if (waiting) return;
 
-  // if (this.game.player.energy <= 0 || convoLevel >= 1) return;
   waiting = true;
   const skillIndex = currentSkillIndex;
   buddyExecuteSkillIndex.call(this, this.game.player, skillIndex);
@@ -228,20 +234,20 @@ function react(skillIndex) {
 
   // If haven't learend listen yet
   if (this.game.player.skills.length === 1) {
-    updateConvoLevel(.4);
-    goodReaction.call(this);
+    goodReaction.call(this, -.1, .5);
   // If the player only knows weather and listen
   } else if (skill === LISTEN && this.game.player.skills.length === 2) {
-    updateConvoLevel(.4);
-    goodReaction.call(this);
+    goodReaction.call(this, -.1, .5);
   // Otherwise...
   } else {
     if (skill === LISTEN) {
-      listenReaction.call(this);
+      updateBars.call(this, -.1, .5);
+    } else if (this.lastBuddyTopic === skill) {
+      goodReaction.call(this, -.15, .2);
     } else if (buddy.skills.includes(skill)) {
-      goodReaction.call(this);
+      goodReaction.call(this, -.1, .1);
     } else {
-      badReaction.call(this);
+      badReaction.call(this, -.2);
     }
   }
 
@@ -249,20 +255,20 @@ function react(skillIndex) {
   energyBar.animateToLevel(this.game.player.energy);
 }
 
-function listenReaction() {
-  updateEnergyLevel(this.game.player, -.15);
-}
-
-function goodReaction() {
+function goodReaction(energyIncrement, convoIncrement) {
   buddyFloatText.call(this, buddy, "cool!", colorMap[2]);
-  updateEnergyLevel(this.game.player, -.1);
-  updateConvoLevel(.2);
+  updateBars.call(this, energyIncrement, convoIncrement);
 }
 
-function badReaction() {
+function badReaction(energyIncrement) {
   buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
-  updateEnergyLevel(this.game.player, -.2);
+  updateBars.call(this, energyIncrement, 0);
   this.game.camera.shakeScreen();
+}
+
+function updateBars(energyIncrement, convoIncrement) {
+  updateEnergyLevel(this.game.player, energyIncrement);
+  updateConvoLevel(convoIncrement * multiplier);
 }
 
 function buddyFloatText(floatBuddy, word, color) {
@@ -290,6 +296,7 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
+  if (skillBuddy === buddy) this.lastBuddyTopic = skill;
 }
 
 function moveBuddies() {

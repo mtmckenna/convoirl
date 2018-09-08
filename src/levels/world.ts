@@ -1,3 +1,4 @@
+import Convo from "./convo";
 import Level from "./level";
 
 import Box from "../box";
@@ -16,7 +17,6 @@ import {
 } from "../common";
 
 import {
-  randomIndex,
   removeElement,
   throttle,
 } from "../helpers";
@@ -29,8 +29,8 @@ const TEXT_INTROS = [
 ];
 
 const TEXT_FIRST_CONVO = [
-  ["keep at it", "to make", "new friends!"],
-  ["and if you are", "low on energy", "take a nap!"],
+  ["keep at it", "and make", "new friends!"],
+  ["if you are", "low on energy", "take a nap!"],
 ];
 
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
@@ -266,7 +266,8 @@ function showNextIntroBox() {
 function learnFromConvo() {
   if (!this.currentBuddy) return;
 
-  const skill = this.currentBuddy.skills[randomIndex(this.currentBuddy.skills)];
+  // const skill = this.currentBuddy.skills[randomIndex(this.currentBuddy.skills)];
+  const skill = (this.game.levels.convo as Convo).lastBuddyTopic;
   box.visible = true;
 
   if (this.game.player.skills.includes(skill)) {
