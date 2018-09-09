@@ -1,6 +1,7 @@
 /*
 TODO
   - special buddy logic
+  - fix ugly flash
   - sfx
   - readme
 

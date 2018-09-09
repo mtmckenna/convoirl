@@ -238,7 +238,8 @@ function hideBox() {
 }
 
 function handleBoxInput(): boolean {
-  if (this.state === "play" || box.ani) return false;
+  if (this.state === "play") return false;
+  if (box.ani) return true;
   let done = false;
 
   switch (this.state) {
@@ -251,7 +252,6 @@ function handleBoxInput(): boolean {
       hideBox.call(this);
       this.state = "play";
       break;
-    // TODO: might be able to dry up these handleInputbox calls
     case "post-listen":
       done = showPostListenBox();
       if (done) {
