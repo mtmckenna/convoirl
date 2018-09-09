@@ -41,6 +41,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public tileIndex: IPoint = { x: 0, y: 0 };
   public energy: number = 1;
   public talking: boolean = false;
+  public lastConvo: number = 0;
 
   private rot: number = Math.PI;
   private color: string;

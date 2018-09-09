@@ -188,6 +188,8 @@ export default class World extends Level {
       case "post-listen":
       case "post-convo":
         learnFromConvo.call(this);
+        this.currentBuddy.lastConvo = this.game.timestamp;
+        this.game.p.lastConvo = this.game.timestamp;
         break;
     }
 
@@ -297,7 +299,7 @@ function startConvo(tileIndex: IPoint): boolean {
       interactable.tileIndex.y === tileIndex.y;
   });
 
-  if (overlappedInteractable) {
+  if (overlappedInteractable && (this.game.timestamp - overlappedInteractable.lastConvo) > 1000) {
     this.currentBuddy = overlappedInteractable as Buddy;
     playerSpawnPosition.x = this.game.p.pos.x;
     playerSpawnPosition.y = this.game.p.pos.y;

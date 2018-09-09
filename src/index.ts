@@ -5,7 +5,6 @@ TODO
   - panning on convo
   - special buddy logic
   - can touch on non selected texts
-  - fix walking buddy collision stuff
   - fix walking backwards guy
   - flashbars when the change
   - bug where you keep walking into house

@@ -34,7 +34,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public a: IAnimations = {};
   private upToIndex: number = null;
 
-  constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
+  constructor(game: Game, words: string = "", color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;
     this.words = words.toUpperCase();
     this.upToIndex = this.words.length;
