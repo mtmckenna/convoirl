@@ -36,10 +36,10 @@ export default class StartScreen extends Level {
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
     this.moveText();
-    this.addDrawables(this.tiles, 0);
-    this.addOverlayDrawables([this.box]);
+    this.addDables(this.tiles, 0);
+    this.addOdables([this.box]);
     this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
-    this.addDrawables(this.clouds, 3);
+    this.addDables(this.clouds, 3);
   }
 
   public levelStarted() {

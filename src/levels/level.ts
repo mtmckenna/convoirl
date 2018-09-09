@@ -94,23 +94,23 @@ export default abstract class Level {
     this.tiles = flatten(this.tilesGrid);
   }
 
-  protected addDrawables(drawables: IDrawable[], zIndex: number) {
+  protected addDables(drawables: IDrawable[], zIndex: number) {
     this.dables[zIndex].push(...drawables);
   }
 
-  protected addOverlayDrawables(drawables: IDrawable[]) {
+  protected addOdables(drawables: IDrawable[]) {
     this.odables.push(...drawables);
   }
 
-  protected addUpdateables(updateables: IUpdateable[]) {
+  protected addUables(updateables: IUpdateable[]) {
     this.uables.push(...updateables);
   }
 
-  protected addTouchables(touchables: ITouchable[]) {
+  protected addTables(touchables: ITouchable[]) {
     this.tables.push(...touchables);
   }
 
-  protected addInteractables(interactables: IInteractable[]) {
+  protected addIables(interactables: IInteractable[]) {
     this.iables.push(...interactables);
   }
 

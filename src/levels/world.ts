@@ -151,14 +151,14 @@ export default class World extends Level {
 
   public configViz() {
     super.configViz();
-    this.addDrawables(this.tiles, 0);
-    this.addDrawables(this.game.p.dusts, 1); // TODO: can combine onto one line
-    this.addDrawables(walkingBuddy.dusts, 1);
-    this.addDrawables([this.game.p], 2);
-    this.addDrawables(buddies, 2);
-    this.addOverlayDrawables([this.energyBar, box]);
-    this.addInteractables(buddies);
-    this.addUpdateables([
+    this.addDables(this.tiles, 0);
+    this.addDables(this.game.p.dusts, 1); // TODO: can combine onto one line
+    this.addDables(walkingBuddy.dusts, 1);
+    this.addDables([this.game.p], 2);
+    this.addDables(buddies, 2);
+    this.addOdables([this.energyBar, box]);
+    this.addIables(buddies);
+    this.addUables([
       ...this.game.p.dusts,
       this.game.p,
       walkingBuddy,
@@ -166,7 +166,7 @@ export default class World extends Level {
       listenBuddy,
     ]);
     this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
-    this.addDrawables(this.clouds, 3);
+    this.addDables(this.clouds, 3);
     this.resize();
   }
 

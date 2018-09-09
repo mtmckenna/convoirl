@@ -163,9 +163,9 @@ export default class Convo extends Level {
 
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
-    this.addDrawables(this.tiles, 0);
-    this.addDrawables(buddies, 1);
-    this.addOverlayDrawables([
+    this.addDables(this.tiles, 0);
+    this.addDables(buddies, 1);
+    this.addOdables([
       box,
       upArrow,
       downArrow,
@@ -173,9 +173,9 @@ export default class Convo extends Level {
       convoBar,
       ...skills,
     ]);
-    this.addTouchables([upArrow, downArrow, ...skills]);
+    this.addTables([upArrow, downArrow, ...skills]);
     this.configClouds(this.tilesGrid[0].length * TS, this.game.p.pos.y - TS, .6);
-    this.addDrawables(this.clouds, 0);
+    this.addDables(this.clouds, 0);
   }
 
   protected generateTileIndexes(sizeInTiles) {
@@ -307,8 +307,8 @@ function buddyFloatText(floatBuddy, word, color) {
   if (word === LISTEN) endPos.x = startPos.x;
 
   text.startFloat(startPos, endPos);
-  this.addOverlayDrawables([text]);
-  this.addUpdateables([text]);
+  this.addOdables([text]);
+  this.addUables([text]);
 }
 
 function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
