@@ -54,7 +54,7 @@ export default class Convo extends Level {
     super(game);
     energyBar = new EnergyBar(this.game, { x: this.game.ss, y: this.game.ss }, "ENERGY");
     convoBar = new EnergyBar(this.game, { x: this.game.ss, y: this.game.ss }, "CONVO");
-    box = new Box(this.game, { x: 0, y: 0 }, { h: 0, width: 0 });
+    box = new Box(this.game, { x: 0, y: 0 }, { h: 0, w: 0 });
     upArrow = new Text(this.game, "^");
     downArrow = new Text(this.game, "_");
     const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
@@ -142,8 +142,8 @@ export default class Convo extends Level {
     super.configViz();
 
     const sizeInTiles = this.game.sizeInTiles();
-    cameraOffset = -sizeInTiles.width * TS * this.game.ss / 2;
-    sizeInTiles.width *= 2;
+    cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2;
+    sizeInTiles.w *= 2;
     sizeInTiles.h *= 2;
 
     // Move the box to the bottom
@@ -176,7 +176,7 @@ export default class Convo extends Level {
 
     // Ground tiles
     this.tileIndexes = new Array(sizeInTiles.h)
-      .fill(null).map(() => new Array(sizeInTiles.width)
+      .fill(null).map(() => new Array(sizeInTiles.w)
         .fill(null).map(() => randomIndex([0, 1]))); // Don't include the sky/tree tile
 
     // Sky tiles
@@ -288,11 +288,11 @@ function buddyFloatText(floatBuddy, word, color) {
   text.buddy = floatBuddy;
 
   const boxPosY = this.boxPosY * this.game.ss + this.game.p.dSize.h / 2 ;
-  const startPos = { x: box.pos.x + this.game.p.dSize.width / 2, y: boxPosY };
+  const startPos = { x: box.pos.x + this.game.p.dSize.w / 2, y: boxPosY };
   const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
 
   if (floatBuddy !== this.game.p) {
-    startPos.x +=  box.dSize.width - text.dSize.width - this.game.p.dSize.width;
+    startPos.x +=  box.dSize.w - text.dSize.w - this.game.p.dSize.w;
     endPos.x = 0;
   }
 
@@ -316,15 +316,12 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
 
 function moveBuddies() {
   // Use cameraOffset to compsenate for the larger levelsize
-  const boxPosX = this.game.boxPos().x / this.game.ss -
-  buddy.size.width / 2 -
-  cameraOffset / this.game.ss;
-
-  const buddyX = boxPosX + box.dSize.width / this.game.ss - buddy.size.width / 2;
-  const playerPos = { x: boxPosX + this.game.p.size.width / 2, y: this.boxPosY };
-
-  buddy.move({ x: buddyX, y: playerPos.y });
+  const boxPosX = this.game.boxPos().x / this.game.ss - buddy.size.w / 2 - cameraOffset / this.game.ss;
+  const buddyX = boxPosX + box.dSize.w / this.game.ss - buddy.size.w / 2;
+  const playerPos = { x: boxPosX + this.game.p.size.w / 2, y: this.boxPosY };
   this.game.p.move(playerPos);
+  buddy.move({ x: buddyX, y: playerPos.y });
+
 }
 
 function updateBoxes() {
@@ -332,22 +329,22 @@ function updateBoxes() {
   box.move({ x: this.game.boxPos().x, y });
   box.updateSize(this.game.boxSize());
   const barWidth =
-  energyBar.dSize.width +
-  convoBar.dSize.width +
+  energyBar.dSize.w +
+  convoBar.dSize.w +
   BAR_SPACING * this.game.ss;
 
   const energyX = (this.game.canvas.width - barWidth) / 2;
   energyBar.move({ x: energyX, y: energyBar.pos.y });
 
-  const convoX = energyBar.pos.x + energyBar.dSize.width + BAR_SPACING * this.game.ss;
+  const convoX = energyBar.pos.x + energyBar.dSize.w + BAR_SPACING * this.game.ss;
   convoBar.move({ x: convoX, y: convoBar.pos.y });
 }
 
 function updateText() {
   const spacing = ARROW_SPACING * this.game.ss;
   const upX = box.pos.x +
-  box.dSize.width -
-  upArrow.dSize.width -
+  box.dSize.w -
+  upArrow.dSize.w -
   spacing;
 
   const upY = box.pos.y + box.dSize.h / 2 - upArrow.dSize.h / 2;
@@ -363,8 +360,8 @@ function updateText() {
     skill.alpha = indexDiff === 0 && !waiting ? 1 : D_ALPHA;
 
     const skillX = box.pos.x +
-      box.dSize.width / 2 -
-      skill.dSize.width / 2;
+      box.dSize.w / 2 -
+      skill.dSize.w / 2;
 
     const skillY = box.pos.y +
       box.dSize.h / 2 -

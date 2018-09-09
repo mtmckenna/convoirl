@@ -13,9 +13,9 @@ import {
 import { flatten } from "../helpers";
 
 export default class Tile implements IDrawable, IInteractable, IFadeable {
-  public dSize = { width: TS, h: TS };
+  public dSize = { w: TS, h: TS };
   public pos = { x: 0, y: 0 };
-  public size = { width: TS, h: TS };
+  public size = { w: TS, h: TS };
   public walkable: boolean = true;
   public visible: boolean = true;
   public game: Game;
@@ -45,7 +45,7 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
 
     this.dSize = {
       h: this.tileLength * this.game.ss,
-      width: this.tileLength * this.game.ss,
+      w: this.tileLength * this.game.ss,
     };
 
     this.cacheOffscreenContext();
@@ -57,14 +57,14 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   }
 
   public moveleft() {
-    this.pos.x = (this.pos.x + this.size.width) < 0 ? this.lWidth : this.pos.x - .008 * this.speed;
+    this.pos.x = (this.pos.x + this.size.w) < 0 ? this.lWidth : this.pos.x - .008 * this.speed;
   }
 
   // It's faster to draw the tile as an image from an offscreen
   // canvas than it is to draw each pixel each frame.
   protected cacheOffscreenContext() {
     const offscreenCanvas = document.createElement("canvas");
-    offscreenCanvas.width = this.dSize.width;
+    offscreenCanvas.width = this.dSize.w;
     offscreenCanvas.height = this.dSize.h;
     const offscreenContext = offscreenCanvas.getContext("2d");
 

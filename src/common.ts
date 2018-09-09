@@ -7,7 +7,7 @@ export interface IPoint {
 
 export interface ISize {
   h: number;
-  width: number;
+  w: number;
 }
 
 export interface IAnimations {

@@ -77,11 +77,11 @@ export default abstract class Level {
   }
 
   protected generateTiles() {
-    const width = this.tileIndexes[0].length * TS;
+    const w = this.tileIndexes[0].length * TS;
     const h = this.tileIndexes.length * TS;
 
-    this.size = { width, h };
-    this.dSize = { width: width * this.game.ss, h: h * this.game.ss };
+    this.size = { w, h };
+    this.dSize = { w: w * this.game.ss, h: h * this.game.ss };
 
     for (let i = 0; i < this.tileIndexes.length; i++) {
       this.tilesGrid.push(new Array(this.tileIndexes[i].length));
@@ -139,7 +139,7 @@ export default abstract class Level {
     sizeInTiles = sizeInTiles || this.game.sizeInTiles();
 
     this.tileIndexes = new Array(sizeInTiles.h)
-      .fill(null).map(() => new Array(sizeInTiles.width)
+      .fill(null).map(() => new Array(sizeInTiles.w)
         .fill(null).map(() => randomIndex(this.tileTypeMap)));
   }
 
@@ -149,13 +149,13 @@ export default abstract class Level {
     const touched = this.tables.find((touchable) => {
       const size = Object.assign({}, touchable.dSize);
       const pos = Object.assign({}, touchable.pos);
-      size.width *= this.game.sf;
+      size.w *= this.game.sf;
       size.h *= this.game.sf;
       pos.x *= this.game.sf;
       pos.y *= this.game.sf;
 
       return touch.clientX + fuzz >= pos.x &&
-      touch.clientX - fuzz <= pos.x + size.width &&
+      touch.clientX - fuzz <= pos.x + size.w &&
       touch.clientY + fuzz >= pos.y &&
       touch.clientY - fuzz <= pos.y + size.h;
     });

@@ -32,7 +32,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public game: Game;
   public dSize: ISize;
   public pos: IPoint = { x: 0, y: 0 };
-  public size: ISize = { h: TS, width: TS };
+  public size: ISize = { h: TS, w: TS };
   public visible: boolean = true;
   public dusts: Dust[];
   public skills: string[] = [];
@@ -79,7 +79,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
     this.dSize = {
       h: TS * this.game.ss,
-      width: TS * this.game.ss,
+      w: TS * this.game.ss,
     };
 
     this.squareSize = this.game.ss;
@@ -102,16 +102,16 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.inConvoMode = inConvoMode;
     this.rot = Math.PI;
     this.squareSize = this.game.ss;
-    this.size.width = TS;
+    this.size.w = TS;
     this.size.h = TS;
-    this.dSize.width = this.size.width * this.game.ss;
+    this.dSize.w = this.size.w * this.game.ss;
     this.dSize.h = this.size.h * this.game.ss;
 
     if (inConvoMode) {
       this.squareSize *= 2;
-      this.size.width *= 2;
+      this.size.w *= 2;
       this.size.h *= 2;
-      this.dSize.width *= 2;
+      this.dSize.w *= 2;
       this.dSize.h *= 2;
       this.a.walking.tw = 0;
     } else {
@@ -207,13 +207,13 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public draw(context, timestamp) {
-    context.translate(this.dSize.width / 2, this.dSize.h / 2);
+    context.translate(this.dSize.w / 2, this.dSize.h / 2);
     context.rotate(this.rot);
-    context.translate(-this.dSize.width / 2, -this.dSize.h / 2);
+    context.translate(-this.dSize.w / 2, -this.dSize.h / 2);
 
     // Main body
     context.fillStyle = this.color;
-    context.fillRect(0, 0, this.dSize.width, this.dSize.h);
+    context.fillRect(0, 0, this.dSize.w, this.dSize.h);
 
     // Trail
     const trail = this.a.walking.tw / this.a.walking.duration;
@@ -221,7 +221,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     gradient.addColorStop(0, this.color);
     gradient.addColorStop(trail, "rgba(150, 192, 131, 0)"); // grass color in rgba
     context.fillStyle = gradient;
-    context.fillRect(0, 0, this.dSize.width, 1.5 * this.dSize.h);
+    context.fillRect(0, 0, this.dSize.w, 1.5 * this.dSize.h);
 
     // Eyes
     maybeDoEyeAnimations.call(this, timestamp);
@@ -244,7 +244,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     if (this.walking && (timestamp - this.lastDustAt) > 30) {
       const dust = this.dusts.find((potentialDust) => !potentialDust.visible);
       if (dust) {
-        const xOffset = this.size.width / 2 * Math.random() + this.size.width / 4;
+        const xOffset = this.size.w / 2 * Math.random() + this.size.w / 4;
         const yOffset = this.size.h / 2 * Math.random() + this.size.h / 4;
         const x = this.pos.x + xOffset;
         const y = this.pos.y + yOffset;
@@ -319,7 +319,7 @@ function drawEye(context, whichOne, openness, lookAwayOffset) {
 function canMoveToPosition(position: IPoint): boolean {
   const level = this.game.currentLevel;
   const inMap = position.x >= 0 &&
-    position.x <= level.size.width - this.size.width &&
+    position.x <= level.size.w - this.size.w &&
     position.y >= 0 &&
     position.y < level.size.h;
 

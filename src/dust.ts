@@ -8,7 +8,7 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
   public game: Game;
 
   public dSize;
-  public size = { width: 1, h: 1 };
+  public size = { w: 1, h: 1 };
   public pos = { x: 0, y: 0 };
   public color: string = colorMap[1];
   public visible: boolean = false;
@@ -21,7 +21,7 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
     this.game = game;
     this.dSize = {
       h: this.size.h * this.game.ss,
-      width: this.size.width * this.game.ss,
+      w: this.size.w * this.game.ss,
     };
   }
 
@@ -47,9 +47,9 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
 
     // TOOO: This sort of makes .drawingSize a lie... maybe make clearer later (haha)?
     context.fillRect(
-      -this.dSize.width * size / 2,
+      -this.dSize.w * size / 2,
       -this.dSize.h * size / 2,
-      this.dSize.width * size,
+      this.dSize.w * size,
       this.dSize.h * size,
     );
   }

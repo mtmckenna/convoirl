@@ -11,7 +11,7 @@ export default class StartScreen extends Level {
 
   constructor(game: Game) {
     super(game);
-    this.box = new Box(this.game, { x: 0, y: 0 }, { h: 0, width: 0 });
+    this.box = new Box(this.game, { x: 0, y: 0 }, { h: 0, w: 0 });
     this.box.setWords(["CONVO IRL", "", "TAP TO PLAY"]);
   }
 
@@ -30,7 +30,7 @@ export default class StartScreen extends Level {
     super.configViz();
 
     const sizeInTiles = this.game.sizeInTiles();
-    sizeInTiles.width *= 2;
+    sizeInTiles.w *= 2;
     sizeInTiles.h *= 2;
 
     this.generateTileIndexes(sizeInTiles);

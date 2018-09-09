@@ -68,7 +68,7 @@ export default class Game {
 
   public boxPos(): IPoint {
     return {
-      x: (this.canvas.width - this.boxSize().width * this.ss) / 2,
+      x: (this.canvas.width - this.boxSize().w * this.ss) / 2,
       y: (this.canvas.height - this.boxSize().h * this.ss) / 2,
     };
   }
@@ -76,7 +76,7 @@ export default class Game {
   public boxSize(): ISize {
     return {
       h: 3 * L_HEIGHT + 2 * L_SPACE,
-      width:  L_HEIGHT * 12,
+      w: L_HEIGHT * 12,
     };
   }
 
@@ -84,11 +84,10 @@ export default class Game {
     return this.transition.running;
   }
 
+  // TODO: could move elsewhere to save space
   public boot(timestamp) {
     this.timestamp = timestamp;
     switchLevel.call(this, this.levels.startScreen);
-    // this.switchLevel(this.levels.world);
-    // switchLevel.call(this, this.levels.convo);
   }
 
   public update(timestamp) {
@@ -127,7 +126,7 @@ export default class Game {
 
     this.canvas.width = width;
     this.canvas.height = height;
-    this.camera.size = { width: this.canvas.width, h: this.canvas.height };
+    this.camera.size = { w: this.canvas.width, h: this.canvas.height };
 
     setSize.call(this);
     if (this.currentLevel) this.currentLevel.resize();
@@ -155,7 +154,7 @@ export default class Game {
   public sizeInTiles(): ISize {
     const w = Math.ceil(this.canvas.width / this.ss / TS);
     const h = Math.ceil(this.canvas.height / this.ss / TS);
-    return { width: w, h: h };
+    return { w, h };
   }
 }
 
@@ -230,7 +229,7 @@ function drawDrawables(timestamp: number) {
 }
 
 function isOffScreen(x: number, y: number, dSize: ISize) {
-  return x + dSize.width < 0 ||
+  return x + dSize.w < 0 ||
     x > this.canvas.width ||
     y + dSize.h < 0 ||
     y > this.canvas.height;

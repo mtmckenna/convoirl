@@ -34,10 +34,10 @@ export default class EnergyBar implements IDrawable {
 
     this.dSize = {
       h: (this.size.h + 1) * this.game.ss,
-      width: (this.size.width + 1) * this.game.ss,
+      w: (this.size.w + 1) * this.game.ss,
     };
 
-    const boxSize = { h: this.size.h + 1, width: this.size.width + 1 };
+    const boxSize = { h: this.size.h + 1, w: this.size.w + 1 };
     this.box = new Box(game, pos, boxSize, colorMap[7]);
 
     const level: IAnimation = {
@@ -74,7 +74,7 @@ export default class EnergyBar implements IDrawable {
 
     this.box.draw(context, timestamp);
     context.fillStyle = colorMap[1];
-    context.fillRect(this.pos.x, this.pos.y, this.dSize.width * this.percentFull, this.dSize.h);
+    context.fillRect(this.pos.x, this.pos.y, this.dSize.w * this.percentFull, this.dSize.h);
     this.energyText.draw(context, timestamp);
   }
 
