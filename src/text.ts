@@ -79,7 +79,6 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
           if (!row[x]) continue;
 
           if (this.shadow) {
-
             context.fillStyle = colorMap[0];
             context.fillRect(
               currX + x * this.game.ss + shadowOffset,

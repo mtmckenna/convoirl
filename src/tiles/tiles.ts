@@ -3,6 +3,19 @@ import { TS } from "../common";
 const E = null;
 
 export default {
+  cloud: {
+    cMatrix: [
+      [E, E, E, E, E, E, E, E],
+      [E, E, E, E, E, E, E, E],
+      [E, E, E, E, E, E, E, E],
+      [E, E, E, 1, 1, E, E, E],
+      [E, E, 1, 1, 1, 1, E, E],
+      [E, E, 1, 1, 1, 1, 1, E],
+      [E, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1],
+    ],
+    canvas: null,
+  },
   door: {
     cMatrix: oneColorTiles(0),
     canvas: null,

@@ -2,6 +2,8 @@ import Box from "../box";
 import Game from "../game";
 import Level from "./level";
 
+import { TS } from "../common";
+
 export default class StartScreen extends Level {
   public panDirection = 1;
   protected tileTypeMap = ["green", "flowers", "grass", "tree"];
@@ -36,6 +38,8 @@ export default class StartScreen extends Level {
     this.moveText();
     this.addDrawables(this.tiles, 0);
     this.addOverlayDrawables([this.box]);
+    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS);
+    this.addDrawables(this.clouds, 3);
   }
 
   public levelStarted() {

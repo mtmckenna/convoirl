@@ -6,7 +6,7 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
-import TinyMusic from "tinymusic";
+// import TinyMusic from "tinymusic";
 
 import {
   IInputBuffer,
@@ -151,10 +151,12 @@ export default class World extends Level {
 
   public configViz() {
     super.configViz();
+
     this.addDrawables(this.tiles, 0);
-    this.addDrawables(this.game.p.dusts, 1);
+    this.addDrawables(this.game.p.dusts, 1); // TODO: can combine onto one line
     this.addDrawables(walkingBuddy.dusts, 1);
     this.addDrawables([this.game.p], 2);
+    this.addDrawables(this.clouds, 3);
     this.addDrawables(buddies, 2);
     this.addOverlayDrawables([this.energyBar, box]);
     this.addInteractables(buddies);
@@ -165,7 +167,10 @@ export default class World extends Level {
       ...walkingBuddy.dusts,
       listenBuddy,
     ]);
+    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS);
+    this.addDrawables(this.clouds, 3);
     this.resize();
+
   }
 
   public levelStarted() {
@@ -190,17 +195,17 @@ export default class World extends Level {
     }
 
     // @ts-ignore
-    const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
+    // const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
 
-    const ac = new NormalizedAudioContext();
-    const tempo = 120;
-    const sequence = new TinyMusic.Sequence(ac, tempo, [
-      "G2 q",
-      "G3 q",
-      "G4 q",
-    ]);
+    // const ac = new NormalizedAudioContext();
+    // const tempo = 120;
+    // const sequence = new TinyMusic.Sequence(ac, tempo, [
+    //   "G2 q",
+    //   "G3 q",
+    //   "G4 q",
+    // ]);
 
-    sequence.loop = false;
+    // sequence.loop = false;
     // sequence.play();
   }
 }

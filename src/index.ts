@@ -25,6 +25,7 @@ BACKBURNER
   - gamepad
 
 SPACE SAVING THOUGHTS
+  - make level smaller
   - make drawingsize a getter? or subclass...
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)

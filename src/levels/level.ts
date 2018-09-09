@@ -32,7 +32,7 @@ export default abstract class Level {
   public state: string;
 
   protected  tileIndexes: number[][];
-
+  protected clouds: Tile[] = [];
   protected abstract tileTypeMap: string[];
 
   constructor(game: Game) {
@@ -48,6 +48,7 @@ export default abstract class Level {
 
   public update(timestamp: number) {
     this.uables.forEach((updateable) => updateable.update(timestamp));
+    this.clouds.forEach((c) => c.moveleft());
   }
 
   public configViz() {
@@ -60,6 +61,19 @@ export default abstract class Level {
 
   public tileAtIndex(tileIndex: IPoint) {
     return this.tilesGrid[tileIndex.y][tileIndex.x];
+  }
+
+  public configClouds(width, height) {
+    this.clouds = [];
+    for (let i = 0; i < 20; i++) {
+      const cloud = (new Tile(this.game, "cloud", 0, 0));
+      cloud.pos.x = randomNumBetween(0, width);
+      cloud.pos.y = randomNumBetween(0, height);
+      cloud.speed = randomNumBetween(.2, 1.0);
+      cloud.alpha = .8;
+      cloud.levelWidth = width;
+      this.clouds.push(cloud);
+    }
   }
 
   protected generateTiles() {
@@ -101,7 +115,7 @@ export default abstract class Level {
   }
 
   protected clearDrawables() {
-    this.dables = new Array(3).fill(null).map(() => new Array().fill(null));
+    this.dables = new Array(4).fill(null).map(() => new Array().fill(null));
   }
 
   protected clearOverlayDrawables() {
@@ -148,4 +162,8 @@ export default abstract class Level {
 
     if (touched && touched.visible) return touched;
   }
+}
+
+function randomNumBetween(min, max): number {
+  return Math.random() * (max - min) + min;
 }

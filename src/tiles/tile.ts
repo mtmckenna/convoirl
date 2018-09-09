@@ -5,13 +5,14 @@ import TILES from "./tiles";
 
 import {
   IDrawable,
+  IFadeable,
   IInteractable,
   IPoint,
   TS,
 } from "../common";
 import { flatten } from "../helpers";
 
-export default class Tile implements IDrawable, IInteractable {
+export default class Tile implements IDrawable, IInteractable, IFadeable {
   public dSize = { width: TS, height: TS };
   public pos = { x: 0, y: 0 };
   public size = { width: TS, height: TS };
@@ -21,6 +22,9 @@ export default class Tile implements IDrawable, IInteractable {
   public tileIndex: IPoint;
   public interactable: boolean = false;
   public name: string;
+  public alpha = 1.0;
+  public speed?: number;
+  public levelWidth?: number;
 
   protected tileLength: number = TS;
   protected cMatrix: number[][];
@@ -32,6 +36,8 @@ export default class Tile implements IDrawable, IInteractable {
 
     this.name = name;
     this.cMatrix = TILES[name].cMatrix;
+
+    // TODO: check if I can check for undefined instead of hasownprop
     this.walkable = TILES[name].hasOwnProperty("walkable") ? TILES[name].walkable : this.walkable;
     this.visible = TILES[name].hasOwnProperty("visible") ? TILES[name].visible : this.visible;
     this.interactable = TILES[name].hasOwnProperty("interactable") ? TILES[name].interactable : this.interactable;
@@ -46,7 +52,12 @@ export default class Tile implements IDrawable, IInteractable {
   }
 
   public draw(context) {
+    context.globalAlpha = this.alpha;
     context.drawImage(TILES[this.name].canvas, 0, 0);
+  }
+
+  public moveleft() {
+    this.pos.x = (this.pos.x + this.size.width) < 0 ? this.levelWidth : this.pos.x - .005 * this.speed);
   }
 
   // It's faster to draw the tile as an image from an offscreen

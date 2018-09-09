@@ -167,6 +167,8 @@ export default class Convo extends Level {
       ...skills,
     ]);
     this.addTouchables([upArrow, downArrow, ...skills]);
+    this.configClouds(this.tilesGrid[0].length * TS, this.game.p.pos.y - TS);
+    this.addDrawables(this.clouds, 0);
   }
 
   protected generateTileIndexes(sizeInTiles) {
