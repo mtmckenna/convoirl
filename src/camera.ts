@@ -65,7 +65,7 @@ export default class Camera implements IPositionable {
     shake.dir.y = oneOrMinusOne();
   }
 
-  public updateScreenShake(timestamp): void {
+  public updateShake(timestamp): void {
     shake.amplitude *= .9;
     const { amplitude, dir } = shake;
 

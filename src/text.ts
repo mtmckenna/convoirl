@@ -21,7 +21,6 @@ import { lerp } from "./helpers";
 export default class Text implements ITouchable, IFadeable, IUpdateable {
   public game: Game;
   public words: string = "";
-  public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
   public dSize: ISize = { w: 0, h: 0 };
   public pos: IPoint = { x: 0, y: 0 };
@@ -33,6 +32,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 
   public a: IAnimations = {};
   private upToIndex: number = null;
+  private pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
 
   constructor(game: Game, words: string = "", color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
     this.game = game;

@@ -100,7 +100,7 @@ export default class Game {
 
   public draw(timestamp: number) {
     if (!context || !this.camera) return;
-    this.camera.updateScreenShake(timestamp);
+    this.camera.updateShake(timestamp);
 
     clearCanvasContext.call(this);
     drawDrawables.call(this, timestamp);

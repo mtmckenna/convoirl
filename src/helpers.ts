@@ -1,5 +1,3 @@
-import Tile from "./tiles/tile";
-
 function lerp(start, end, t): number {
   return (1 - t) * start + t * end;
 }
