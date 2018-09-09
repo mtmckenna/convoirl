@@ -47,7 +47,7 @@ export default class StartScreen extends Level {
   }
 
   public handleInput() {
-    if (this.game.transitioning()) return;
+    if (this.game.inTr()) return;
     this.game.qLevel(this.game.levels.world);
   }
 

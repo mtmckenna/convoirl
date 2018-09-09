@@ -53,7 +53,7 @@ export default class Box implements IFadeable {
   }
 
   public draw(context, timestamp) {
-    const alpha = this.game.transitioning() ? Math.min(this.alpha, this.game.nextAlpha) : this.alpha;
+    const alpha = this.game.inTr() ? Math.min(this.alpha, this.game.nextAlpha) : this.alpha;
     context.globalAlpha = alpha;
     context.fillStyle = this.color;
     context.fillRect(this.pos.x, this.pos.y, this.dSize.w, this.dSize.h);

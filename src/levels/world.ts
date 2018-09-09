@@ -112,13 +112,13 @@ export default class World extends Level {
   }
 
   public handleInput(key) {
-    if (this.game.transitioning()) return;
+    if (this.game.inTr()) return;
     if (handleBoxInput.call(this)) return;
     inputBuffer = { pressedAt: this.game.timestamp, key };
   }
 
   public handleTouch(touch) {
-    if (this.game.transitioning()) return;
+    if (this.game.inTr()) return;
     if (this.game.p.walking) return;
     if (handleBoxInput.call(this)) return;
 

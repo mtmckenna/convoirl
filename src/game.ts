@@ -80,7 +80,7 @@ export default class Game {
     };
   }
 
-  public transitioning(): boolean {
+  public inTr(): boolean {
     return transition.running;
   }
 
@@ -95,7 +95,7 @@ export default class Game {
     this.timestamp = timestamp;
     this.currentLevel.update(timestamp);
 
-    if (this.transitioning()) updateTransition.call(this, timestamp);
+    if (this.inTr()) updateTransition.call(this, timestamp);
   }
 
   public draw(timestamp: number) {
@@ -105,7 +105,7 @@ export default class Game {
     clearCanvasContext.call(this);
     drawDrawables.call(this, timestamp);
     drawOverlayDrawables.call(this, timestamp);
-    if (this.transitioning()) updateTransition.call(this, timestamp);
+    if (this.inTr()) updateTransition.call(this, timestamp);
   }
 
   public resize() {
@@ -200,7 +200,7 @@ function drawDrawables(timestamp: number) {
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
       context.translate((x + .5) | 0, (y + .5) | 0);
-      context.globalAlpha = this.transitioning() ? transition.nextLevelAlpha : 1;
+      context.globalAlpha = this.inTr() ? transition.nextLevelAlpha : 1;
       drawable.draw(context, timestamp);
       context.setTransform(1, 0, 0, 1, 0, 0);
     });
@@ -232,7 +232,7 @@ function isOffScreen(x: number, y: number, dSize: ISize) {
 }
 
 function drawOverlayDrawables(timestamp: number) {
-  if (this.transitioning()) context.globalAlpha = transition.nextLevelAlpha;
+  if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
   this.currentLevel.odables.forEach((drawable) => {
     if (!drawable.visible) return;
     drawable.draw(context, timestamp);
@@ -242,7 +242,7 @@ function drawOverlayDrawables(timestamp: number) {
 }
 
 function clearCanvasContext(): void {
-  if (this.transitioning()) context.globalAlpha = transition.nextLevelAlpha;
+  if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
   context.fillStyle = this.currentLevel.bgColor;
   context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }

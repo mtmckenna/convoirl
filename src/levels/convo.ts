@@ -51,7 +51,6 @@ export default class Convo extends Level {
   public usedTopics: string[];
 
   protected tileTypeMap = ["green", "flowers", "sky", "tree"];
-  protected tileIndexes;
 
   constructor(game: Game) {
     super(game);
@@ -129,7 +128,7 @@ export default class Convo extends Level {
 
     // console.log(buddyTimeout, reactTimeout);
     waiting = floatiesInArray(this.odables).length > 0 ||
-    this.game.transitioning() ||
+    this.game.inTr() ||
     !!buddyTimeout ||
     !!reactTimeout;
 
