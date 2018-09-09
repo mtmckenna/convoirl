@@ -44,7 +44,7 @@ export default class Game {
   public p: Buddy;
   public ss: number = SQUARE_SIZE;
   public transition: IAnimation;
-  public scaleFactor: number = 1;
+  public sf: number = 1;
 
   constructor(canvas: HTMLCanvasElement) {
     this.p = new Buddy(this);
@@ -168,7 +168,7 @@ function startTransition() {
 }
 
 function setSize() {
-  this.scaleFactor = window.innerWidth / this.canvas.width;
+  this.sf = window.innerWidth / this.canvas.width;
 }
 
 function updateTransition(timestamp) {
