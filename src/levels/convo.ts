@@ -102,6 +102,7 @@ export default class Convo extends Level {
     lastBuddyTopic = null;
     buddies = [this.game.p, buddy];
 
+    // If this is the final buddy, make the game harder
     if (buddy.skills.length > 2) multiplier = SB_MULT;
 
     skills = this.game.p.skills.map((skillString) => new Text(this.game, skillString));
@@ -137,7 +138,8 @@ export default class Convo extends Level {
 
     // Win
     if (convoLevel >= 1) {
-      const nextState = (this.game.p.skills.length === 1) ? "post-listen" : "post-convo";
+      let nextState = (this.game.p.skills.length === 1) ? "post-listen" : "post-convo";
+      nextState = buddy.skills.length > 2 ? "win" : nextState; // If the last buddy, set the game to win
       this.game.queueNextLevel(this.game.levels.world, nextState);
     // Lose
     } else if (this.game.p.energy <= 0) {
@@ -149,7 +151,7 @@ export default class Convo extends Level {
     super.configViz();
 
     const sizeInTiles = this.game.sizeInTiles();
-    cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2;
+    cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2; // TODO: might be able to replace with this.size.w / 2
     sizeInTiles.w *= 2;
     sizeInTiles.h *= 2;
 
@@ -174,7 +176,7 @@ export default class Convo extends Level {
       ...skills,
     ]);
     this.addTables([upArrow, downArrow, ...skills]);
-    this.configClouds(this.tilesGrid[0].length * TS, this.game.p.pos.y - TS, .6);
+    this.configClouds(this.size.w, this.game.p.pos.y - TS, .6);
     this.addDables(this.clouds, 0);
   }
 

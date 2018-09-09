@@ -1,3 +1,4 @@
+import colorMap from "../colors";
 import Convo from "./convo";
 import Level from "./level";
 
@@ -9,6 +10,8 @@ import Game from "../game";
 import TinyMusic from "tinymusic";
 
 import {
+  IDrawable,
+  IFadeable,
   IInputBuffer,
   IPoint,
   LISTEN,
@@ -34,10 +37,18 @@ const TEXT_FIRST_CONVO = [
   ["if you are", "low on energy", "take a nap!"],
 ];
 
+const TEXT_WIN = [
+  ["great job!", "you made a", "new friend!"],
+  ["maybe you", "will become", "best buds!"],
+  ["be kind to", "your friends", "because"],
+  ["every quest", "is better", "with friends!"],
+  ["", "game over", ""],
+];
+
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
 const SLEEP_POS = { x: TS * 4, y: TS * 5 };
 const TOPICS = [
-  "PASTRIES",
+  "BAKING",
   "FRANCE",
   "SPORTS",
   "ANIME",
@@ -56,6 +67,7 @@ let walkingBuddy: Buddy;
 let listenBuddy: Buddy;
 let specialBuddy: Buddy;
 let energyBar: EnergyBar;
+let gameOverStartTime: number = 0;
 
 export default class World extends Level {
   public currentBuddy: Buddy;
@@ -165,7 +177,7 @@ export default class World extends Level {
       ...walkingBuddy.dusts,
       listenBuddy,
     ]);
-    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
+    this.configClouds(this.size.w, this.size.h, .3);
     this.addDables(this.clouds, 3);
     this.resize();
   }
@@ -184,6 +196,9 @@ export default class World extends Level {
       case "nap":
         this.game.p.move(SLEEP_POS);
         sleep.call(this);
+        break;
+      case "win":
+        showWinBox.call(this);
         break;
       case "post-listen":
       case "post-convo":
@@ -226,19 +241,22 @@ function handleBoxInput(): boolean {
       hideBox.call(this);
       this.state = "play";
       break;
+    // TODO: might be able to dry up these handleInputbox calls
     case "post-listen":
       showPostListenBox.call(this);
       break;
     case "intro":
       showNextIntroBox.call(this);
       break;
-    case "animating":
+    case "win":
+      showWinBox.call(this);
       break;
   }
 
   return true;
 }
 
+// TODO: might be able to save space by consolidating these methods
 function showPostListenBox() {
   const words = TEXT_FIRST_CONVO[0];
   if (!words) {
@@ -267,6 +285,27 @@ function showNextIntroBox() {
   box.setWords(words);
   box.animateTextIn(this.game.timestamp);
   TEXT_INTROS.shift();
+}
+
+function showWinBox() {
+  const words = TEXT_WIN[0];
+  if (!words) return;
+
+  box.visible = true;
+  box.setWords(words);
+  box.animateTextIn(this.game.timestamp);
+  TEXT_WIN.shift();
+
+  if (TEXT_WIN.length === 0) {
+    this.state = "game-over";
+    gameOverStartTime = this.game.timestamp;
+    shadeBox.game = this.game;
+    shadeBox.size.w = this.size.w;
+    shadeBox.size.h = this.size.h;
+    shadeBox.dSize.w = shadeBox.size.w * this.game.ss;
+    shadeBox.dSize.h = shadeBox.size.h * this.game.ss;
+    this.addDables([shadeBox], 3);
+  }
 }
 
 function learnFromConvo() {
@@ -427,3 +466,17 @@ function processInput(): boolean {
   this.game.p.walk(direction);
   return true;
 }
+
+const shadeBox: IDrawable & IFadeable = {
+  alpha: 0.0,
+  dSize: { w: 0, h: 0 },
+  draw: function(context) {
+    context.fillStyle = colorMap[0];
+    context.globalAlpha = Math.min((this.game.timestamp - gameOverStartTime) / 2000, .8);
+    context.fillRect(0, 0, this.dSize.w, this.dSize.h);
+  },
+  game: null,
+  pos: { x: 0, y: 0 },
+  size: { w: 0, h: 0 },
+  visible: true,
+};

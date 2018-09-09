@@ -2,10 +2,9 @@ import Box from "../box";
 import Game from "../game";
 import Level from "./level";
 
-import { TS } from "../common";
+let panDirection = 1;
 
 export default class StartScreen extends Level {
-  public panDirection = 1;
   protected tileTypeMap = ["green", "flowers", "grass", "tree"];
   private box: Box;
 
@@ -21,9 +20,9 @@ export default class StartScreen extends Level {
 
   public update(timestamp) {
     super.update(timestamp);
-    this.game.camera.pos.x -= this.panDirection * 0.05;
-    if (this.game.camera.pos.x < -this.game.canvas.width) this.panDirection = -1;
-    if (this.game.camera.pos.x > 0) this.panDirection = 1;
+    this.game.camera.pos.x -= panDirection * 0.05;
+    if (this.game.camera.pos.x < -this.game.canvas.width) panDirection = -1;
+    if (this.game.camera.pos.x > 0) panDirection = 1;
   }
 
   public configViz() {
@@ -35,10 +34,11 @@ export default class StartScreen extends Level {
 
     this.generateTileIndexes(sizeInTiles);
     this.generateTiles();
-    this.moveText();
+    this.box.move(this.game.boxPos());
+    this.box.updateSize(this.game.boxSize());
     this.addDables(this.tiles, 0);
     this.addOdables([this.box]);
-    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
+    this.configClouds(this.size.w, this.size.h, .3);
     this.addDables(this.clouds, 3);
   }
 
@@ -53,10 +53,5 @@ export default class StartScreen extends Level {
 
   public handleTouch() {
     this.handleInput();
-  }
-
-  private moveText() {
-    this.box.move(this.game.boxPos());
-    this.box.updateSize(this.game.boxSize());
   }
 }

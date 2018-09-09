@@ -16,10 +16,8 @@ import { flatten, randomIndex } from "../helpers";
 
 export default abstract class Level {
   public game: Game;
-
   public size: ISize;
   public dSize: ISize;
-
   public tiles: Tile[];
   public tilesGrid: Tile[][] = [];
 
@@ -31,7 +29,7 @@ export default abstract class Level {
   public bgColor: string = colorMap[2];
   public state: string;
 
-  protected  tileIndexes: number[][];
+  protected tileIndexes: number[][];
   protected clouds: Tile[] = [];
   protected abstract tileTypeMap: string[];
 

@@ -5,10 +5,10 @@ TODO
   - show you win screen
   - sfx
   - readme
-  - panning on convo
-  - flashbars when the change
 
 BACKBURNER
+  - panning on convo
+  - flashbars when the change
   - clean up level tiles
   - can touch on non selected texts
   - fix walking backwards guy
