@@ -127,7 +127,7 @@ export default class Game {
     if (this.currentLevel) this.currentLevel.resize();
   }
 
-  public queueNextLevel(updatedLevel: Level, state?: string) {
+  public qLevel(updatedLevel: Level, state?: string) {
     if (updatedLevel === this.levels.convo) {
       const { convo, world } = this.levels;
       (convo as Convo).setBuddy((world as World).currentBuddy.copy());

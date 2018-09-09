@@ -342,7 +342,7 @@ function startConvo(tileIndex: IPoint): boolean {
     this.currentBuddy = overlappedInteractable as Buddy;
     playerSpawnPosition.x = this.game.p.pos.x;
     playerSpawnPosition.y = this.game.p.pos.y;
-    this.game.queueNextLevel(this.game.levels.convo);
+    this.game.qLevel(this.game.levels.convo);
     return true;
   }
 

@@ -140,10 +140,10 @@ export default class Convo extends Level {
     if (convoLevel >= 1) {
       let nextState = (this.game.p.skills.length === 1) ? "post-listen" : "post-convo";
       nextState = buddy.skills.length > 2 ? "win" : nextState; // If the last buddy, set the game to win
-      this.game.queueNextLevel(this.game.levels.world, nextState);
+      this.game.qLevel(this.game.levels.world, nextState);
     // Lose
     } else if (this.game.p.energy <= 0) {
-      this.game.queueNextLevel(this.game.levels.world, "nap");
+      this.game.qLevel(this.game.levels.world, "nap");
     }
   }
 
