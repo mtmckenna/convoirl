@@ -32,12 +32,12 @@ SPACE SAVING THOUGHTS
 import Game from "./game";
 import gameLoopFunction from "./game-loop";
 
-import { MS_PER } from "./common";
+import { MS } from "./common";
 
 const canvas: HTMLCanvasElement = document.getElementById("game") as HTMLCanvasElement;
 
 const game: Game = new Game(canvas);
-const gameLoop = gameLoopFunction(MS_PER, game.update, game);
+const gameLoop = gameLoopFunction(MS, game.update, game);
 
 let currentTouch: Touch = null;
 let touchDown: boolean = false;

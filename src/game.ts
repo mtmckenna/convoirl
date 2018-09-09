@@ -2,8 +2,8 @@ import {
   IAnimation,
   IPoint,
   ISize,
-  L_HEIGHT,
-  L_SPACE,
+  LH,
+  LS,
   TS,
 } from "./common";
 
@@ -75,8 +75,8 @@ export default class Game {
 
   public boxSize(): ISize {
     return {
-      h: 3 * L_HEIGHT + 2 * L_SPACE,
-      w: L_HEIGHT * 12,
+      h: 3 * LH + 2 * LS,
+      w: LH * 12,
     };
   }
 

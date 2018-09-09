@@ -15,8 +15,8 @@ import {
   IInputBuffer,
   IPoint,
   LT,
-  T_TIME,
   TS,
+  TT,
 } from "../common";
 
 import {
@@ -107,8 +107,8 @@ export default class World extends Level {
     showWinBox = () => showBox.call(this, TEXT_WIN);
 
     this.state = "intro";
-    const throttledHandleTouch = throttle(this.handleTouch.bind(this), T_TIME);
-    const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
+    const throttledHandleTouch = throttle(this.handleTouch.bind(this), TT);
+    const throttledHandleInput = throttle(this.handleInput.bind(this), TT);
     this.handleTouch = throttledHandleTouch;
     this.handleInput = throttledHandleInput;
 

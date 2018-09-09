@@ -15,7 +15,7 @@ import {
   IPoint,
   ISize,
   IUpdateable,
-  MS_PER,
+  MS,
   TS,
 } from "./common";
 
@@ -199,9 +199,9 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
       y = this.a.walking.endPos.y;
       this.a.walking.running = false;
       this.a.walking.t = 0;
-      this.a.walking.tw = Math.max(this.a.walking.tw - MS_PER * 100, 0);
+      this.a.walking.tw = Math.max(this.a.walking.tw - MS * 100, 0);
     } else {
-      this.a.walking.tw = Math.min(this.a.walking.tw + MS_PER * 100, this.a.walking.duration);
+      this.a.walking.tw = Math.min(this.a.walking.tw + MS * 100, this.a.walking.duration);
     }
 
     this.move({ x, y });

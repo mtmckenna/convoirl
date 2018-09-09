@@ -11,7 +11,7 @@ import {
   ISize,
   ITouchable,
   IUpdateable,
-  L_HEIGHT,
+  LH,
   LT,
   } from "./common";
 
@@ -47,7 +47,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));
     // Add up the widths of all the letters + spaces
     const w = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
-    this.size = { w, h: L_HEIGHT };
+    this.size = { w, h: LH };
     this.dSize = { h: this.size.h * this.game.ss, w: this.size.w * this.game.ss };
 
     const floatText: IAnimation = {

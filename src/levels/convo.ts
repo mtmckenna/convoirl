@@ -9,11 +9,11 @@ import Text from "../text";
 
 import {
   ITouchable,
-  L_HEIGHT,
-  L_SPACE,
+  LH,
+  LS,
   LT,
-  T_TIME,
   TS,
+  TT,
 } from "../common";
 
 import {
@@ -59,7 +59,7 @@ export default class Convo extends Level {
     box = new Box(this.game, { x: 0, y: 0 }, { h: 0, w: 0 });
     upArrow = new Text(this.game, "^");
     downArrow = new Text(this.game, "_");
-    const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
+    const throttledHandleInput = throttle(this.handleInput.bind(this), TT);
     this.handleInput = throttledHandleInput;
     upArrow.touched = () => this.handleInput("ArrowUp");
     downArrow.touched = () => this.handleInput("ArrowDown");
@@ -298,7 +298,7 @@ function buddyFloatText(floatBuddy, word, color) {
 
   const boxPosY = this.boxPosY * this.game.ss + this.game.p.dSize.h / 2 ;
   const startPos = { x: box.pos.x + this.game.p.dSize.w / 2, y: boxPosY };
-  const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
+  const endPos = { x: this.game.canvas.width, y: -LH };
 
   if (floatBuddy !== this.game.p) {
     startPos.x +=  box.dSize.w - text.dSize.w - this.game.p.dSize.w;
@@ -377,7 +377,7 @@ function updateText() {
     const skillY = box.pos.y +
       box.dSize.h / 2 -
       skill.dSize.h / 2 +
-      indexDiff * L_SPACE * this.game.ss;
+      indexDiff * LS * this.game.ss;
 
     skill.move({ x: skillX, y: skillY });
     skill.visible = Math.abs(indexDiff) > 1 ? false : true;

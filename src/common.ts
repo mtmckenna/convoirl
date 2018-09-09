@@ -54,9 +54,9 @@ export interface IInputBuffer {
   key: string;
 }
 
-export const TS = 8;
-export const MS_PER = 1 / 60;
-export const L_SPACE = 8;
-export const T_TIME = 120;
-export const L_HEIGHT = 5;
-export const LT = "*LISTEN*";
+export const TS = 8; // tile size
+export const MS = 1 / 60; // ms per second
+export const LS = 8; // spacing between lines
+export const TT = 120; // throttle time
+export const LH = 5; // letter heights
+export const LT = "*LISTEN*"; // listen skill
