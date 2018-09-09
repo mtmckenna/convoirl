@@ -23,7 +23,7 @@ export default class EnergyBar implements IDrawable {
   public percentFull: number = 0;
 
   private box: Box;
-  private animations: IAnimations = {};
+  private a: IAnimations = {};
 
   constructor(game: Game, pos: IPoint, word: string) {
     this.game = game;
@@ -48,13 +48,13 @@ export default class EnergyBar implements IDrawable {
       startTime: 0,
     };
 
-    this.animations.level = level;
+    this.a.level = level;
 
     this.move(pos);
   }
 
   get animating(): boolean {
-    const animationArray = Object.keys(this.animations).map((key) => this.animations[key]);
+    const animationArray = Object.keys(this.a).map((key) => this.a[key]);
     return !!animationArray.find((animation) => animation.running);
   }
 
@@ -79,21 +79,21 @@ export default class EnergyBar implements IDrawable {
   }
 
   public animateToLevel(updatedLevel) {
-    this.animations.level.startTime = this.game.timestamp;
-    this.animations.level.startLevel = this.percentFull;
-    this.animations.level.endLevel = updatedLevel;
-    this.animations.level.running = true;
+    this.a.level.startTime = this.game.timestamp;
+    this.a.level.startLevel = this.percentFull;
+    this.a.level.endLevel = updatedLevel;
+    this.a.level.running = true;
   }
 
   private updateLevel(timestamp) {
-    if (!this.animations.level.running) return;
-    const t = (timestamp - this.animations.level.startTime) / this.animations.level.duration;
+    if (!this.a.level.running) return;
+    const t = (timestamp - this.a.level.startTime) / this.a.level.duration;
 
-    let level = lerp(this.animations.level.startLevel, this.animations.level.endLevel, t);
+    let level = lerp(this.a.level.startLevel, this.a.level.endLevel, t);
 
     if (t >= 1) {
-      level = this.animations.level.endLevel;
-      this.animations.level.running = false;
+      level = this.a.level.endLevel;
+      this.a.level.running = false;
     }
 
     this.percentFull = level;

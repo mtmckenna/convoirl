@@ -4,13 +4,12 @@ const E = null;
 
 export default {
   door: {
+    cMatrix: oneColorTiles(0),
     canvas: null,
-    colorMatrix: oneColorTiles(0),
     interactable: true,
   },
   flowers: {
-    canvas: null,
-    colorMatrix: [
+    cMatrix: [
       [2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 5, 2, 2, 2, 3, 2],
       [2, 5, 4, 5, 2, 2, 2, 2],
@@ -20,10 +19,10 @@ export default {
       [2, 2, 3, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 2, 2, 2, 2],
     ],
+    canvas: null,
   },
   grass: {
-    canvas: null,
-    colorMatrix: [
+    cMatrix: [
     [2, 2, 2, 2, 2, 2, 2, 2],
     [2, 2, 2, 2, 2, 2, 2, 2],
     [2, 2, 3, 2, 2, 2, 2, 2],
@@ -33,14 +32,14 @@ export default {
     [2, 2, 3, 2, 2, 2, 2, 2],
     [2, 2, 2, 2, 2, 2, 2, 2],
     ],
+    canvas: null,
   },
   green: {
+    cMatrix: oneColorTiles(2),
     canvas: null,
-    colorMatrix: oneColorTiles(2),
   },
   house: {
-    canvas: null,
-    colorMatrix: [
+    cMatrix: [
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
       [2, 2, 2, 2, 2, 2, 2, 2, 2, 6, 6, 6, 6, 6, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2],
@@ -66,15 +65,15 @@ export default {
       [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6],
       [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 6, 6, 6],
     ],
+    canvas: null,
     tileLength: 3 * TS,
   },
   sky: {
+    cMatrix: oneColorTiles(9),
     canvas: null,
-    colorMatrix: oneColorTiles(9),
   },
   tree: {
-    canvas: null,
-    colorMatrix: [
+    cMatrix: [
       [E, E, E, E, E, E, E, E],
       [E, E, 7, 7, 7, 7, E, E],
       [E, 7, 7, 7, 7, 7, 7, E],
@@ -84,6 +83,7 @@ export default {
       [E, E, E, 6, 6, E, E, E],
       [E, E, 6, 6, 6, 6, E, E],
     ],
+    canvas: null,
     walkable: false,
   },
   unwalkable: {

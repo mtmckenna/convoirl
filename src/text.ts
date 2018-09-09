@@ -31,7 +31,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public alpha = 1;
   public buddy?: Buddy = null;
 
-  public animations: IAnimations = {};
+  public a: IAnimations = {};
   private upToIndex: number = null;
 
   constructor(game: Game, words: string, color: string = colorMap[1], pos: IPoint = { x: 0, y: 0 }) {
@@ -58,7 +58,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
       startTime: 0,
     };
 
-    this.animations.floatText = floatText;
+    this.a.floatText = floatText;
   }
 
   public draw(context, timestamp) {
@@ -111,11 +111,11 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   }
 
   public startFloat(startPos: IPoint, endPos: IPoint) {
-    this.animations.floatText.startTime = this.game.timestamp;
-    this.animations.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.height };
-    this.animations.floatText.endPos = { x: endPos.x, y: endPos.y };
-    this.animations.floatText.running = true;
-    this.move(this.animations.floatText.startPos);
+    this.a.floatText.startTime = this.game.timestamp;
+    this.a.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.height };
+    this.a.floatText.endPos = { x: endPos.x, y: endPos.y };
+    this.a.floatText.running = true;
+    this.move(this.a.floatText.startPos);
   }
 
   public update(timestamp) {
@@ -124,7 +124,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 }
 
 function updateFloat(timestamp) {
-  const { floatText } = this.animations;
+  const { floatText } = this.a;
   if (!floatText.running) return;
   const t = (timestamp - floatText.startTime) / floatText.duration;
 

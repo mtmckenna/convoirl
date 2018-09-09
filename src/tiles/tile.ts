@@ -23,7 +23,7 @@ export default class Tile implements IDrawable, IInteractable {
   public name: string;
 
   protected tileLength: number = TS;
-  protected colorMatrix: number[][];
+  protected cMatrix: number[][];
 
   constructor(game: Game, name: string, rowIndex: number, columnIndex: number) {
     this.game = game;
@@ -31,7 +31,7 @@ export default class Tile implements IDrawable, IInteractable {
     this.tileIndex = { x: rowIndex, y: columnIndex };
 
     this.name = name;
-    this.colorMatrix = TILES[name].colorMatrix;
+    this.cMatrix = TILES[name].cMatrix;
     this.walkable = TILES[name].hasOwnProperty("walkable") ? TILES[name].walkable : this.walkable;
     this.visible = TILES[name].hasOwnProperty("visible") ? TILES[name].visible : this.visible;
     this.interactable = TILES[name].hasOwnProperty("interactable") ? TILES[name].interactable : this.interactable;
@@ -57,7 +57,7 @@ export default class Tile implements IDrawable, IInteractable {
     offscreenCanvas.height = this.dSize.height;
     const offscreenContext = offscreenCanvas.getContext("2d");
 
-    const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);
+    const colors = flatten(this.cMatrix).map((colorIndex) => colorMap[colorIndex]);
     colors.forEach((color, index) => {
       if (!color) return;
       offscreenContext.fillStyle = color;

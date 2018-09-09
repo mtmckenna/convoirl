@@ -381,7 +381,7 @@ function updateFloatyText() {
   for (let i = floaties.length - 1; i >= 0; i--) {
     const floaty = floaties[i];
     if (!floaty) break;
-    if (!floaty.animations.floatText.running) {
+    if (!floaty.a.floatText.running) {
       removeElement(floaty, this.overlayDrawables);
       this.updateables.splice(i, 1);
     }
