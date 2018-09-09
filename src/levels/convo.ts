@@ -41,10 +41,11 @@ let skills: Text[];
 let upArrow: Text;
 let waiting: boolean = false;
 let multiplier: number = 1;
+let lastBuddyTopic: number = null;
 
 export default class Convo extends Level {
   public backgroundColor = colorMap[9];
-  public lastBuddyTopic: string = null;
+  public usedTopics: string[];
 
   protected tileTypeMap = ["green", "flowers", "sky", "tree"];
   protected tileIndexes;
@@ -94,7 +95,8 @@ export default class Convo extends Level {
     waiting = false;
     this.game.player.setConvoMode(true, "right");
     convoLevel = 0;
-    this.lastBuddyTopic = null;
+    this.usedTopics = [];
+    lastBuddyTopic = null;
     buddies = [this.game.player, buddy];
 
     if (buddy.skills.length > 2) multiplier = SB_MULT;
@@ -128,7 +130,7 @@ export default class Convo extends Level {
 
     // Win
     if (convoLevel >= 1) {
-      const nextState = (buddy.skills.length === 1) ? "post-listen" : "post-convo";
+      const nextState = (this.game.player.skills.length === 1) ? "post-listen" : "post-convo";
       this.game.queueNextLevel(this.game.levels.world, nextState);
     // Lose
     } else if (this.game.player.energy <= 0) {
@@ -221,10 +223,10 @@ function useSelectedSkill() {
 
   setTimeout(() => react.call(this, skillIndex), 2000);
 
-  let buddySkillIndex = randomIndex(buddy.skills);
-
   // If we're at the listenbuddy for the first time, just have them do listen
-  if (this.game.player.skills.length === 1) buddySkillIndex = buddy.skills.indexOf(LISTEN);
+  let buddySkillIndex = buddy.skills.indexOf(LISTEN);
+
+  if (this.game.player.skills.length !== 1) buddySkillIndex = randomIndex(buddy.skills);
 
   setTimeout(() => buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex), 4500);
 }
@@ -241,11 +243,11 @@ function react(skillIndex) {
   // Otherwise...
   } else {
     if (skill === LISTEN) {
-      updateBars.call(this, -.1, .5);
-    } else if (this.lastBuddyTopic === skill) {
-      goodReaction.call(this, -.15, .2);
+      updateBars.call(this, -.1, .25);
+    } else if (lastBuddyTopic === skill) {
+      goodReaction.call(this, -.15, .50);
     } else if (buddy.skills.includes(skill)) {
-      goodReaction.call(this, -.1, .1);
+      goodReaction.call(this, -.1, .34);
     } else {
       badReaction.call(this, -.2);
     }
@@ -296,7 +298,10 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
-  if (skillBuddy === buddy) this.lastBuddyTopic = skill;
+  if (skillBuddy === buddy) {
+    lastBuddyTopic = skill;
+    if (!this.usedTopics.includes(skill)) this.usedTopics.push(skill);
+  }
 }
 
 function moveBuddies() {

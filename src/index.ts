@@ -11,9 +11,9 @@ TODO
   - can touch on non selected texts
   - fix walking buddy collision stuff
   - fix holding down the touch as you walk
-  - slightly delay on showing text on load
   - flashbars when the change
   - bug where you run into listen buddy after they moved
+  - bug where you keep walking into house
 
 BACKBURNER
   - add sun and clouds in convo

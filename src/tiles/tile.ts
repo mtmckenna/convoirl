@@ -69,4 +69,3 @@ export default class Tile implements IDrawable, IInteractable {
     TILES[this.name].canvas = offscreenCanvas;
   }
 }
-

@@ -17,6 +17,7 @@ import {
 } from "../common";
 
 import {
+  randomIndex,
   removeElement,
   throttle,
 } from "../helpers";
@@ -42,6 +43,7 @@ const TOPICS = [
   "ANIME",
   "BOOKS",
   "MATH",
+  "CATS",
 ];
 
 const SECONDARY_TOPICS = TOPICS.slice();
@@ -266,15 +268,16 @@ function showNextIntroBox() {
 function learnFromConvo() {
   if (!this.currentBuddy) return;
 
-  // const skill = this.currentBuddy.skills[randomIndex(this.currentBuddy.skills)];
-  const skill = (this.game.levels.convo as Convo).lastBuddyTopic;
+  const convo = (this.game.levels.convo as Convo);
+  const topics = convo.usedTopics.filter((topic) => !this.game.player.skills.includes(topic));
+  const skill = topics.length > 0 ? topics[randomIndex(topics)] : null;
   box.visible = true;
 
-  if (this.game.player.skills.includes(skill)) {
-    box.setWords(["nice convo!", "that was a", "good time!"]);
-  } else {
+  if (skill) {
     box.setWords(["nice convo!", "you learned", `${skill}!`]);
     this.game.player.skills.push(skill);
+  } else {
+    box.setWords(["nice convo!", "that was a", "good time!"]);
   }
 
   box.animateTextIn(this.game.timestamp);
@@ -331,7 +334,7 @@ function getSecondaryTopic(primaryTopic: string): string {
 function createBuddies() {
   listenBuddy = new Buddy(this.game);
   listenBuddy.move({ x: TS * 7, y: TS * 10 });
-  listenBuddy.skills.push(LISTEN);
+  listenBuddy.skills.push(LISTEN, TOPICS[6]);
   listenBuddy.look("up");
 
   const pastryBuddy = new Buddy(this.game);
@@ -382,7 +385,7 @@ function createBuddies() {
 // I needed to de-dupe the switch statements to save space.
 function processInput(): boolean {
   const timeSinceInput = this.game.timestamp - inputBuffer.pressedAt;
-  if (timeSinceInput > 50) return false; // For input buffering
+  if (timeSinceInput > 30) return false; // For input buffering
   if (this.game.player.walking) return false;
 
   // Get the tile index that we'd be walking onto
