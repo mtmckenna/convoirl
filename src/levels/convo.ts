@@ -11,7 +11,7 @@ import {
   ITouchable,
   L_HEIGHT,
   L_SPACE,
-  LISTEN,
+  LT,
   T_TIME,
   TS,
 } from "../common";
@@ -234,7 +234,7 @@ function useSelectedSkill() {
   reactTimeout = setTimeout(() => react.call(this, skillIndex), 2000);
 
   // If we're at the listenbuddy for the first time, just have them do listen
-  let buddySkillIndex = buddy.skills.indexOf(LISTEN);
+  let buddySkillIndex = buddy.skills.indexOf(LT);
 
   if (this.game.p.skills.length !== 1) buddySkillIndex = randomIndex(buddy.skills);
 
@@ -249,11 +249,11 @@ function react(skillIndex) {
   if (this.game.p.skills.length === 1) {
     goodReaction.call(this, -.1, .5);
   // If the player only knows weather and listen
-  } else if (skill === LISTEN && this.game.p.skills.length === 2) {
+  } else if (skill === LT && this.game.p.skills.length === 2) {
     goodReaction.call(this, -.1, .5);
   // Otherwise...
   } else {
-    if (skill === LISTEN) {
+    if (skill === LT) {
       updateBars.call(this, -.1, .25);
     } else if (lastBuddyTopic === skill) {
       greatReaction.call(this, -.15, .50);
@@ -305,7 +305,7 @@ function buddyFloatText(floatBuddy, word, color) {
     endPos.x = 0;
   }
 
-  if (word === LISTEN) endPos.x = startPos.x;
+  if (word === LT) endPos.x = startPos.x;
 
   text.startFloat(startPos, endPos);
   this.addOdables([text]);
@@ -316,7 +316,7 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   if (skillBuddy === buddy) buddyTimeout = null;
   if (convoLevel >= 1 || this.game.p.energy <= 0) return;
   const skill = skillBuddy.skills[skillIndex];
-  const color = skill === LISTEN ? colorMap[9] : colorMap[1];
+  const color = skill === LT ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
   if (skillBuddy === buddy) {
     lastBuddyTopic = skill;
@@ -393,7 +393,7 @@ function updateFloatyText() {
 
   // Don't open mouth when listening (good tip for life too)
   buddies.forEach((talkingBuddy) => talkingBuddy.talking = !!floaties.find((floaty) => {
-    return floaty.words !== LISTEN && floaty.buddy === talkingBuddy;
+    return floaty.words !== LT && floaty.buddy === talkingBuddy;
   }));
 
   for (let i = floaties.length - 1; i >= 0; i--) {

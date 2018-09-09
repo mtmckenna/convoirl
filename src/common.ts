@@ -59,4 +59,4 @@ export const MS_PER = 1 / 60;
 export const L_SPACE = 8;
 export const T_TIME = 120;
 export const L_HEIGHT = 5;
-export const LISTEN = "*LISTEN*";
+export const LT = "*LISTEN*";

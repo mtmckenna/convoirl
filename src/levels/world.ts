@@ -14,7 +14,7 @@ import {
   IFadeable,
   IInputBuffer,
   IPoint,
-  LISTEN,
+  LT,
   T_TIME,
   TS,
 } from "../common";
@@ -102,9 +102,9 @@ export default class World extends Level {
 
   constructor(game: Game) {
     super(game);
-    showNextIntroBox = () => showBox(TEXT_INTROS);
-    showPostListenBox = () => showBox(TEXT_FIRST_CONVO);
-    showWinBox = () => showBox(TEXT_WIN);
+    showNextIntroBox = () => showBox.call(this, TEXT_INTROS);
+    showPostListenBox = () => showBox.call(this, TEXT_FIRST_CONVO);
+    showWinBox = () => showBox.call(this, TEXT_WIN);
 
     this.state = "intro";
     const throttledHandleTouch = throttle(this.handleTouch.bind(this), T_TIME);
@@ -364,7 +364,7 @@ function getSecondaryTopic(primaryTopic: string): string {
 function createBuddies() {
   listenBuddy = new Buddy(this.game);
   listenBuddy.move({ x: TS * 7, y: TS * 10 });
-  listenBuddy.skills.push(LISTEN, TOPICS[6]);
+  listenBuddy.skills.push(LT, TOPICS[6]);
   listenBuddy.look("up");
 
   const pastryBuddy = new Buddy(this.game);

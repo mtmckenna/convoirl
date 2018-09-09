@@ -12,7 +12,7 @@ import {
   ITouchable,
   IUpdateable,
   L_HEIGHT,
-  LISTEN,
+  LT,
   } from "./common";
 
 import { lerp } from "./helpers";
@@ -130,7 +130,7 @@ function updateFloat(timestamp) {
   let x = lerp(floatText.startPos.x, floatText.endPos.x, t);
 
   // If listening, go straight up; otherwise, zigzag
-  if (this.words !== LISTEN) x += 10 * Math.sin((t) * 6 * Math.PI);
+  if (this.words !== LT) x += 10 * Math.sin((t) * 6 * Math.PI);
 
   const y = lerp(floatText.startPos.y, floatText.endPos.y, t);
 
