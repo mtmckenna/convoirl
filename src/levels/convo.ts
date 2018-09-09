@@ -121,7 +121,7 @@ export default class Convo extends Level {
 
   public update(timestamp) {
     super.update(timestamp);
-    this.game.camera.move({ x: cameraOffset, y: 0 });
+    this.game.c.move({ x: cameraOffset, y: 0 });
 
     updateText.call(this);
     updateFloatyText.call(this);
@@ -284,7 +284,7 @@ function goodReaction(energyIncrement, convoIncrement) {
 function badReaction(energyIncrement) {
   buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
   updateBars.call(this, energyIncrement, 0);
-  this.game.camera.shakeScreen();
+  this.game.c.shakeScreen();
 }
 
 function updateBars(energyIncrement, convoIncrement) {

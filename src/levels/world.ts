@@ -130,9 +130,9 @@ export default class World extends Level {
     if (this.game.p.walking) return;
     if (handleBoxInput.call(this)) return;
 
-    const { camera } = this.game;
-    const { h, w } = camera.size;
-    const offset = camera.offset;
+    const { c } = this.game;
+    const { h, w } = c.size;
+    const offset = c.offset;
 
     // TODO: totally forgot how this works...
     const tapXInCameraSpace = touch.clientX * w / window.innerWidth - offset.x;
@@ -162,7 +162,7 @@ export default class World extends Level {
     super.update(timestamp);
     processInput.call(this);
     startConvo.call(this, this.game.p.tileIndex);
-    this.game.camera.moveToPlayer(this.game.p);
+    this.game.c.moveToPlayer(this.game.p);
 
     // Make walking buddy walk
     if (walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) walkingBuddy.autoWalkDirection = "right";

@@ -20,9 +20,9 @@ export default class StartScreen extends Level {
 
   public update(timestamp) {
     super.update(timestamp);
-    this.game.camera.pos.x -= panDirection * 0.05;
-    if (this.game.camera.pos.x < -this.game.canvas.width) panDirection = -1;
-    if (this.game.camera.pos.x > 0) panDirection = 1;
+    this.game.c.pos.x -= panDirection * 0.05;
+    if (this.game.c.pos.x < -this.game.canvas.width) panDirection = -1;
+    if (this.game.c.pos.x > 0) panDirection = 1;
   }
 
   public configViz() {

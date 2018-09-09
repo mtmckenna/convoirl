@@ -36,7 +36,7 @@ let nextLevel: null | Level = null;
 let imageOfPreviousLevel: HTMLImageElement = null;
 
 export default class Game {
-  public camera: Camera;
+  public c: Camera;
   public canvas: HTMLCanvasElement;
   public currentLevel: Level;
   public timestamp: number = 0;
@@ -63,7 +63,7 @@ export default class Game {
     };
 
     // this.transition = Object.assign({}, transition);
-    this.camera = new Camera(this);
+    this.c = new Camera(this);
   }
 
   public boxPos(): IPoint {
@@ -99,8 +99,8 @@ export default class Game {
   }
 
   public draw(timestamp: number) {
-    if (!context || !this.camera) return;
-    this.camera.updateShake(timestamp);
+    if (!context || !this.c) return;
+    this.c.updateShake(timestamp);
 
     clearCanvasContext.call(this);
     drawDrawables.call(this, timestamp);
@@ -121,7 +121,7 @@ export default class Game {
 
     this.canvas.width = width;
     this.canvas.height = height;
-    this.camera.size = { w: this.canvas.width, h: this.canvas.height };
+    this.c.size = { w: this.canvas.width, h: this.canvas.height };
 
     setSize.call(this);
     if (this.currentLevel) this.currentLevel.resize();
@@ -187,7 +187,7 @@ function switchLevel(updatedLevel) {
 }
 
 function drawDrawables(timestamp: number) {
-  const offset = this.camera.offset;
+  const offset = this.c.offset;
   this.currentLevel.dables.forEach((drawablesAtZIndex) => {
     drawablesAtZIndex.forEach((drawable) => {
       // the !drawable is a hack to help reduce file size on levels with generated tiles
