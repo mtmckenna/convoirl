@@ -457,7 +457,7 @@ function processInput(): boolean {
 const shadeBox: IDrawable & IFadeable = {
   alpha: 0.0,
   dSize: { w: 0, h: 0 },
-  draw: function(context) {
+  draw(context) {
     context.fillStyle = colorMap[0];
     context.globalAlpha = Math.min((this.game.tstamp - gameOverStartTime) / 2000, .8);
     context.fillRect(0, 0, this.dSize.w, this.dSize.h);
