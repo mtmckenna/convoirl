@@ -8,9 +8,7 @@ TODO
   - fix walking buddy collision stuff
   - fix walking backwards guy
   - flashbars when the change
-  - bug where you run into listen buddy after they moved
   - bug where you keep walking into house
-  - different text if you do great vs good
 
 BACKBURNER
   - add sun and clouds in convo

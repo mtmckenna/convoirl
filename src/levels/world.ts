@@ -295,7 +295,7 @@ function updateBox() {
 
 function startConvo(tileIndex: IPoint): boolean {
   // Check if we're overlapping interactables like buddies
-  const overlappedInteractable = this.interactables.find((interactable) => {
+  const overlappedInteractable = this.iables.find((interactable) => {
     return interactable.tileIndex.x === tileIndex.x &&
       interactable.tileIndex.y === tileIndex.y;
   });

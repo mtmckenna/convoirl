@@ -26,8 +26,8 @@ export default abstract class Level {
   public dables: IDrawable[][];
   public odables: IDrawable[];
   public uables: IUpdateable[];
-  public interactables: IInteractable[];
-  public touchables: ITouchable[];
+  public iables: IInteractable[];
+  public tables: ITouchable[];
   public backgroundColor: string = colorMap[2];
   public state: string;
 
@@ -107,11 +107,11 @@ export default abstract class Level {
   }
 
   protected addTouchables(touchables: ITouchable[]) {
-    this.touchables.push(...touchables);
+    this.tables.push(...touchables);
   }
 
   protected addInteractables(interactables: IInteractable[]) {
-    this.interactables.push(...interactables);
+    this.iables.push(...interactables);
   }
 
   protected clearDrawables() {
@@ -127,11 +127,11 @@ export default abstract class Level {
   }
 
   protected clearInteractables() {
-    this.interactables = [];
+    this.iables = [];
   }
 
   protected clearTouchables() {
-    this.touchables = [];
+    this.tables = [];
   }
 
   protected generateTileIndexes(sizeInTiles?: ISize) {
@@ -146,7 +146,7 @@ export default abstract class Level {
   protected touchedTouchable(touch: Touch): ITouchable {
     const fuzz = 20 * this.game.scaleFactor;
 
-    const touched = this.touchables.find((touchable) => {
+    const touched = this.tables.find((touchable) => {
       const size = Object.assign({}, touchable.dSize);
       const pos = Object.assign({}, touchable.pos);
       size.width *= this.game.scaleFactor;
