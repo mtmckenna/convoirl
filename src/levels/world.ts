@@ -212,7 +212,6 @@ export default class World extends Level {
       case "post-listen":
       case "post-convo":
         learnFromConvo.call(this);
-        this.currentBuddy.lastConvo = this.game.tstamp;
         this.game.p.lastConvo = this.game.tstamp;
         break;
     }
@@ -239,7 +238,7 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
-  if (box.ani) return true;
+  // if (box.ani) return true;
   let done = false;
 
   switch (this.state) {
@@ -251,6 +250,7 @@ function handleBoxInput(): boolean {
     case "post-convo":
       hideBox.call(this);
       this.state = "play";
+      this.currentBuddy.lastConvo = this.game.tstamp;
       break;
     case "post-listen":
       done = showPostListenBox();
