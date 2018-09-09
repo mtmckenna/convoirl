@@ -43,8 +43,8 @@ export default class Game {
   public levels: { [key: string]: Level; };
   public p: Buddy;
   public ss: number = SQUARE_SIZE;
-  public transition: IAnimation;
   public sf: number = 1;
+  public nextAlpha: number = 1;
 
   constructor(canvas: HTMLCanvasElement) {
     this.p = new Buddy(this);
@@ -62,7 +62,7 @@ export default class Game {
       world: new World(this),
     };
 
-    this.transition = Object.assign({}, transition);
+    // this.transition = Object.assign({}, transition);
     this.camera = new Camera(this);
   }
 
@@ -81,7 +81,7 @@ export default class Game {
   }
 
   public transitioning(): boolean {
-    return this.transition.running;
+    return transition.running;
   }
 
   public update(timestamp) {
@@ -154,8 +154,8 @@ export default class Game {
 }
 
 function startTransition() {
-  this.transition.startTime = this.timestamp;
-  this.transition.running = true;
+  transition.startTime = this.timestamp;
+  transition.running = true;
   imageOfPreviousLevel = new Image();
   imageOfPreviousLevel.src = this.canvas.toDataURL("png");
   switchLevel.call(this, nextLevel);
@@ -166,14 +166,15 @@ function setSize() {
 }
 
 function updateTransition(timestamp) {
-  const t = (timestamp - this.transition.startTime) / this.transition.duration;
+  const t = (timestamp - transition.startTime) / transition.duration;
 
-  this.transition.prevLevelScale = clerp(1, 5, 1, 5, t);
-  this.transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
-  this.transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
+  transition.prevLevelScale = clerp(1, 5, 1, 5, t);
+  transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
+  transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
+  this.nextAlpha = transition.nextLevelAlpha;
 
   if (t >= 1) {
-    this.transition = Object.assign({}, transition);
+    transition.running = false;
     imageOfPreviousLevel = null;
   }
 }
@@ -199,7 +200,7 @@ function drawDrawables(timestamp: number) {
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
       context.translate((x + .5) | 0, (y + .5) | 0);
-      context.globalAlpha = this.transitioning() ? this.transition.nextLevelAlpha : 1;
+      context.globalAlpha = this.transitioning() ? transition.nextLevelAlpha : 1;
       drawable.draw(context, timestamp);
       context.setTransform(1, 0, 0, 1, 0, 0);
     });
@@ -208,8 +209,8 @@ function drawDrawables(timestamp: number) {
   context.globalAlpha = 1;
 
   if (imageOfPreviousLevel) {
-    context.globalAlpha = this.transition.prevLevelAlpha;
-    const scaleFactor = this.transition.prevLevelScale;
+    context.globalAlpha = transition.prevLevelAlpha;
+    const scaleFactor = transition.prevLevelScale;
     const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
     const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
     context.drawImage(
@@ -231,7 +232,7 @@ function isOffScreen(x: number, y: number, dSize: ISize) {
 }
 
 function drawOverlayDrawables(timestamp: number) {
-  if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
+  if (this.transitioning()) context.globalAlpha = transition.nextLevelAlpha;
   this.currentLevel.odables.forEach((drawable) => {
     if (!drawable.visible) return;
     drawable.draw(context, timestamp);
@@ -241,7 +242,7 @@ function drawOverlayDrawables(timestamp: number) {
 }
 
 function clearCanvasContext(): void {
-  if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
+  if (this.transitioning()) context.globalAlpha = transition.nextLevelAlpha;
   context.fillStyle = this.currentLevel.bgColor;
   context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }
