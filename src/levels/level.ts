@@ -52,11 +52,11 @@ export default abstract class Level {
   }
 
   public configViz() {
-    this.clearDrawables();
-    this.clearOverlayDrawables();
-    this.clearUpdateables();
-    this.clearInteractables();
-    this.clearTouchables();
+    this.clearDables();
+    this.clearOdables();
+    this.clearUables();
+    this.clearIables();
+    this.clearTables();
   }
 
   public tileAtIndex(tileIndex: IPoint) {
@@ -114,23 +114,23 @@ export default abstract class Level {
     this.iables.push(...interactables);
   }
 
-  protected clearDrawables() {
+  protected clearDables() {
     this.dables = new Array(4).fill(null).map(() => new Array().fill(null));
   }
 
-  protected clearOverlayDrawables() {
+  protected clearOdables() {
     this.odables = [];
   }
 
-  protected clearUpdateables() {
+  protected clearUables() {
     this.uables = [];
   }
 
-  protected clearInteractables() {
+  protected clearIables() {
     this.iables = [];
   }
 
-  protected clearTouchables() {
+  protected clearTables() {
     this.tables = [];
   }
 
