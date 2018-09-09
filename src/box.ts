@@ -33,10 +33,6 @@ export default class Box implements IFadeable {
     this.move(pos);
   }
 
-  get textLength() {
-    return this.texts.reduce((prev, text) => prev + text.words.length, 0);
-  }
-
   public move(updatedPos: IPoint) {
     this.pos.x = updatedPos.x;
     this.pos.y = updatedPos.y;
@@ -70,7 +66,8 @@ export default class Box implements IFadeable {
 
     if (this.startTime) {
       // TODO: gotta be a simpler way of doing the animation here
-      const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / 50), this.textLength);
+      const textLength = this.texts.reduce((prev, text) => prev + text.words.length, 0);
+      const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / 50), textLength);
       indexes = this.texts.map((text, i) => {
         // Add up lengths of previous texts
         const prevSum = this.texts.slice(0, i).reduce((prev, toCount) => toCount.words.length + prev, 0);
