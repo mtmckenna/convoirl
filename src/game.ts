@@ -248,6 +248,6 @@ function drawOverlayDrawables(timestamp: number) {
 
 function clearCanvasContext(): void {
   if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
-  context.fillStyle = this.currentLevel.backgroundColor;
+  context.fillStyle = this.currentLevel.bgColor;
   context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }

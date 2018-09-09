@@ -28,7 +28,7 @@ export default abstract class Level {
   public uables: IUpdateable[];
   public iables: IInteractable[];
   public tables: ITouchable[];
-  public backgroundColor: string = colorMap[2];
+  public bgColor: string = colorMap[2];
   public state: string;
 
   protected  tileIndexes: number[][];

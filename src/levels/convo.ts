@@ -44,7 +44,7 @@ let multiplier: number = 1;
 let lastBuddyTopic: number = null;
 
 export default class Convo extends Level {
-  public backgroundColor = colorMap[9];
+  public bgColor = colorMap[9];
   public usedTopics: string[];
 
   protected tileTypeMap = ["green", "flowers", "sky", "tree"];
