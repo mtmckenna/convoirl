@@ -193,7 +193,7 @@ function switchLevel(updatedLevel) {
 
 function drawDrawables(timestamp: number) {
   const offset = this.camera.offset;
-  this.currentLevel.drawables.forEach((drawablesAtZIndex) => {
+  this.currentLevel.dables.forEach((drawablesAtZIndex) => {
     drawablesAtZIndex.forEach((drawable) => {
       // the !drawable is a hack to help reduce file size on levels with generated tiles
       if (!drawable || !drawable.visible) return;
@@ -238,7 +238,7 @@ function isOffScreen(x: number, y: number, dSize: ISize) {
 
 function drawOverlayDrawables(timestamp: number) {
   if (this.transitioning()) context.globalAlpha = this.transition.nextLevelAlpha;
-  this.currentLevel.overlayDrawables.forEach((drawable) => {
+  this.currentLevel.odables.forEach((drawable) => {
     if (!drawable.visible) return;
     drawable.draw(context, timestamp);
   });

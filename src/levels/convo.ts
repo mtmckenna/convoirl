@@ -123,10 +123,10 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
 
-    waiting = floatiesInArray(this.overlayDrawables).length > 0 || this.game.transitioning();
+    waiting = floatiesInArray(this.odables).length > 0 || this.game.transitioning();
 
     // Don't win or lose if we're still animating
-    if (!doneAnimating(this.overlayDrawables)) return;
+    if (!doneAnimating(this.odables)) return;
 
     // Win
     if (convoLevel >= 1) {
@@ -371,7 +371,7 @@ function floatiesInArray(drawables) {
 }
 
 function updateFloatyText() {
-  const floaties = floatiesInArray(this.overlayDrawables);
+  const floaties = floatiesInArray(this.odables);
 
   // Don't open mouth when listening (good tip for life too)
   buddies.forEach((talkingBuddy) => talkingBuddy.talking = !!floaties.find((floaty) => {
@@ -382,8 +382,8 @@ function updateFloatyText() {
     const floaty = floaties[i];
     if (!floaty) break;
     if (!floaty.a.floatText.running) {
-      removeElement(floaty, this.overlayDrawables);
-      this.updateables.splice(i, 1);
+      removeElement(floaty, this.odables);
+      this.uables.splice(i, 1);
     }
   }
 }

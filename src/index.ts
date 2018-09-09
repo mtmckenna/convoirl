@@ -2,7 +2,6 @@
 TODO
   - sfx
   - readme
-  - make house look nicer
   - clouds
   - panning on convo
   - logic for when someone runs out of energy
@@ -10,15 +9,15 @@ TODO
   - some way to know you selected the right thing (fireworks? change color of sky)
   - can touch on non selected texts
   - fix walking buddy collision stuff
-  - fix holding down the touch as you walk
+  - fix walking backwards guy
   - flashbars when the change
   - bug where you run into listen buddy after they moved
   - bug where you keep walking into house
+  - different text if you do great vs good
 
 BACKBURNER
   - add sun and clouds in convo
   - animate buttons when you press them
-  - can probably consolidate a lot of the code around walking
   - add color effects on transition
   - have player be an instance on every level
   - use diff easing function for level transition

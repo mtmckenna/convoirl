@@ -23,9 +23,9 @@ export default abstract class Level {
   public tiles: Tile[];
   public tilesGrid: Tile[][] = [];
 
-  public drawables: IDrawable[][];
-  public overlayDrawables: IDrawable[];
-  public updateables: IUpdateable[];
+  public dables: IDrawable[][];
+  public odables: IDrawable[];
+  public uables: IUpdateable[];
   public interactables: IInteractable[];
   public touchables: ITouchable[];
   public backgroundColor: string = colorMap[2];
@@ -47,7 +47,7 @@ export default abstract class Level {
   public levelStarted() { return; }
 
   public update(timestamp: number) {
-    this.updateables.forEach((updateable) => updateable.update(timestamp));
+    this.uables.forEach((updateable) => updateable.update(timestamp));
   }
 
   public configViz() {
@@ -81,15 +81,15 @@ export default abstract class Level {
   }
 
   protected addDrawables(drawables: IDrawable[], zIndex: number) {
-    this.drawables[zIndex].push(...drawables);
+    this.dables[zIndex].push(...drawables);
   }
 
   protected addOverlayDrawables(drawables: IDrawable[]) {
-    this.overlayDrawables.push(...drawables);
+    this.odables.push(...drawables);
   }
 
   protected addUpdateables(updateables: IUpdateable[]) {
-    this.updateables.push(...updateables);
+    this.uables.push(...updateables);
   }
 
   protected addTouchables(touchables: ITouchable[]) {
@@ -101,15 +101,15 @@ export default abstract class Level {
   }
 
   protected clearDrawables() {
-    this.drawables = new Array(3).fill(null).map(() => new Array().fill(null));
+    this.dables = new Array(3).fill(null).map(() => new Array().fill(null));
   }
 
   protected clearOverlayDrawables() {
-    this.overlayDrawables = [];
+    this.odables = [];
   }
 
   protected clearUpdateables() {
-    this.updateables = [];
+    this.uables = [];
   }
 
   protected clearInteractables() {
