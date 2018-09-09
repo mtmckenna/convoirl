@@ -64,7 +64,7 @@ export default class Convo extends Level {
   }
 
   get boxPosY() {
-    return box.pos.y / this.game.ss - this.game.player.size.height - BUDDY_Y_FROM_BOX;
+    return box.pos.y / this.game.ss - this.game.p.size.height - BUDDY_Y_FROM_BOX;
   }
 
   public handleInput(key) {
@@ -93,15 +93,15 @@ export default class Convo extends Level {
 
   public levelWillStart() {
     waiting = false;
-    this.game.player.setConvoMode(true, "right");
+    this.game.p.setConvoMode(true, "right");
     convoLevel = 0;
     this.usedTopics = [];
     lastBuddyTopic = null;
-    buddies = [this.game.player, buddy];
+    buddies = [this.game.p, buddy];
 
     if (buddy.skills.length > 2) multiplier = SB_MULT;
 
-    skills = this.game.player.skills.map((skillString) => new Text(this.game, skillString));
+    skills = this.game.p.skills.map((skillString) => new Text(this.game, skillString));
     skills.forEach((skill) => skill.touched = () => {
       if (skills[currentSkillIndex] === skill) this.handleInput("Enter");
     });
@@ -109,7 +109,7 @@ export default class Convo extends Level {
 
   public levelStarted() {
     convoBar.animateToLevel(convoLevel);
-    energyBar.animateToLevel(this.game.player.energy);
+    energyBar.animateToLevel(this.game.p.energy);
   }
 
   public resize() {
@@ -130,10 +130,10 @@ export default class Convo extends Level {
 
     // Win
     if (convoLevel >= 1) {
-      const nextState = (this.game.player.skills.length === 1) ? "post-listen" : "post-convo";
+      const nextState = (this.game.p.skills.length === 1) ? "post-listen" : "post-convo";
       this.game.queueNextLevel(this.game.levels.world, nextState);
     // Lose
-    } else if (this.game.player.energy <= 0) {
+    } else if (this.game.p.energy <= 0) {
       this.game.queueNextLevel(this.game.levels.world, "nap");
     }
   }
@@ -170,7 +170,7 @@ export default class Convo extends Level {
   }
 
   protected generateTileIndexes(sizeInTiles) {
-    const playerTileIndexY = Math.min(this.game.player.tileIndex.y + 1, sizeInTiles.height);
+    const playerTileIndexY = Math.min(this.game.p.tileIndex.y + 1, sizeInTiles.height);
 
     // Ground tiles
     this.tileIndexes = new Array(sizeInTiles.height)
@@ -219,26 +219,26 @@ function useSelectedSkill() {
 
   waiting = true;
   const skillIndex = currentSkillIndex;
-  buddyExecuteSkillIndex.call(this, this.game.player, skillIndex);
+  buddyExecuteSkillIndex.call(this, this.game.p, skillIndex);
 
   setTimeout(() => react.call(this, skillIndex), 2000);
 
   // If we're at the listenbuddy for the first time, just have them do listen
   let buddySkillIndex = buddy.skills.indexOf(LISTEN);
 
-  if (this.game.player.skills.length !== 1) buddySkillIndex = randomIndex(buddy.skills);
+  if (this.game.p.skills.length !== 1) buddySkillIndex = randomIndex(buddy.skills);
 
   setTimeout(() => buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex), 4500);
 }
 
 function react(skillIndex) {
-  const skill = this.game.player.skills[skillIndex];
+  const skill = this.game.p.skills[skillIndex];
 
   // If haven't learend listen yet
-  if (this.game.player.skills.length === 1) {
+  if (this.game.p.skills.length === 1) {
     goodReaction.call(this, -.1, .5);
   // If the player only knows weather and listen
-  } else if (skill === LISTEN && this.game.player.skills.length === 2) {
+  } else if (skill === LISTEN && this.game.p.skills.length === 2) {
     goodReaction.call(this, -.1, .5);
   // Otherwise...
   } else {
@@ -254,7 +254,7 @@ function react(skillIndex) {
   }
 
   convoBar.animateToLevel(convoLevel);
-  energyBar.animateToLevel(this.game.player.energy);
+  energyBar.animateToLevel(this.game.p.energy);
 }
 
 function goodReaction(energyIncrement, convoIncrement) {
@@ -269,7 +269,7 @@ function badReaction(energyIncrement) {
 }
 
 function updateBars(energyIncrement, convoIncrement) {
-  updateEnergyLevel(this.game.player, energyIncrement);
+  updateEnergyLevel(this.game.p, energyIncrement);
   updateConvoLevel(convoIncrement * multiplier);
 }
 
@@ -277,12 +277,12 @@ function buddyFloatText(floatBuddy, word, color) {
   const text = new Text(this.game, word, color);
   text.buddy = floatBuddy;
 
-  const boxPosY = this.boxPosY * this.game.ss + this.game.player.dSize.height / 2 ;
-  const startPos = { x: box.pos.x + this.game.player.dSize.width / 2, y: boxPosY };
+  const boxPosY = this.boxPosY * this.game.ss + this.game.p.dSize.height / 2 ;
+  const startPos = { x: box.pos.x + this.game.p.dSize.width / 2, y: boxPosY };
   const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
 
-  if (floatBuddy !== this.game.player) {
-    startPos.x +=  box.dSize.width - text.dSize.width - this.game.player.dSize.width;
+  if (floatBuddy !== this.game.p) {
+    startPos.x +=  box.dSize.width - text.dSize.width - this.game.p.dSize.width;
     endPos.x = 0;
   }
 
@@ -294,7 +294,7 @@ function buddyFloatText(floatBuddy, word, color) {
 }
 
 function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
-  if (convoLevel >= 1 || this.game.player.energy <= 0) return;
+  if (convoLevel >= 1 || this.game.p.energy <= 0) return;
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
   buddyFloatText.call(this, skillBuddy, skill, color);
@@ -311,10 +311,10 @@ function moveBuddies() {
   cameraOffset / this.game.ss;
 
   const buddyX = boxPosX + box.dSize.width / this.game.ss - buddy.size.width / 2;
-  const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: this.boxPosY };
+  const playerPos = { x: boxPosX + this.game.p.size.width / 2, y: this.boxPosY };
 
   buddy.move({ x: buddyX, y: playerPos.y });
-  this.game.player.move(playerPos);
+  this.game.p.move(playerPos);
 }
 
 function updateBoxes() {

@@ -107,7 +107,7 @@ export default class World extends Level {
 
   public handleTouch(touch) {
     if (this.game.transitioning()) return;
-    if (this.game.player.walking) return;
+    if (this.game.p.walking) return;
     if (handleBoxInput.call(this)) return;
 
     const { camera } = this.game;
@@ -117,8 +117,8 @@ export default class World extends Level {
     // TODO: totally forgot how this works...
     const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
     const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
-    const horizontalDistance = tapXInCameraSpace - this.game.player.pos.x * this.game.ss;
-    const verticalDistance = tapYInCameraSpace - this.game.player.pos.y * this.game.ss;
+    const horizontalDistance = tapXInCameraSpace - this.game.p.pos.x * this.game.ss;
+    const verticalDistance = tapYInCameraSpace - this.game.p.pos.y * this.game.ss;
     const absHorizontalDistance = Math.abs(horizontalDistance);
     const absVerticalDistance = Math.abs(verticalDistance);
     const minMoveTheshold = this.game.ss * TS / 2;
@@ -141,8 +141,8 @@ export default class World extends Level {
   public update(timestamp) {
     super.update(timestamp);
     processInput.call(this);
-    startConvo.call(this, this.game.player.tileIndex);
-    this.game.camera.moveToPlayer(this.game.player);
+    startConvo.call(this, this.game.p.tileIndex);
+    this.game.camera.moveToPlayer(this.game.p);
 
     // Make walking buddy walk
     if (walkingBuddy.pos.x <= WB_START_POS.x - 5 * TS) walkingBuddy.autoWalkDirection = "right";
@@ -152,15 +152,15 @@ export default class World extends Level {
   public configViz() {
     super.configViz();
     this.addDrawables(this.tiles, 0);
-    this.addDrawables(this.game.player.dusts, 1);
+    this.addDrawables(this.game.p.dusts, 1);
     this.addDrawables(walkingBuddy.dusts, 1);
-    this.addDrawables([this.game.player], 2);
+    this.addDrawables([this.game.p], 2);
     this.addDrawables(buddies, 2);
     this.addOverlayDrawables([this.energyBar, box]);
     this.addInteractables(buddies);
     this.addUpdateables([
-      ...this.game.player.dusts,
-      this.game.player,
+      ...this.game.p.dusts,
+      this.game.p,
       walkingBuddy,
       ...walkingBuddy.dusts,
       listenBuddy,
@@ -169,18 +169,18 @@ export default class World extends Level {
   }
 
   public levelStarted() {
-    this.energyBar.animateToLevel(this.game.player.energy);
+    this.energyBar.animateToLevel(this.game.p.energy);
     walkingBuddy.move(WB_START_POS);
-    this.game.player.move(playerSpawnPosition);
-    this.game.player.stop();
-    this.game.player.setConvoMode(false);
+    this.game.p.move(playerSpawnPosition);
+    this.game.p.stop();
+    this.game.p.setConvoMode(false);
 
     switch (this.state) {
       case "intro":
         showNextIntroBox.call(this);
         break;
       case "nap":
-        this.game.player.move(SLEEP_POS);
+        this.game.p.move(SLEEP_POS);
         sleep.call(this);
         break;
       case "post-listen":
@@ -269,13 +269,13 @@ function learnFromConvo() {
   if (!this.currentBuddy) return;
 
   const convo = (this.game.levels.convo as Convo);
-  const topics = convo.usedTopics.filter((topic) => !this.game.player.skills.includes(topic));
+  const topics = convo.usedTopics.filter((topic) => !this.game.p.skills.includes(topic));
   const skill = topics.length > 0 ? topics[randomIndex(topics)] : null;
   box.visible = true;
 
   if (skill) {
     box.setWords(["nice convo!", "you learned", `${skill}!`]);
-    this.game.player.skills.push(skill);
+    this.game.p.skills.push(skill);
   } else {
     box.setWords(["nice convo!", "that was a", "good time!"]);
   }
@@ -297,8 +297,8 @@ function startConvo(tileIndex: IPoint): boolean {
 
   if (overlappedInteractable) {
     this.currentBuddy = overlappedInteractable as Buddy;
-    playerSpawnPosition.x = this.game.player.pos.x;
-    playerSpawnPosition.y = this.game.player.pos.y;
+    playerSpawnPosition.x = this.game.p.pos.x;
+    playerSpawnPosition.y = this.game.p.pos.y;
     this.game.queueNextLevel(this.game.levels.convo);
     return true;
   }
@@ -307,8 +307,8 @@ function startConvo(tileIndex: IPoint): boolean {
 }
 
 function sleep() {
-  this.game.player.energy = 1;
-  this.energyBar.animateToLevel(this.game.player.energy);
+  this.game.p.energy = 1;
+  this.energyBar.animateToLevel(this.game.p.energy);
   box.setWords(["", "zzzzzz...", ""]);
   box.animateTextIn(this.game.timestamp);
   box.visible = true;
@@ -386,10 +386,10 @@ function createBuddies() {
 function processInput(): boolean {
   const timeSinceInput = this.game.timestamp - inputBuffer.pressedAt;
   if (timeSinceInput > 30) return false; // For input buffering
-  if (this.game.player.walking) return false;
+  if (this.game.p.walking) return false;
 
   // Get the tile index that we'd be walking onto
-  const tileIndex = Object.assign({}, this.game.player.tileIndex);
+  const tileIndex = Object.assign({}, this.game.p.tileIndex);
   let direction = null;
 
   switch (inputBuffer.key) {
@@ -420,6 +420,6 @@ function processInput(): boolean {
   if (this.tileAtIndex(tileIndex).interactable) sleep.call(this);
 
   // If we're not overlapping anything fun, just walk
-  this.game.player.walk(direction);
+  this.game.p.walk(direction);
   return true;
 }

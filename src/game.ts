@@ -41,14 +41,14 @@ export default class Game {
   public currentLevel: Level;
   public timestamp: number = 0;
   public levels: { [key: string]: Level; };
-  public player: Buddy;
+  public p: Buddy;
   public ss: number = SQUARE_SIZE;
   public transition: IAnimation;
   public scaleFactor: number = 1;
 
   constructor(canvas: HTMLCanvasElement) {
-    this.player = new Buddy(this);
-    this.player.skills.push("WEATHER");
+    this.p = new Buddy(this);
+    this.p.skills.push("WEATHER");
 
     this.canvas = canvas;
     setSize.call(this);
