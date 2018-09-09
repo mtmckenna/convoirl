@@ -142,26 +142,6 @@ export default abstract class Level {
       .fill(null).map(() => new Array(sizeInTiles.w)
         .fill(null).map(() => randomIndex(this.tileTypeMap)));
   }
-
-  protected touchedTouchable(touch: Touch): ITouchable {
-    const fuzz = 20 * this.game.sf;
-
-    const touched = this.tables.find((touchable) => {
-      const size = Object.assign({}, touchable.dSize);
-      const pos = Object.assign({}, touchable.pos);
-      size.w *= this.game.sf;
-      size.h *= this.game.sf;
-      pos.x *= this.game.sf;
-      pos.y *= this.game.sf;
-
-      return touch.clientX + fuzz >= pos.x &&
-      touch.clientX - fuzz <= pos.x + size.w &&
-      touch.clientY + fuzz >= pos.y &&
-      touch.clientY - fuzz <= pos.y + size.h;
-    });
-
-    if (touched && touched.visible) return touched;
-  }
 }
 
 function randomNumBetween(min, max): number {

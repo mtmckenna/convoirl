@@ -4,12 +4,16 @@ TODO
   - readme
   - panning on convo
   - special buddy logic
-  - can touch on non selected texts
-  - fix walking backwards guy
+
   - flashbars when the change
-  - bug where you keep walking into house
+  - show you win screen
+  - can't go forward until all the text is displayed
+  - fix scroll bug on desktop
 
 BACKBURNER
+  - clean up level tiles
+  - can touch on non selected texts
+  - fix walking backwards guy
   - add sun and clouds in convo
   - animate buttons when you press them
   - add color effects on transition
