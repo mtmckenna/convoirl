@@ -52,7 +52,8 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   }
 
   public draw(context) {
-    context.globalAlpha = this.alpha;
+    // TODO: dedupe with code on text
+    context.globalAlpha = this.game.inTr() ? Math.min(this.alpha, this.game.nextAlpha) : this.alpha;
     context.drawImage(TILES[this.name].canvas, 0, 0);
   }
 
