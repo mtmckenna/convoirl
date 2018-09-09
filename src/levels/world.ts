@@ -6,7 +6,7 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
-// import TinyMusic from "tinymusic";
+import TinyMusic from "tinymusic";
 
 import {
   IInputBuffer,
@@ -194,17 +194,17 @@ export default class World extends Level {
     }
 
     // @ts-ignore
-    // const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
+    const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
 
-    // const ac = new NormalizedAudioContext();
-    // const tempo = 120;
-    // const sequence = new TinyMusic.Sequence(ac, tempo, [
-    //   "G2 q",
-    //   "G3 q",
-    //   "G4 q",
-    // ]);
+    const ac = new NormalizedAudioContext();
+    const tempo = 120;
+    const sequence = new TinyMusic.Sequence(ac, tempo, [
+      "G2 q",
+      "G3 q",
+      "G4 q",
+    ]);
 
-    // sequence.loop = false;
+    sequence.loop = false;
     // sequence.play();
   }
 }
