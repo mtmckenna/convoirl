@@ -6,7 +6,7 @@ export interface IPoint {
 }
 
 export interface ISize {
-  height: number;
+  h: number;
   width: number;
 }
 

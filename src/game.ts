@@ -69,13 +69,13 @@ export default class Game {
   public boxPos(): IPoint {
     return {
       x: (this.canvas.width - this.boxSize().width * this.ss) / 2,
-      y: (this.canvas.height - this.boxSize().height * this.ss) / 2,
+      y: (this.canvas.height - this.boxSize().h * this.ss) / 2,
     };
   }
 
   public boxSize(): ISize {
     return {
-      height: 3 * L_HEIGHT + 2 * L_SPACE,
+      h: 3 * L_HEIGHT + 2 * L_SPACE,
       width:  L_HEIGHT * 12,
     };
   }
@@ -127,7 +127,7 @@ export default class Game {
 
     this.canvas.width = width;
     this.canvas.height = height;
-    this.camera.size = { width: this.canvas.width, height: this.canvas.height };
+    this.camera.size = { width: this.canvas.width, h: this.canvas.height };
 
     setSize.call(this);
     if (this.currentLevel) this.currentLevel.resize();
@@ -155,7 +155,7 @@ export default class Game {
   public sizeInTiles(): ISize {
     const w = Math.ceil(this.canvas.width / this.ss / TS);
     const h = Math.ceil(this.canvas.height / this.ss / TS);
-    return { width: w, height: h };
+    return { width: w, h: h };
   }
 }
 
@@ -232,7 +232,7 @@ function drawDrawables(timestamp: number) {
 function isOffScreen(x: number, y: number, dSize: ISize) {
   return x + dSize.width < 0 ||
     x > this.canvas.width ||
-    y + dSize.height < 0 ||
+    y + dSize.h < 0 ||
     y > this.canvas.height;
 }
 

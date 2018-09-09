@@ -13,9 +13,9 @@ import {
 import { flatten } from "../helpers";
 
 export default class Tile implements IDrawable, IInteractable, IFadeable {
-  public dSize = { width: TS, height: TS };
+  public dSize = { width: TS, h: TS };
   public pos = { x: 0, y: 0 };
-  public size = { width: TS, height: TS };
+  public size = { width: TS, h: TS };
   public walkable: boolean = true;
   public visible: boolean = true;
   public game: Game;
@@ -44,7 +44,7 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
     this.tileLength = TILES[name].hasOwnProperty("tileLength") ? TILES[name].tileLength : this.tileLength;
 
     this.dSize = {
-      height: this.tileLength * this.game.ss,
+      h: this.tileLength * this.game.ss,
       width: this.tileLength * this.game.ss,
     };
 
@@ -65,7 +65,7 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   protected cacheOffscreenContext() {
     const offscreenCanvas = document.createElement("canvas");
     offscreenCanvas.width = this.dSize.width;
-    offscreenCanvas.height = this.dSize.height;
+    offscreenCanvas.height = this.dSize.h;
     const offscreenContext = offscreenCanvas.getContext("2d");
 
     const colors = flatten(this.cMatrix).map((colorIndex) => colorMap[colorIndex]);

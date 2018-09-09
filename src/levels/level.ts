@@ -78,10 +78,10 @@ export default abstract class Level {
 
   protected generateTiles() {
     const width = this.tileIndexes[0].length * TS;
-    const height = this.tileIndexes.length * TS;
+    const h = this.tileIndexes.length * TS;
 
-    this.size = { width, height };
-    this.dSize = { width: width * this.game.ss, height: height * this.game.ss };
+    this.size = { width, h };
+    this.dSize = { width: width * this.game.ss, h: h * this.game.ss };
 
     for (let i = 0; i < this.tileIndexes.length; i++) {
       this.tilesGrid.push(new Array(this.tileIndexes[i].length));
@@ -138,26 +138,26 @@ export default abstract class Level {
     // The tiles should fit the screen size since we don't scroll in convo
     sizeInTiles = sizeInTiles || this.game.sizeInTiles();
 
-    this.tileIndexes = new Array(sizeInTiles.height)
+    this.tileIndexes = new Array(sizeInTiles.h)
       .fill(null).map(() => new Array(sizeInTiles.width)
         .fill(null).map(() => randomIndex(this.tileTypeMap)));
   }
 
   protected touchedTouchable(touch: Touch): ITouchable {
-    const fuzz = 20 * this.game.scaleFactor;
+    const fuzz = 20 * this.game.sf;
 
     const touched = this.tables.find((touchable) => {
       const size = Object.assign({}, touchable.dSize);
       const pos = Object.assign({}, touchable.pos);
-      size.width *= this.game.scaleFactor;
-      size.height *= this.game.scaleFactor;
-      pos.x *= this.game.scaleFactor;
-      pos.y *= this.game.scaleFactor;
+      size.width *= this.game.sf;
+      size.h *= this.game.sf;
+      pos.x *= this.game.sf;
+      pos.y *= this.game.sf;
 
       return touch.clientX + fuzz >= pos.x &&
       touch.clientX - fuzz <= pos.x + size.width &&
       touch.clientY + fuzz >= pos.y &&
-      touch.clientY - fuzz <= pos.y + size.height;
+      touch.clientY - fuzz <= pos.y + size.h;
     });
 
     if (touched && touched.visible) return touched;

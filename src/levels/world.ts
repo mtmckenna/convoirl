@@ -111,12 +111,12 @@ export default class World extends Level {
     if (handleBoxInput.call(this)) return;
 
     const { camera } = this.game;
-    const { height, width } = camera.size;
+    const { h, width } = camera.size;
     const offset = camera.offset;
 
     // TODO: totally forgot how this works...
     const tapXInCameraSpace = touch.clientX * width / window.innerWidth - offset.x;
-    const tapYInCameraSpace = touch.clientY * height / window.innerHeight - offset.y;
+    const tapYInCameraSpace = touch.clientY * h / window.innerHeight - offset.y;
     const horizontalDistance = tapXInCameraSpace - this.game.p.pos.x * this.game.ss;
     const verticalDistance = tapYInCameraSpace - this.game.p.pos.y * this.game.ss;
     const absHorizontalDistance = Math.abs(horizontalDistance);

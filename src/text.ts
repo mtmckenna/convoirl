@@ -23,7 +23,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public words: string = "";
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
-  public dSize: ISize = { width: 0, height: 0 };
+  public dSize: ISize = { width: 0, h: 0 };
   public pos: IPoint = { x: 0, y: 0 };
   public color: string;
   public visible: boolean = true;
@@ -47,8 +47,8 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     const maxValues = this.pixelLetters.map((letter) => Math.max(...letter.map((row) => row.length)));
     // Add up the widths of all the letters + spaces
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
-    this.size = { width, height: L_HEIGHT };
-    this.dSize = { height: this.size.height * this.game.ss, width: this.size.width * this.game.ss };
+    this.size = { width, h: L_HEIGHT };
+    this.dSize = { h: this.size.h * this.game.ss, width: this.size.width * this.game.ss };
 
     const floatText: IAnimation = {
       duration: 3000,
@@ -111,7 +111,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
 
   public startFloat(startPos: IPoint, endPos: IPoint) {
     this.a.floatText.startTime = this.game.timestamp;
-    this.a.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.height };
+    this.a.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.h };
     this.a.floatText.endPos = { x: endPos.x, y: endPos.y };
     this.a.floatText.running = true;
     this.move(this.a.floatText.startPos);

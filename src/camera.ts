@@ -14,11 +14,11 @@ let shake: IScreenShakeProps;
 // camera be the drawing size/pos and not the non-scaled pos...
 export default class Camera implements IPositionable {
   public pos: IPoint = { x: 0, y: 0 };
-  public size: ISize = { width: 0, height: 0 };
+  public size: ISize = { width: 0, h: 0 };
 
   constructor(updatedGame) {
     game = updatedGame;
-    this.size = { width: game.canvas.width, height: game.canvas.height };
+    this.size = { width: game.canvas.width, h: game.canvas.height };
     shake = {
       amplitude: 0,
       dir: { x: 1, y: 1 },
@@ -45,13 +45,13 @@ export default class Camera implements IPositionable {
 
     this.pos.y = game.canvas.height / 2 -
       drawable.pos.y * game.ss -
-      drawable.dSize.height / 2;
+      drawable.dSize.h / 2;
 
     // Stop camera at edges of level size
     const leftStop = 0;
     const rightStop = -1 * (game.currentLevel.dSize.width - this.size.width);
     const topStop = 0;
-    const bottomStop = -1 * (game.currentLevel.dSize.height - this.size.height);
+    const bottomStop = -1 * (game.currentLevel.dSize.h - this.size.h);
     if (this.pos.x > leftStop) this.pos.x = leftStop;
     if (this.pos.x < rightStop) this.pos.x = rightStop;
     if (this.pos.y > topStop) this.pos.y = topStop;
