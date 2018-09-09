@@ -17,6 +17,7 @@ export default class Box implements IFadeable {
   public dSize: ISize;
   public visible: boolean = true;
   public alpha = 1;
+  public ani: boolean = false; // is animating
 
   private strokePos: IPoint;
   private color: string;
@@ -67,6 +68,7 @@ export default class Box implements IFadeable {
       // TODO: gotta be a simpler way of doing the animation here
       const textLength = this.texts.reduce((prev, text) => prev + text.words.length, 0);
       const showUpToIndex = Math.min(Math.floor((timestamp - this.startTime) / 50), textLength);
+      if (textLength === showUpToIndex) this.ani = false;
       indexes = this.texts.map((text, i) => {
         // Add up lengths of previous texts
         const prevSum = this.texts.slice(0, i).reduce((prev, toCount) => toCount.words.length + prev, 0);
@@ -88,6 +90,7 @@ export default class Box implements IFadeable {
 
   public aniText(time: number) {
     this.startTime = time;
+    this.ani = true;
   }
 }
 

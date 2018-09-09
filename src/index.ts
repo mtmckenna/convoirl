@@ -1,7 +1,6 @@
 /*
 TODO
   - special buddy logic
-  - can't go forward until all the text is displayed
   - sfx
   - readme
 

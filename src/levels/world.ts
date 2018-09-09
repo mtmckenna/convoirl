@@ -238,7 +238,7 @@ function hideBox() {
 }
 
 function handleBoxInput(): boolean {
-  if (this.state === "play") return false;
+  if (this.state === "play" || box.ani) return false;
   let done = false;
 
   switch (this.state) {
