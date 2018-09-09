@@ -84,15 +84,10 @@ export default class Game {
     return this.transition.running;
   }
 
-  // TODO: could move elsewhere to save space
-  public boot(timestamp) {
-    this.timestamp = timestamp;
-    switchLevel.call(this, this.levels.startScreen);
-  }
-
   public update(timestamp) {
     if (!booted) {
-      this.boot(timestamp);
+      this.timestamp = timestamp;
+      switchLevel.call(this, this.levels.startScreen);
       this.resize();
       booted = true;
     }
