@@ -165,7 +165,7 @@ export default class World extends Level {
       ...walkingBuddy.dusts,
       listenBuddy,
     ]);
-    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS);
+    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
     this.addDrawables(this.clouds, 3);
     this.resize();
   }

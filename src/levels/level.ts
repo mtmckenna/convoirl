@@ -63,14 +63,14 @@ export default abstract class Level {
     return this.tilesGrid[tileIndex.y][tileIndex.x];
   }
 
-  public configClouds(width, height) {
+  public configClouds(width, height, alpha) {
     this.clouds = [];
     for (let i = 0; i < 20; i++) {
       const cloud = (new Tile(this.game, "cloud", 0, 0));
       cloud.pos.x = randomNumBetween(0, width);
       cloud.pos.y = randomNumBetween(0, height);
       cloud.speed = randomNumBetween(.2, 1.0);
-      cloud.alpha = .8;
+      cloud.alpha = alpha;
       cloud.lWidth = width;
       this.clouds.push(cloud);
     }

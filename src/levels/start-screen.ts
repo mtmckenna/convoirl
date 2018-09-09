@@ -38,7 +38,7 @@ export default class StartScreen extends Level {
     this.moveText();
     this.addDrawables(this.tiles, 0);
     this.addOverlayDrawables([this.box]);
-    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS);
+    this.configClouds(this.tilesGrid[0].length * TS, this.tilesGrid.length * TS, .3);
     this.addDrawables(this.clouds, 3);
   }
 
