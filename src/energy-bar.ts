@@ -70,7 +70,7 @@ export default class EnergyBar implements IDrawable {
   }
 
   public draw(context, timestamp) {
-    this.updateLevel(timestamp);
+    updateLevel.call(this, timestamp);
 
     this.box.draw(context, timestamp);
     context.fillStyle = colorMap[1];
@@ -84,18 +84,18 @@ export default class EnergyBar implements IDrawable {
     this.a.level.endLevel = updatedLevel;
     this.a.level.running = true;
   }
+}
 
-  private updateLevel(timestamp) {
-    if (!this.a.level.running) return;
-    const t = (timestamp - this.a.level.startTime) / this.a.level.duration;
+function updateLevel(timestamp) {
+  if (!this.a.level.running) return;
+  const t = (timestamp - this.a.level.startTime) / this.a.level.duration;
 
-    let level = lerp(this.a.level.startLevel, this.a.level.endLevel, t);
+  let level = lerp(this.a.level.startLevel, this.a.level.endLevel, t);
 
-    if (t >= 1) {
-      level = this.a.level.endLevel;
-      this.a.level.running = false;
-    }
-
-    this.percentFull = level;
+  if (t >= 1) {
+    level = this.a.level.endLevel;
+    this.a.level.running = false;
   }
+
+  this.percentFull = level;
 }
