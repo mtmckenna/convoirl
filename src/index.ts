@@ -1,14 +1,12 @@
 /*
 TODO
+  - special buddy logic
+  - can't go forward until all the text is displayed
+  - show you win screen
   - sfx
   - readme
   - panning on convo
-  - special buddy logic
-
   - flashbars when the change
-  - show you win screen
-  - can't go forward until all the text is displayed
-  - fix scroll bug on desktop
 
 BACKBURNER
   - clean up level tiles
@@ -24,16 +22,11 @@ BACKBURNER
 
 SPACE SAVING THOUGHTS
   - make level smaller
-  - make drawingsize a getter? or subclass...
   - might be able to save space by using gameCoordsFrom/gameSizeFrom
   - dedupe some lerp stuff (buddy/energybar)
-  - might be able to remove drawingSize on some things
   - drawingSize for buddy can be hardcoded
   - could reduce common indexes in tiles
-  - try closure
-  - look for private members that can be singletons (all the levels/camera)
-  - maybe remove either levelwillstart or levelstarted?
-  - rename drawingsize?
+  - try closure compiler
 */
 
 import Game from "./game";

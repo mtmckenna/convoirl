@@ -55,9 +55,9 @@ let inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
 let walkingBuddy: Buddy;
 let listenBuddy: Buddy;
 let specialBuddy: Buddy;
+let energyBar: EnergyBar;
 
 export default class World extends Level {
-  public energyBar: EnergyBar; // TODO: needs to be public?
   public currentBuddy: Buddy;
 
   protected tileTypeMap = ["green", "flowers", "grass", "tree", "house", "unwalkable", "door"];
@@ -93,7 +93,7 @@ export default class World extends Level {
     this.handleInput = throttledHandleInput;
 
     this.generateTiles();
-    this.energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
+    energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
 
     box = new Box(this.game, this.game.boxPos(), this.game.boxSize());
     createBuddies.call(this);
@@ -133,8 +133,8 @@ export default class World extends Level {
   }
 
   public resize() {
-    const energyBarX = (this.game.canvas.width - this.energyBar.dSize.w) / 2;
-    this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
+    const energyBarX = (this.game.canvas.width - energyBar.dSize.w) / 2;
+    energyBar.move({ x: energyBarX, y: energyBar.pos.y });
     updateBox.call(this);
   }
 
@@ -156,7 +156,7 @@ export default class World extends Level {
     this.addDables(walkingBuddy.dusts, 1);
     this.addDables([this.game.p], 2);
     this.addDables(buddies, 2);
-    this.addOdables([this.energyBar, box]);
+    this.addOdables([energyBar, box]);
     this.addIables(buddies);
     this.addUables([
       ...this.game.p.dusts,
@@ -171,7 +171,7 @@ export default class World extends Level {
   }
 
   public levelStarted() {
-    this.energyBar.animateToLevel(this.game.p.energy);
+    energyBar.animateToLevel(this.game.p.energy);
     walkingBuddy.move(WB_START_POS);
     this.game.p.move(playerSpawnPosition);
     this.game.p.stop();
@@ -312,7 +312,7 @@ function startConvo(tileIndex: IPoint): boolean {
 
 function sleep() {
   this.game.p.energy = 1;
-  this.energyBar.animateToLevel(this.game.p.energy);
+  energyBar.animateToLevel(this.game.p.energy);
   box.setWords(["", "zzzzzz...", ""]);
   box.animateTextIn(this.game.timestamp);
   box.visible = true;
