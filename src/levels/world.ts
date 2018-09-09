@@ -133,7 +133,7 @@ export default class World extends Level {
   }
 
   public resize() {
-    const energyBarX = (this.game.canvas.width - this.energyBar.drawingSize.width) / 2;
+    const energyBarX = (this.game.canvas.width - this.energyBar.dSize.width) / 2;
     this.energyBar.move({ x: energyBarX, y: this.energyBar.pos.y });
     updateBox.call(this);
   }

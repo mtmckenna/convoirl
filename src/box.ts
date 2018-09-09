@@ -15,7 +15,7 @@ export default class Box implements IFadeable {
   public game: Game;
   public pos: IPoint;
   public size: ISize;
-  public drawingSize: ISize;
+  public dSize: ISize;
   public visible: boolean = true;
   public alpha = 1;
 
@@ -50,7 +50,7 @@ export default class Box implements IFadeable {
 
   public updateSize(updatedSize: ISize) {
     this.size = { height: updatedSize.height, width: updatedSize.width };
-    this.drawingSize = {
+    this.dSize = {
       height: this.size.height * this.game.ss,
       width: this.size.width * this.game.ss,
     };
@@ -60,11 +60,11 @@ export default class Box implements IFadeable {
     const alpha = this.game.transitioning() ? Math.min(this.alpha, this.game.transition.nextLevelAlpha) : this.alpha;
     context.globalAlpha = alpha;
     context.fillStyle = this.color;
-    context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width, this.drawingSize.height);
+    context.fillRect(this.pos.x, this.pos.y, this.dSize.width, this.dSize.height);
     context.strokeStyle = colorMap[1];
     context.fillStyle = colorMap[1];
     context.lineWidth = this.game.ss;
-    context.strokeRect(this.strokePos.x, this.strokePos.y, this.drawingSize.width, this.drawingSize.height);
+    context.strokeRect(this.strokePos.x, this.strokePos.y, this.dSize.width, this.dSize.height);
 
     let indexes = new Array(this.texts.length).fill(0);
 
@@ -105,7 +105,7 @@ function moveTexts() {
   const textHeight = numLines * drawingLetterSize + (numLines - 2) * drawingLineSize;
   this.texts.forEach((text, index) => {
     const x = this.pos.x + this.game.ss * (this.size.width - text.size.width) / 2;
-    const y = this.pos.y + (this.drawingSize.height - textHeight) / 2 + drawingLineSize * index;
+    const y = this.pos.y + (this.dSize.height - textHeight) / 2 + drawingLineSize * index;
     text.move({ x, y });
   });
 }

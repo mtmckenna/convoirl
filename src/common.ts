@@ -39,7 +39,7 @@ export interface IFadeable {
 }
 
 export interface IDrawable extends IPositionable {
-  drawingSize: ISize;
+  dSize: ISize;
   visible: boolean;
   game: Game;
   draw(context: CanvasRenderingContext2D, timestamp: number): void;

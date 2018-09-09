@@ -18,7 +18,7 @@ export default abstract class Level {
   public game: Game;
 
   public size: ISize;
-  public drawingSize: ISize;
+  public dSize: ISize;
 
   public tiles: Tile[];
   public tilesGrid: Tile[][] = [];
@@ -67,7 +67,7 @@ export default abstract class Level {
     const height = this.tileIndexes.length * TS;
 
     this.size = { width, height };
-    this.drawingSize = { width: width * this.game.ss, height: height * this.game.ss };
+    this.dSize = { width: width * this.game.ss, height: height * this.game.ss };
 
     for (let i = 0; i < this.tileIndexes.length; i++) {
       this.tilesGrid.push(new Array(this.tileIndexes[i].length));
@@ -133,7 +133,7 @@ export default abstract class Level {
     const fuzz = 20 * this.game.scaleFactor;
 
     const touched = this.touchables.find((touchable) => {
-      const size = Object.assign({}, touchable.drawingSize);
+      const size = Object.assign({}, touchable.dSize);
       const pos = Object.assign({}, touchable.pos);
       size.width *= this.game.scaleFactor;
       size.height *= this.game.scaleFactor;

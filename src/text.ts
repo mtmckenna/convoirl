@@ -23,7 +23,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   public words: string = "";
   public pixelLetters: any[][]; // Why can't I do number[][] without TS errors?
   public size: ISize;
-  public drawingSize: ISize = { width: 0, height: 0 };
+  public dSize: ISize = { width: 0, height: 0 };
   public pos: IPoint = { x: 0, y: 0 };
   public color: string;
   public visible: boolean = true;
@@ -48,7 +48,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
     // Add up the widths of all the letters + spaces
     const width = maxValues.reduce((total, current) => total += current, 0) + this.pixelLetters.length - 1;
     this.size = { width, height: L_HEIGHT };
-    this.drawingSize = { height: this.size.height * this.game.ss, width: this.size.width * this.game.ss };
+    this.dSize = { height: this.size.height * this.game.ss, width: this.size.width * this.game.ss };
 
     const floatText: IAnimation = {
       duration: 3000,

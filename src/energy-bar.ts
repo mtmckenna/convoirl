@@ -18,7 +18,7 @@ export default class EnergyBar implements IDrawable {
   public game: Game;
   public pos: IPoint = { x: 0, y: 0 };
   public size: ISize;
-  public drawingSize: ISize;
+  public dSize: ISize;
   public visible: boolean = true;
   public percentFull: number = 0;
 
@@ -32,7 +32,7 @@ export default class EnergyBar implements IDrawable {
 
     this.size = Object.assign({}, this.energyText.size);
 
-    this.drawingSize = {
+    this.dSize = {
       height: (this.size.height + 1) * this.game.ss,
       width: (this.size.width + 1) * this.game.ss,
     };
@@ -74,7 +74,7 @@ export default class EnergyBar implements IDrawable {
 
     this.box.draw(context, timestamp);
     context.fillStyle = colorMap[1];
-    context.fillRect(this.pos.x, this.pos.y, this.drawingSize.width * this.percentFull, this.drawingSize.height);
+    context.fillRect(this.pos.x, this.pos.y, this.dSize.width * this.percentFull, this.dSize.height);
     this.energyText.draw(context, timestamp);
   }
 

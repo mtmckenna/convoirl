@@ -7,7 +7,7 @@ import { clerp } from "./helpers";
 export default class Dust implements IDrawable, IFadeable, IUpdateable {
   public game: Game;
 
-  public drawingSize;
+  public dSize;
   public size = { width: 1, height: 1 };
   public pos = { x: 0, y: 0 };
   public color: string = colorMap[1];
@@ -19,7 +19,7 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
 
   constructor(game: Game) {
     this.game = game;
-    this.drawingSize = {
+    this.dSize = {
       height: this.size.height * this.game.ss,
       width: this.size.width * this.game.ss,
     };
@@ -47,10 +47,10 @@ export default class Dust implements IDrawable, IFadeable, IUpdateable {
 
     // TOOO: This sort of makes .drawingSize a lie... maybe make clearer later (haha)?
     context.fillRect(
-      -this.drawingSize.width * size / 2,
-      -this.drawingSize.height * size / 2,
-      this.drawingSize.width * size,
-      this.drawingSize.height * size,
+      -this.dSize.width * size / 2,
+      -this.dSize.height * size / 2,
+      this.dSize.width * size,
+      this.dSize.height * size,
     );
   }
 }

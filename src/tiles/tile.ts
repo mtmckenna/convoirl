@@ -12,7 +12,7 @@ import {
 import { flatten } from "../helpers";
 
 export default class Tile implements IDrawable, IInteractable {
-  public drawingSize = { width: TS, height: TS };
+  public dSize = { width: TS, height: TS };
   public pos = { x: 0, y: 0 };
   public size = { width: TS, height: TS };
   public walkable: boolean = true;
@@ -37,7 +37,7 @@ export default class Tile implements IDrawable, IInteractable {
     this.interactable = TILES[name].hasOwnProperty("interactable") ? TILES[name].interactable : this.interactable;
     this.tileLength = TILES[name].hasOwnProperty("tileLength") ? TILES[name].tileLength : this.tileLength;
 
-    this.drawingSize = {
+    this.dSize = {
       height: this.tileLength * this.game.ss,
       width: this.tileLength * this.game.ss,
     };
@@ -53,8 +53,8 @@ export default class Tile implements IDrawable, IInteractable {
   // canvas than it is to draw each pixel each frame.
   protected cacheOffscreenContext() {
     const offscreenCanvas = document.createElement("canvas");
-    offscreenCanvas.width = this.drawingSize.width;
-    offscreenCanvas.height = this.drawingSize.height;
+    offscreenCanvas.width = this.dSize.width;
+    offscreenCanvas.height = this.dSize.height;
     const offscreenContext = offscreenCanvas.getContext("2d");
 
     const colors = flatten(this.colorMatrix).map((colorIndex) => colorMap[colorIndex]);

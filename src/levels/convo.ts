@@ -277,12 +277,12 @@ function buddyFloatText(floatBuddy, word, color) {
   const text = new Text(this.game, word, color);
   text.buddy = floatBuddy;
 
-  const boxPosY = this.boxPosY * this.game.ss + this.game.player.drawingSize.height / 2 ;
-  const startPos = { x: box.pos.x + this.game.player.drawingSize.width / 2, y: boxPosY };
+  const boxPosY = this.boxPosY * this.game.ss + this.game.player.dSize.height / 2 ;
+  const startPos = { x: box.pos.x + this.game.player.dSize.width / 2, y: boxPosY };
   const endPos = { x: this.game.canvas.width, y: -L_HEIGHT };
 
   if (floatBuddy !== this.game.player) {
-    startPos.x +=  box.drawingSize.width - text.drawingSize.width - this.game.player.drawingSize.width;
+    startPos.x +=  box.dSize.width - text.dSize.width - this.game.player.dSize.width;
     endPos.x = 0;
   }
 
@@ -310,7 +310,7 @@ function moveBuddies() {
   buddy.size.width / 2 -
   cameraOffset / this.game.ss;
 
-  const buddyX = boxPosX + box.drawingSize.width / this.game.ss - buddy.size.width / 2;
+  const buddyX = boxPosX + box.dSize.width / this.game.ss - buddy.size.width / 2;
   const playerPos = { x: boxPosX + this.game.player.size.width / 2, y: this.boxPosY };
 
   buddy.move({ x: buddyX, y: playerPos.y });
@@ -322,25 +322,25 @@ function updateBoxes() {
   box.move({ x: this.game.boxPos().x, y });
   box.updateSize(this.game.boxSize());
   const barWidth =
-  energyBar.drawingSize.width +
-  convoBar.drawingSize.width +
+  energyBar.dSize.width +
+  convoBar.dSize.width +
   BAR_SPACING * this.game.ss;
 
   const energyX = (this.game.canvas.width - barWidth) / 2;
   energyBar.move({ x: energyX, y: energyBar.pos.y });
 
-  const convoX = energyBar.pos.x + energyBar.drawingSize.width + BAR_SPACING * this.game.ss;
+  const convoX = energyBar.pos.x + energyBar.dSize.width + BAR_SPACING * this.game.ss;
   convoBar.move({ x: convoX, y: convoBar.pos.y });
 }
 
 function updateText() {
   const spacing = ARROW_SPACING * this.game.ss;
   const upX = box.pos.x +
-  box.drawingSize.width -
-  upArrow.drawingSize.width -
+  box.dSize.width -
+  upArrow.dSize.width -
   spacing;
 
-  const upY = box.pos.y + box.drawingSize.height / 2 - upArrow.drawingSize.height / 2;
+  const upY = box.pos.y + box.dSize.height / 2 - upArrow.dSize.height / 2;
   const downX = box.pos.x + spacing;
   const downY = upY;
 
@@ -353,12 +353,12 @@ function updateText() {
     skill.alpha = indexDiff === 0 && !waiting ? 1 : D_ALPHA;
 
     const skillX = box.pos.x +
-      box.drawingSize.width / 2 -
-      skill.drawingSize.width / 2;
+      box.dSize.width / 2 -
+      skill.dSize.width / 2;
 
     const skillY = box.pos.y +
-      box.drawingSize.height / 2 -
-      skill.drawingSize.height / 2 +
+      box.dSize.height / 2 -
+      skill.dSize.height / 2 +
       indexDiff * L_SPACE * this.game.ss;
 
     skill.move({ x: skillX, y: skillY });

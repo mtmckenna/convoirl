@@ -200,7 +200,7 @@ function drawDrawables(timestamp: number) {
       const x = drawable.pos.x * this.ss + offset.x;
       const y = drawable.pos.y * this.ss + offset.y;
 
-      if (isOffScreen.call(this, x, y, drawable.drawingSize)) return;
+      if (isOffScreen.call(this, x, y, drawable.dSize)) return;
 
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
@@ -229,10 +229,10 @@ function drawDrawables(timestamp: number) {
   }
 }
 
-function isOffScreen(x: number, y: number, drawingSize: ISize) {
-  return x + drawingSize.width < 0 ||
+function isOffScreen(x: number, y: number, dSize: ISize) {
+  return x + dSize.width < 0 ||
     x > this.canvas.width ||
-    y + drawingSize.height < 0 ||
+    y + dSize.height < 0 ||
     y > this.canvas.height;
 }
 

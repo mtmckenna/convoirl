@@ -30,7 +30,7 @@ const COLORS = ["#94725d", "#bfa17a", "#eeeec7", "#5a444e", "#cd9957", "#3e2d2e"
 
 export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   public game: Game;
-  public drawingSize: ISize;
+  public dSize: ISize;
   public pos: IPoint = { x: 0, y: 0 };
   public size: ISize = { height: TS, width: TS };
   public visible: boolean = true;
@@ -77,7 +77,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     this.color = COLORS[randomIndex(COLORS)];
     this.dusts = Array.from(Array(50).keys()).map(() => new Dust(this.game));
-    this.drawingSize = {
+    this.dSize = {
       height: TS * this.game.ss,
       width: TS * this.game.ss,
     };
@@ -104,15 +104,15 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.squareSize = this.game.ss;
     this.size.width = TS;
     this.size.height = TS;
-    this.drawingSize.width = this.size.width * this.game.ss;
-    this.drawingSize.height = this.size.height * this.game.ss;
+    this.dSize.width = this.size.width * this.game.ss;
+    this.dSize.height = this.size.height * this.game.ss;
 
     if (inConvoMode) {
       this.squareSize *= 2;
       this.size.width *= 2;
       this.size.height *= 2;
-      this.drawingSize.width *= 2;
-      this.drawingSize.height *= 2;
+      this.dSize.width *= 2;
+      this.dSize.height *= 2;
       this.a.walking.tw = 0;
     } else {
       this.talking = false;
@@ -207,21 +207,21 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
   }
 
   public draw(context, timestamp) {
-    context.translate(this.drawingSize.width / 2, this.drawingSize.height / 2);
+    context.translate(this.dSize.width / 2, this.dSize.height / 2);
     context.rotate(this.rot);
-    context.translate(-this.drawingSize.width / 2, -this.drawingSize.height / 2);
+    context.translate(-this.dSize.width / 2, -this.dSize.height / 2);
 
     // Main body
     context.fillStyle = this.color;
-    context.fillRect(0, 0, this.drawingSize.width, this.drawingSize.height);
+    context.fillRect(0, 0, this.dSize.width, this.dSize.height);
 
     // Trail
     const trail = this.a.walking.tw / this.a.walking.duration;
-    const gradient = context.createLinearGradient(0, this.drawingSize.height, 0, this.drawingSize.height * 1.5);
+    const gradient = context.createLinearGradient(0, this.dSize.height, 0, this.dSize.height * 1.5);
     gradient.addColorStop(0, this.color);
     gradient.addColorStop(trail, "rgba(150, 192, 131, 0)"); // grass color in rgba
     context.fillStyle = gradient;
-    context.fillRect(0, 0, this.drawingSize.width, 1.5 * this.drawingSize.height);
+    context.fillRect(0, 0, this.dSize.width, 1.5 * this.dSize.height);
 
     // Eyes
     maybeDoEyeAnimations.call(this, timestamp);

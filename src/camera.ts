@@ -41,17 +41,17 @@ export default class Camera implements IPositionable {
   public moveToPlayer(drawable: IDrawable): void {
     this.pos.x = game.canvas.width / 2 -
       drawable.pos.x * game.ss -
-      drawable.drawingSize.width / 2;
+      drawable.dSize.width / 2;
 
     this.pos.y = game.canvas.height / 2 -
       drawable.pos.y * game.ss -
-      drawable.drawingSize.height / 2;
+      drawable.dSize.height / 2;
 
     // Stop camera at edges of level size
     const leftStop = 0;
-    const rightStop = -1 * (game.currentLevel.drawingSize.width - this.size.width);
+    const rightStop = -1 * (game.currentLevel.dSize.width - this.size.width);
     const topStop = 0;
-    const bottomStop = -1 * (game.currentLevel.drawingSize.height - this.size.height);
+    const bottomStop = -1 * (game.currentLevel.dSize.height - this.size.height);
     if (this.pos.x > leftStop) this.pos.x = leftStop;
     if (this.pos.x < rightStop) this.pos.x = rightStop;
     if (this.pos.y > topStop) this.pos.y = topStop;
