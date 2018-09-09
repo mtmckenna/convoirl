@@ -43,7 +43,7 @@ export default class StartScreen extends Level {
   }
 
   public levelStarted() {
-    window.setTimeout(() => this.box.aniText(this.game.timestamp), 200);
+    window.setTimeout(() => this.box.aniText(this.game.tstamp), 200);
   }
 
   public handleInput() {

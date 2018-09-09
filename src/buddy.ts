@@ -177,7 +177,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
   public configureWalkingAnimation(startPos, endPos) {
     const { walking } = this.a;
-    walking.startTime = this.game.timestamp;
+    walking.startTime = this.game.tstamp;
     walking.endPos = endPos;
     walking.startPos = startPos;
     walking.running = true;
@@ -318,7 +318,7 @@ function drawEye(context, whichOne, openness, lookAwayOffset) {
 }
 
 function canMoveToPosition(position: IPoint): boolean {
-  const level = this.game.currentLevel;
+  const level = this.game.cl;
   const inMap = position.x >= 0 &&
     position.x <= level.size.w - this.size.w &&
     position.y >= 0 &&

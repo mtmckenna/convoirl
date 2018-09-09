@@ -122,7 +122,7 @@ export default class World extends Level {
   public handleInput(key) {
     if (this.game.inTr()) return;
     if (handleBoxInput.call(this)) return;
-    inputBuffer = { pressedAt: this.game.timestamp, key };
+    inputBuffer = { pressedAt: this.game.tstamp, key };
   }
 
   public handleTouch(touch) {
@@ -212,8 +212,8 @@ export default class World extends Level {
       case "post-listen":
       case "post-convo":
         learnFromConvo.call(this);
-        this.currentBuddy.lastConvo = this.game.timestamp;
-        this.game.p.lastConvo = this.game.timestamp;
+        this.currentBuddy.lastConvo = this.game.tstamp;
+        this.game.p.lastConvo = this.game.tstamp;
         break;
     }
 
@@ -268,7 +268,7 @@ function handleBoxInput(): boolean {
       showWinBox();
       if (TEXT_WIN.length === 0) {
         this.state = "game-over";
-        gameOverStartTime = this.game.timestamp;
+        gameOverStartTime = this.game.tstamp;
         shadeBox.game = this.game;
         shadeBox.size = Object.assign({}, this.size);
         shadeBox.dSize = Object.assign({}, this.dSize);
@@ -290,7 +290,7 @@ function showBox(textArray): boolean {
 
   box.visible = true;
   box.setWords(words);
-  box.aniText(this.game.timestamp);
+  box.aniText(this.game.tstamp);
   textArray.shift();
   return false;
 }
@@ -310,7 +310,7 @@ function learnFromConvo() {
     box.setWords(["nice convo!", "that was a", "good time!"]);
   }
 
-  box.aniText(this.game.timestamp);
+  box.aniText(this.game.tstamp);
 }
 
 function updateBox() {
@@ -325,7 +325,7 @@ function startConvo(tileIndex: IPoint): boolean {
       interactable.tileIndex.y === tileIndex.y;
   });
 
-  if (overlappedInteractable && (this.game.timestamp - overlappedInteractable.lastConvo) > 1000) {
+  if (overlappedInteractable && (this.game.tstamp - overlappedInteractable.lastConvo) > 1000) {
     this.currentBuddy = overlappedInteractable as Buddy;
     playerSpawnPosition.x = this.game.p.pos.x;
     playerSpawnPosition.y = this.game.p.pos.y;
@@ -340,7 +340,7 @@ function sleep() {
   this.game.p.energy = 1;
   energyBar.animateToLevel(this.game.p.energy);
   box.setWords(["", "zzzzzz...", ""]);
-  box.aniText(this.game.timestamp);
+  box.aniText(this.game.tstamp);
   box.visible = true;
   this.state = "sleeping";
 }
@@ -414,7 +414,7 @@ function createBuddies() {
 // This function is gigantic not because I'm a bad person but because
 // I needed to de-dupe the switch statements to save space.
 function processInput(): boolean {
-  const timeSinceInput = this.game.timestamp - inputBuffer.pressedAt;
+  const timeSinceInput = this.game.tstamp - inputBuffer.pressedAt;
   if (timeSinceInput > 30) return false; // For input buffering
   if (this.game.p.walking) return false;
 
@@ -459,7 +459,7 @@ const shadeBox: IDrawable & IFadeable = {
   dSize: { w: 0, h: 0 },
   draw: function(context) {
     context.fillStyle = colorMap[0];
-    context.globalAlpha = Math.min((this.game.timestamp - gameOverStartTime) / 2000, .8);
+    context.globalAlpha = Math.min((this.game.tstamp - gameOverStartTime) / 2000, .8);
     context.fillRect(0, 0, this.dSize.w, this.dSize.h);
   },
   game: null,

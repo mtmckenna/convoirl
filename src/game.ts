@@ -38,8 +38,8 @@ let imageOfPreviousLevel: HTMLImageElement = null;
 export default class Game {
   public c: Camera;
   public canvas: HTMLCanvasElement;
-  public currentLevel: Level;
-  public timestamp: number = 0;
+  public cl: Level;
+  public tstamp: number = 0;
   public levels: { [key: string]: Level; };
   public p: Buddy;
   public ss: number = SQUARE_SIZE;
@@ -86,14 +86,14 @@ export default class Game {
 
   public update(timestamp) {
     if (!booted) {
-      this.timestamp = timestamp;
+      this.tstamp = timestamp;
       switchLevel.call(this, this.levels.startScreen);
       this.resize();
       booted = true;
     }
 
-    this.timestamp = timestamp;
-    this.currentLevel.update(timestamp);
+    this.tstamp = timestamp;
+    this.cl.update(timestamp);
 
     if (this.inTr()) updateTransition.call(this, timestamp);
   }
@@ -124,7 +124,7 @@ export default class Game {
     this.c.size = { w: this.canvas.width, h: this.canvas.height };
 
     setSize.call(this);
-    if (this.currentLevel) this.currentLevel.resize();
+    if (this.cl) this.cl.resize();
   }
 
   public qLevel(updatedLevel: Level, state?: string) {
@@ -139,11 +139,11 @@ export default class Game {
 
   // TODO: what's the best typescripty way of setting this event?
   public handleInput(event) {
-    this.currentLevel.handleInput(event.key);
+    this.cl.handleInput(event.key);
   }
 
   public handleTouch(touch: Touch) {
-    this.currentLevel.handleTouch(touch);
+    this.cl.handleTouch(touch);
   }
 
   public sizeInTiles(): ISize {
@@ -154,7 +154,7 @@ export default class Game {
 }
 
 function startTransition() {
-  transition.startTime = this.timestamp;
+  transition.startTime = this.tstamp;
   transition.running = true;
   imageOfPreviousLevel = new Image();
   imageOfPreviousLevel.src = this.canvas.toDataURL("png");
@@ -180,15 +180,15 @@ function updateTransition(timestamp) {
 }
 
 function switchLevel(updatedLevel) {
-  this.currentLevel = updatedLevel;
-  this.currentLevel.levelWillStart();
-  this.currentLevel.configViz();
-  this.currentLevel.levelStarted();
+  this.cl = updatedLevel;
+  this.cl.levelWillStart();
+  this.cl.configViz();
+  this.cl.levelStarted();
 }
 
 function drawDrawables(timestamp: number) {
   const offset = this.c.offset;
-  this.currentLevel.dables.forEach((drawablesAtZIndex) => {
+  this.cl.dables.forEach((drawablesAtZIndex) => {
     drawablesAtZIndex.forEach((drawable) => {
       // the !drawable is a hack to help reduce file size on levels with generated tiles
       if (!drawable || !drawable.visible) return;
@@ -233,7 +233,7 @@ function isOffScreen(x: number, y: number, dSize: ISize) {
 
 function drawOverlayDrawables(timestamp: number) {
   if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
-  this.currentLevel.odables.forEach((drawable) => {
+  this.cl.odables.forEach((drawable) => {
     if (!drawable.visible) return;
     drawable.draw(context, timestamp);
   });
@@ -243,6 +243,6 @@ function drawOverlayDrawables(timestamp: number) {
 
 function clearCanvasContext(): void {
   if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
-  context.fillStyle = this.currentLevel.bgColor;
+  context.fillStyle = this.cl.bgColor;
   context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }

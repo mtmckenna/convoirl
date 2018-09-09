@@ -79,7 +79,7 @@ export default class EnergyBar implements IDrawable {
   }
 
   public animateToLevel(updatedLevel) {
-    this.a.level.startTime = this.game.timestamp;
+    this.a.level.startTime = this.game.tstamp;
     this.a.level.startLevel = this.percentFull;
     this.a.level.endLevel = updatedLevel;
     this.a.level.running = true;

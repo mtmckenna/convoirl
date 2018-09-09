@@ -110,7 +110,7 @@ export default class Text implements ITouchable, IFadeable, IUpdateable {
   }
 
   public startFloat(startPos: IPoint, endPos: IPoint) {
-    this.a.floatText.startTime = this.game.timestamp;
+    this.a.floatText.startTime = this.game.tstamp;
     this.a.floatText.startPos = { x: startPos.x, y: startPos.y - this.size.h };
     this.a.floatText.endPos = { x: endPos.x, y: endPos.y };
     this.a.floatText.running = true;

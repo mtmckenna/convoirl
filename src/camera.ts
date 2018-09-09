@@ -49,9 +49,9 @@ export default class Camera implements IPositionable {
 
     // Stop camera at edges of level size
     const leftStop = 0;
-    const rightStop = -1 * (game.currentLevel.dSize.w - this.size.w);
+    const rightStop = -1 * (game.cl.dSize.w - this.size.w);
     const topStop = 0;
-    const bottomStop = -1 * (game.currentLevel.dSize.h - this.size.h);
+    const bottomStop = -1 * (game.cl.dSize.h - this.size.h);
     if (this.pos.x > leftStop) this.pos.x = leftStop;
     if (this.pos.x < rightStop) this.pos.x = rightStop;
     if (this.pos.y > topStop) this.pos.y = topStop;
