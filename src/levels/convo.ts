@@ -42,6 +42,8 @@ let upArrow: Text;
 let waiting: boolean = false;
 let multiplier: number = 1;
 let lastBuddyTopic: number = null;
+let reactTimeout: number = null;
+let buddyTimeout: number = null;
 
 export default class Convo extends Level {
   public bgColor = colorMap[9];
@@ -123,7 +125,11 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
 
-    waiting = floatiesInArray(this.odables).length > 0 || this.game.transitioning();
+    // console.log(buddyTimeout, reactTimeout);
+    waiting = floatiesInArray(this.odables).length > 0 ||
+    this.game.transitioning() ||
+    !!buddyTimeout ||
+    !!reactTimeout;
 
     // Don't win or lose if we're still animating
     if (!doneAnimating(this.odables)) return;
@@ -223,18 +229,19 @@ function useSelectedSkill() {
   const skillIndex = currentSkillIndex;
   buddyExecuteSkillIndex.call(this, this.game.p, skillIndex);
 
-  setTimeout(() => react.call(this, skillIndex), 2000);
+  reactTimeout = setTimeout(() => react.call(this, skillIndex), 2000);
 
   // If we're at the listenbuddy for the first time, just have them do listen
   let buddySkillIndex = buddy.skills.indexOf(LISTEN);
 
   if (this.game.p.skills.length !== 1) buddySkillIndex = randomIndex(buddy.skills);
 
-  setTimeout(() => buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex), 4500);
+  buddyTimeout = setTimeout(() => buddyExecuteSkillIndex.call(this, buddy, buddySkillIndex), 4500);
 }
 
 function react(skillIndex) {
   const skill = this.game.p.skills[skillIndex];
+  reactTimeout = null;
 
   // If haven't learend listen yet
   if (this.game.p.skills.length === 1) {
@@ -304,6 +311,7 @@ function buddyFloatText(floatBuddy, word, color) {
 }
 
 function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
+  if (skillBuddy === buddy) buddyTimeout = null;
   if (convoLevel >= 1 || this.game.p.energy <= 0) return;
   const skill = skillBuddy.skills[skillIndex];
   const color = skill === LISTEN ? colorMap[9] : colorMap[1];
@@ -357,6 +365,7 @@ function updateText() {
   skills.forEach((skill, index) => {
     const indexDiff = currentSkillIndex - index;
 
+    // Appear selectable if it's the current index and we're not waiting
     skill.alpha = indexDiff === 0 && !waiting ? 1 : D_ALPHA;
 
     const skillX = box.pos.x +
