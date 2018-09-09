@@ -24,7 +24,7 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   public name: string;
   public alpha = 1.0;
   public speed?: number;
-  public levelWidth?: number;
+  public lWidth?: number;
 
   protected tileLength: number = TS;
   protected cMatrix: number[][];
@@ -57,7 +57,7 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   }
 
   public moveleft() {
-    this.pos.x = (this.pos.x + this.size.width) < 0 ? this.levelWidth : this.pos.x - .005 * this.speed);
+    this.pos.x = (this.pos.x + this.size.width) < 0 ? this.lWidth : this.pos.x - .005 * this.speed;
   }
 
   // It's faster to draw the tile as an image from an offscreen

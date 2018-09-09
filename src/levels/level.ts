@@ -71,7 +71,7 @@ export default abstract class Level {
       cloud.pos.y = randomNumBetween(0, height);
       cloud.speed = randomNumBetween(.2, 1.0);
       cloud.alpha = .8;
-      cloud.levelWidth = width;
+      cloud.lWidth = width;
       this.clouds.push(cloud);
     }
   }

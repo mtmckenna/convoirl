@@ -1,7 +1,5 @@
 import Game from "./game";
 
-import Tile from "../tiles/tile"
-
 export interface IPoint {
   x: number;
   y: number;
