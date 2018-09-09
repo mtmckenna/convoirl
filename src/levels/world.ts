@@ -60,6 +60,10 @@ const TOPICS = [
 const SECONDARY_TOPICS = TOPICS.slice();
 const playerSpawnPosition: IPoint = { x: TS * 4, y: TS * 6 };
 
+let showNextIntroBox;
+let showPostListenBox;
+let showWinBox;
+
 let buddies: Buddy[];
 let box: Box;
 let inputBuffer: IInputBuffer = { pressedAt: 0, key: null };
@@ -98,6 +102,10 @@ export default class World extends Level {
 
   constructor(game: Game) {
     super(game);
+    showNextIntroBox = () => showBox(TEXT_INTROS);
+    showPostListenBox = () => showBox(TEXT_FIRST_CONVO);
+    showWinBox = () => showBox(TEXT_WIN);
+
     this.state = "intro";
     const throttledHandleTouch = throttle(this.handleTouch.bind(this), T_TIME);
     const throttledHandleInput = throttle(this.handleInput.bind(this), T_TIME);
@@ -191,14 +199,15 @@ export default class World extends Level {
 
     switch (this.state) {
       case "intro":
-        showNextIntroBox.call(this);
+        showNextIntroBox();
         break;
       case "nap":
         this.game.p.move(SLEEP_POS);
         sleep.call(this);
         break;
       case "win":
-        showWinBox.call(this);
+        this.game.p.energy = 1;
+        showWinBox();
         break;
       case "post-listen":
       case "post-convo":
@@ -230,6 +239,7 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
+  let done = false;
 
   switch (this.state) {
     case "sleeping":
@@ -243,69 +253,46 @@ function handleBoxInput(): boolean {
       break;
     // TODO: might be able to dry up these handleInputbox calls
     case "post-listen":
-      showPostListenBox.call(this);
+      done = showPostListenBox();
+      if (done) {
+        this.state = "play";
+        listenBuddy.walk("right");
+        listenBuddy.look("left");
+      }
       break;
     case "intro":
-      showNextIntroBox.call(this);
+      done = showNextIntroBox();
+      if (done) this.state = "play";
       break;
     case "win":
-      showWinBox.call(this);
+      showWinBox();
+      if (TEXT_WIN.length === 0) {
+        this.state = "game-over";
+        gameOverStartTime = this.game.timestamp;
+        shadeBox.game = this.game;
+        shadeBox.size = Object.assign({}, this.size);
+        shadeBox.dSize = Object.assign({}, this.dSize);
+        this.addDables([shadeBox], 3);
+      }
       break;
   }
 
   return true;
 }
 
-// TODO: might be able to save space by consolidating these methods
-function showPostListenBox() {
-  const words = TEXT_FIRST_CONVO[0];
+function showBox(textArray): boolean {
+  const words = textArray[0];
+
   if (!words) {
-    this.state = "play";
     box.visible = false;
-    listenBuddy.walk("right");
-    listenBuddy.look("left");
-    return;
+    return true;
   }
 
   box.visible = true;
   box.setWords(words);
-  box.animateTextIn(this.game.timestamp);
-  TEXT_FIRST_CONVO.shift();
-}
-
-function showNextIntroBox() {
-  const words = TEXT_INTROS[0];
-  if (!words) {
-    this.state = "play";
-    box.visible = false;
-    return;
-  }
-
-  box.visible = true;
-  box.setWords(words);
-  box.animateTextIn(this.game.timestamp);
-  TEXT_INTROS.shift();
-}
-
-function showWinBox() {
-  const words = TEXT_WIN[0];
-  if (!words) return;
-
-  box.visible = true;
-  box.setWords(words);
-  box.animateTextIn(this.game.timestamp);
-  TEXT_WIN.shift();
-
-  if (TEXT_WIN.length === 0) {
-    this.state = "game-over";
-    gameOverStartTime = this.game.timestamp;
-    shadeBox.game = this.game;
-    shadeBox.size.w = this.size.w;
-    shadeBox.size.h = this.size.h;
-    shadeBox.dSize.w = shadeBox.size.w * this.game.ss;
-    shadeBox.dSize.h = shadeBox.size.h * this.game.ss;
-    this.addDables([shadeBox], 3);
-  }
+  box.aniText(this.game.timestamp);
+  textArray.shift();
+  return false;
 }
 
 function learnFromConvo() {
@@ -323,7 +310,7 @@ function learnFromConvo() {
     box.setWords(["nice convo!", "that was a", "good time!"]);
   }
 
-  box.animateTextIn(this.game.timestamp);
+  box.aniText(this.game.timestamp);
 }
 
 function updateBox() {
@@ -353,7 +340,7 @@ function sleep() {
   this.game.p.energy = 1;
   energyBar.animateToLevel(this.game.p.energy);
   box.setWords(["", "zzzzzz...", ""]);
-  box.animateTextIn(this.game.timestamp);
+  box.aniText(this.game.timestamp);
   box.visible = true;
   this.state = "sleeping";
 }

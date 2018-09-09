@@ -87,7 +87,7 @@ export default class Box implements IFadeable {
     moveTexts.call(this);
   }
 
-  public animateTextIn(time: number) {
+  public aniText(time: number) {
     this.startTime = time;
   }
 }
