@@ -247,7 +247,7 @@ function react(skillIndex) {
     if (skill === LISTEN) {
       updateBars.call(this, -.1, .25);
     } else if (lastBuddyTopic === skill) {
-      goodReaction.call(this, -.15, .50);
+      greatReaction.call(this, -.15, .50);
     } else if (buddy.skills.includes(skill)) {
       goodReaction.call(this, -.1, .34);
     } else {
@@ -257,6 +257,14 @@ function react(skillIndex) {
 
   convoBar.animateToLevel(convoLevel);
   energyBar.animateToLevel(this.game.p.energy);
+}
+
+function greatReaction(energyIncrement, convoIncrement) {
+  const textFunc = () => buddyFloatText.call(this, buddy, "totally!", colorMap[2]);
+  textFunc();
+  window.setTimeout(textFunc, 500);
+  window.setTimeout(textFunc, 1000);
+  updateBars.call(this, energyIncrement, convoIncrement);
 }
 
 function goodReaction(energyIncrement, convoIncrement) {

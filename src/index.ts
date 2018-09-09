@@ -2,11 +2,8 @@
 TODO
   - sfx
   - readme
-  - clouds
   - panning on convo
-  - logic for when someone runs out of energy
   - special buddy logic
-  - some way to know you selected the right thing (fireworks? change color of sky)
   - can touch on non selected texts
   - fix walking buddy collision stuff
   - fix walking backwards guy
