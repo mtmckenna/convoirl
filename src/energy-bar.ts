@@ -27,7 +27,7 @@ export default class EnergyBar implements IDrawable {
 
   constructor(game: Game, pos: IPoint, word: string) {
     this.game = game;
-    this.energyText = new Text(this.game, word, colorMap[7]);
+    this.energyText = new Text(this.game, word, colorMap[1]);
     this.energyText.shadow = false;
 
     this.size = Object.assign({}, this.energyText.size);
@@ -38,7 +38,7 @@ export default class EnergyBar implements IDrawable {
     };
 
     const boxSize = { h: this.size.h + 1, w: this.size.w + 1 };
-    this.box = new Box(game, pos, boxSize, colorMap[7]);
+    this.box = new Box(game, pos, boxSize, colorMap[10]);
 
     const level: IAnimation = {
       duration: 1000,
@@ -73,8 +73,16 @@ export default class EnergyBar implements IDrawable {
     updateLevel.call(this, timestamp);
 
     this.box.draw(context, timestamp);
-    context.fillStyle = colorMap[1];
-    context.fillRect(this.pos.x, this.pos.y, this.dSize.w * this.percentFull, this.dSize.h);
+    context.fillStyle = colorMap[7]; // green
+    // console.log(this.percentFull)
+    context.fillRect(
+      Math.floor(this.pos.x + .5),
+      Math.floor(this.pos.y + .5),
+      Math.floor(this.dSize.w * this.percentFull - .5),
+      Math.floor(this.dSize.h - .5),
+    );
+    // context.fillStyle = colorMap[10]; // red
+    // context.fillRect(this.pos.x + this.size.w * this.percentFull, this.pos.y, 1 - this.percentFull, this.dSize.h);
     this.energyText.draw(context, timestamp);
   }
 

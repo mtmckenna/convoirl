@@ -1,7 +1,11 @@
 /*
 TODO
-  - special buddy logic
   - sfx
+  - red energy bar
+  - energy bar width
+  - intro text
+  - outro text
+  - overlap
   - readme
 
 BACKBURNER
