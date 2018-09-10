@@ -238,7 +238,7 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
-  // if (box.ani) return true;
+  if (box.ani) return true;
   let done = false;
 
   switch (this.state) {
@@ -325,7 +325,7 @@ function startConvo(tileIndex: IPoint): boolean {
       interactable.tileIndex.y === tileIndex.y;
   });
 
-  if (overlappedInteractable && (this.game.tstamp - overlappedInteractable.lastConvo) > 1000) {
+  if (overlappedInteractable && (this.game.tstamp - overlappedInteractable.lastConvo) > 1000 && !box.visible) {
     this.currentBuddy = overlappedInteractable as Buddy;
     playerSpawnPosition.x = this.game.p.pos.x;
     playerSpawnPosition.y = this.game.p.pos.y;

@@ -27,7 +27,7 @@ const BUDDY_Y_FROM_BOX = 4;
 const ARROW_SPACING = 2;
 const BAR_SPACING = 3;
 const D_ALPHA = .5;
-const SB_MULT = .2;
+const SB_MULT = .35;
 
 let box: Box;
 let buddies: Buddy[];
