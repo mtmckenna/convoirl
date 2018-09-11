@@ -74,15 +74,12 @@ export default class EnergyBar implements IDrawable {
 
     this.box.draw(context, timestamp);
     context.fillStyle = colorMap[7]; // green
-    // console.log(this.percentFull)
     context.fillRect(
-      Math.floor(this.pos.x + .5),
-      Math.floor(this.pos.y + .5),
-      Math.floor(this.dSize.w * this.percentFull - .5),
-      Math.floor(this.dSize.h - .5),
+      Math.ceil(this.pos.x + 1),
+      Math.ceil(this.pos.y + 1),
+      Math.floor(Math.max(this.dSize.w * this.percentFull - 2, 0)),
+      Math.floor(this.dSize.h - 2),
     );
-    // context.fillStyle = colorMap[10]; // red
-    // context.fillRect(this.pos.x + this.size.w * this.percentFull, this.pos.y, 1 - this.percentFull, this.dSize.h);
     this.energyText.draw(context, timestamp);
   }
 

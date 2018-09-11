@@ -6,6 +6,7 @@ TODO
   - intro text
   - outro text
   - overlap
+  - passive listener
   - readme
 
 BACKBURNER
