@@ -332,7 +332,8 @@ function startConvo(tileIndex: IPoint): boolean {
     return true;
   }
 
-  return false;
+  // Still don't want the player to move if there's an interactable in the way
+  return !!overlappedInteractable;
 }
 
 function sleep() {

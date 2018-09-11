@@ -1,8 +1,6 @@
 /*
 TODO
   - sfx
-  - overlap
-  - turn off buttons when waiting
   - readme
 
 BACKBURNER
