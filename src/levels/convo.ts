@@ -208,12 +208,7 @@ function moveSkillCursor(amountToMoveBy) {
   const updatedIndex = currentSkillIndex + amountToMoveBy;
   const skill = skills[updatedIndex] || skills[currentSkillIndex];
   currentSkillIndex = skills.indexOf(skill);
-  downArrow.alpha = 1;
-  upArrow.alpha = 1;
   skills.forEach((s) => s.alpha = D_ALPHA);
-
-  if (currentSkillIndex === 0) downArrow.alpha = D_ALPHA;
-  if (currentSkillIndex === skills.length - 1) upArrow.alpha = D_ALPHA;
 }
 
 function updateConvoLevel(increment: number) {
@@ -363,6 +358,9 @@ function updateText() {
 
   upArrow.move({ x: upX, y: upY });
   downArrow.move({ x: downX, y: downY });
+
+  downArrow.alpha = (currentSkillIndex === 0 || waiting) ? D_ALPHA : 1;
+  upArrow.alpha = (currentSkillIndex === skills.length - 1 || waiting) ? D_ALPHA : 1;
 
   skills.forEach((skill, index) => {
     const indexDiff = currentSkillIndex - index;
