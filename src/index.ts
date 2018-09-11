@@ -1,12 +1,8 @@
 /*
 TODO
   - sfx
-  - red energy bar
-  - energy bar width
-  - intro text
-  - outro text
   - overlap
-  - passive listener
+  - turn off buttons when waiting
   - readme
 
 BACKBURNER
@@ -77,5 +73,6 @@ window.onmousedown = handleTouchDown;
 window.ontouchstart = handleTouchDown;
 window.onmouseup = handleTouchUp;
 window.ontouchend = handleTouchUp;
-window.onmousemove = handleTouchMove;
+
+window.addEventListener("onmousemove", handleTouchMove, { passive: false });
 window.addEventListener("touchmove", handleTouchMove, { passive: false });
