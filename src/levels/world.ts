@@ -42,7 +42,6 @@ const TEXT_WIN = [
   ["maybe you", "will become", "best buds!"],
   ["be kind to", "your friends", "because"],
   ["every quest", "is better", "with friends!"],
-  ["", "game over", ""],
 ];
 
 const WB_START_POS = { x: TS * 18, y: TS * 7 };
