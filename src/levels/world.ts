@@ -155,7 +155,8 @@ export default class World extends Level {
   public resize() {
     const energyBarX = (this.game.canvas.width - energyBar.dSize.w) / 2;
     energyBar.move({ x: energyBarX, y: energyBar.pos.y });
-    updateBox.call(this);
+    box.move(this.game.boxPos());
+    box.updateSize(BS);
   }
 
   public update(timestamp) {
@@ -305,11 +306,6 @@ function learnFromConvo() {
   }
 
   box.aniText(this.game.tstamp);
-}
-
-function updateBox() {
-  box.move(this.game.boxPos());
-  box.updateSize(BS);
 }
 
 function startConvo(tileIndex: IPoint): boolean {
