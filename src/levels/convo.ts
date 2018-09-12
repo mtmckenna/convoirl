@@ -1,4 +1,5 @@
 import Level from "./level";
+import World from "./world";
 
 import Box from "../box";
 import Buddy from "../buddy";
@@ -88,13 +89,12 @@ export default class Convo extends Level {
     const touched = touchedTouchable.call(this, touch);
     if (touched) touched.touched();
   }
-
-  public setBuddy(updatedBuddy: Buddy) {
-    buddy = updatedBuddy;
-    buddy.setConvoMode(true, "left");
-  }
-
   public levelWillStart() {
+    // Grab buddy for world level... would rather do this in game,
+    // but I need to save the function call for space reasons.
+    buddy = (this.game.levels.world as World).currentBuddy.copy();
+    buddy.setConvoMode(true, "left");
+
     waiting = false;
     this.game.p.setConvoMode(true, "right");
     convoLevel = 0;

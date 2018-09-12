@@ -156,10 +156,6 @@ export default class Game {
   }
 
   public qLevel(updatedLevel: Level, state?: string) {
-    if (updatedLevel === this.levels.convo) {
-      const { convo, world } = this.levels;
-      (convo as Convo).setBuddy((world as World).currentBuddy.copy());
-    }
     nextLevel = updatedLevel;
     if (state) nextLevel.state = state;
     startTransition.call(this);
