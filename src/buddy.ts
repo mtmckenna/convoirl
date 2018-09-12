@@ -333,7 +333,7 @@ function canMoveToPosition(position: IPoint): boolean {
   x /= TS;
   y /= TS;
 
-  return inMap && level.tilesGrid[y][x].wable;
+  return inMap && level.tiles[this.game.cl.size.w / TS * y + x].wable;
 }
 
 function shouldDoAnimation(animation: IAnimation, timestamp: number): boolean {

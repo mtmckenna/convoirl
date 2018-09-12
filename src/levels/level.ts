@@ -4,20 +4,16 @@ import Tile from "../tiles/tile";
 
 import {
   IDrawable,
-  IInteractable,
   ISize,
   IUpdateable,
   TS,
  } from "../common";
 
-import { flatten, randomIndex } from "../helpers";
-
 export default abstract class Level {
   public game: Game;
   public size: ISize;
   public dSize: ISize;
-  public tiles: Tile[];
-  public tilesGrid: Tile[][] = [];
+  public tiles: Tile[] = [];
   public dables: IDrawable[][]; // drawables
   public odables: IDrawable[]; // overlay drawables
   public uables: IUpdateable[]; // updateables
@@ -58,7 +54,7 @@ export default abstract class Level {
       cloud.pos.y = randomNumBetween(0, height);
       cloud.speed = randomNumBetween(.2, 1.0);
       cloud.alpha = alpha;
-      cloud.lWidth = width;
+      cloud.lWidth = this.size.w;
       this.clouds.push(cloud);
     }
   }
@@ -71,14 +67,11 @@ export default abstract class Level {
     this.dSize = { w: w * this.game.ss, h: h * this.game.ss };
 
     for (let i = 0; i < this.tileIndexes.length; i++) {
-      this.tilesGrid.push(new Array(this.tileIndexes[i].length));
       for (let j = 0; j < this.tileIndexes[i].length; j++) {
         const tileType = this.tileTypeMap[this.tileIndexes[i][j] || 0];
-        this.tilesGrid[i][j] = new Tile(this.game, tileType, j, i);
+        this.tiles.push(new Tile(this.game, tileType, j, i));
       }
     }
-
-    this.tiles = flatten(this.tilesGrid);
   }
 
   protected addDables(drawables: IDrawable[], zIndex: number) {
