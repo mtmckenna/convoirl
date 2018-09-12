@@ -9,6 +9,7 @@ import Game from "../game";
 import Text from "../text";
 
 import {
+  BS,
   ITouchable,
   LH,
   LS,
@@ -339,9 +340,9 @@ function moveBuddies() {
 }
 
 function updateBoxes() {
-  const y = this.game.canvas.height - this.game.boxSize().h * this.game.ss - this.game.ss * 2;
+  const y = this.game.canvas.height - BS.h * this.game.ss - this.game.ss * 2;
   box.move({ x: this.game.boxPos().x, y });
-  box.updateSize(this.game.boxSize());
+  box.updateSize(BS);
   const barWidth =
   energyBar.dSize.w +
   convoBar.dSize.w +

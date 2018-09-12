@@ -1,9 +1,8 @@
 import {
+  BS,
   IAnimation,
   IPoint,
   ISize,
-  LH,
-  LS,
   TS,
 } from "./common";
 
@@ -74,15 +73,8 @@ export default class Game {
 
   public boxPos(): IPoint {
     return {
-      x: (this.canvas.width - this.boxSize().w * this.ss) / 2,
-      y: (this.canvas.height - this.boxSize().h * this.ss) / 2,
-    };
-  }
-
-  public boxSize(): ISize {
-    return {
-      h: 3 * LH + 2 * LS,
-      w: LH * 12,
+      x: (this.canvas.width - BS.w * this.ss) / 2,
+      y: (this.canvas.height - BS.h * this.ss) / 2,
     };
   }
 

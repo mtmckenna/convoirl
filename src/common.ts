@@ -60,3 +60,4 @@ export const LS = 8; // spacing between lines
 export const TT = 120; // throttle time
 export const LH = 5; // letter heights
 export const LT = "*LISTEN*"; // listen skill
+export const BS = { h: 3 * LH + 2 * LS, w: LH * 12 }; // box size

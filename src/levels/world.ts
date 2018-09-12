@@ -8,6 +8,7 @@ import EnergyBar from "../energy-bar";
 import Game from "../game";
 
 import {
+  BS,
   IDrawable,
   IFadeable,
   IInputBuffer,
@@ -114,7 +115,7 @@ export default class World extends Level {
     this.generateTiles();
     energyBar = new EnergyBar(this.game, { x: 0, y: game.ss }, "ENERGY");
 
-    box = new Box(this.game, this.game.boxPos(), this.game.boxSize());
+    box = new Box(this.game, this.game.boxPos(), BS);
     createBuddies.call(this);
   }
 
@@ -302,7 +303,7 @@ function learnFromConvo() {
 
 function updateBox() {
   box.move(this.game.boxPos());
-  box.updateSize(this.game.boxSize());
+  box.updateSize(BS);
 }
 
 function startConvo(tileIndex: IPoint): boolean {

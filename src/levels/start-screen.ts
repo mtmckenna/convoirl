@@ -2,7 +2,7 @@ import Box from "../box";
 import Game from "../game";
 import Level from "./level";
 
-import { ISize } from "../common";
+import { BS, ISize } from "../common";
 import { randomIndex } from "../helpers";
 
 let panDirection = 1;
@@ -34,7 +34,7 @@ export default class StartScreen extends Level {
     this.tileIndexes = generateTileIndexes(this.game.sizeInTiles(), this.tileTypeMap);
     this.generateTiles();
     this.box.move(this.game.boxPos());
-    this.box.updateSize(this.game.boxSize());
+    this.box.updateSize(BS);
     this.addDables(this.tiles, 0);
     this.addOdables([this.box]);
     this.configClouds(this.size.w, this.size.h, .3);

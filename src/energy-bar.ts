@@ -38,7 +38,6 @@ export default class EnergyBar implements IDrawable {
     };
 
     const boxSize = { h: this.size.h + 2, w: this.size.w + 2 };
-    // this.box = new Box(game, pos, boxSize, colorMap[10]);
     this.box = new Box(game, pos, boxSize, null);
 
     const level: IAnimation = {
