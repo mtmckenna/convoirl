@@ -229,7 +229,7 @@ function hideBox() {
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
   this.game.pa("walk");
-  // if (box.ani) return true;
+  if (box.ani) return true;
   let done = false;
 
   switch (this.state) {
