@@ -153,15 +153,8 @@ export default class Convo extends Level {
 
     const sizeInTiles = this.game.sizeInTiles();
     cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2; // TODO: might be able to replace with this.size.w / 2
-    // sizeInTiles.w *= 2;
-    // sizeInTiles.h *= 2;
-
-    // Move the box to the bottom
-    // Align the buddies to be on top of the box
-    // Generate tiles so that they begin in the middle of buddies
-    updateBoxes.call(this);
     updateText.call(this);
-    moveBuddies.call(this);
+    moveThings.call(this);
     moveSkillCursor.call(this, 0);
 
     this.tileIndexes = generateTileIndexes(this.game);
@@ -180,6 +173,31 @@ export default class Convo extends Level {
     this.configClouds(this.size.w, this.game.p.pos.y - TS, .6);
     this.addDables(this.clouds, 0);
   }
+}
+
+function moveThings() {
+  // Move bars
+  const y = this.game.canvas.height - BS.h * this.game.ss - this.game.ss * 2;
+  box.move({ x: this.game.boxPos().x, y });
+  box.updateSize(BS);
+  const barWidth =
+  energyBar.dSize.w +
+  convoBar.dSize.w +
+  BAR_SPACING * this.game.ss;
+
+  const energyX = (this.game.canvas.width - barWidth) / 2;
+  energyBar.move({ x: energyX, y: energyBar.pos.y });
+
+  const convoX = energyBar.pos.x + energyBar.dSize.w + BAR_SPACING * this.game.ss;
+  convoBar.move({ x: convoX, y: convoBar.pos.y });
+
+  // Move buddies
+  // Use cameraOffset to compsenate for the larger levelsize
+  const boxPosX = this.game.boxPos().x / this.game.ss - buddy.size.w / 2 - cameraOffset / this.game.ss;
+  const buddyX = boxPosX + box.dSize.w / this.game.ss - buddy.size.w / 2;
+  const playerPos = { x: boxPosX + this.game.p.size.w / 2, y: this.boxPosY };
+  this.game.p.move(playerPos);
+  buddy.move({ x: buddyX, y: playerPos.y });
 }
 
 function generateTileIndexes(game: Game) {
@@ -329,31 +347,31 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   this.game.pa("walk", 5);
 }
 
-function moveBuddies() {
-  // Use cameraOffset to compsenate for the larger levelsize
-  const boxPosX = this.game.boxPos().x / this.game.ss - buddy.size.w / 2 - cameraOffset / this.game.ss;
-  const buddyX = boxPosX + box.dSize.w / this.game.ss - buddy.size.w / 2;
-  const playerPos = { x: boxPosX + this.game.p.size.w / 2, y: this.boxPosY };
-  this.game.p.move(playerPos);
-  buddy.move({ x: buddyX, y: playerPos.y });
+// function moveBuddies() {
+//   // Use cameraOffset to compsenate for the larger levelsize
+//   const boxPosX = this.game.boxPos().x / this.game.ss - buddy.size.w / 2 - cameraOffset / this.game.ss;
+//   const buddyX = boxPosX + box.dSize.w / this.game.ss - buddy.size.w / 2;
+//   const playerPos = { x: boxPosX + this.game.p.size.w / 2, y: this.boxPosY };
+//   this.game.p.move(playerPos);
+//   buddy.move({ x: buddyX, y: playerPos.y });
 
-}
+// }
 
-function updateBoxes() {
-  const y = this.game.canvas.height - BS.h * this.game.ss - this.game.ss * 2;
-  box.move({ x: this.game.boxPos().x, y });
-  box.updateSize(BS);
-  const barWidth =
-  energyBar.dSize.w +
-  convoBar.dSize.w +
-  BAR_SPACING * this.game.ss;
+// function updateBoxes() {
+//   const y = this.game.canvas.height - BS.h * this.game.ss - this.game.ss * 2;
+//   box.move({ x: this.game.boxPos().x, y });
+//   box.updateSize(BS);
+//   const barWidth =
+//   energyBar.dSize.w +
+//   convoBar.dSize.w +
+//   BAR_SPACING * this.game.ss;
 
-  const energyX = (this.game.canvas.width - barWidth) / 2;
-  energyBar.move({ x: energyX, y: energyBar.pos.y });
+//   const energyX = (this.game.canvas.width - barWidth) / 2;
+//   energyBar.move({ x: energyX, y: energyBar.pos.y });
 
-  const convoX = energyBar.pos.x + energyBar.dSize.w + BAR_SPACING * this.game.ss;
-  convoBar.move({ x: convoX, y: convoBar.pos.y });
-}
+//   const convoX = energyBar.pos.x + energyBar.dSize.w + BAR_SPACING * this.game.ss;
+//   convoBar.move({ x: convoX, y: convoBar.pos.y });
+// }
 
 function updateText() {
   const spacing = ARROW_SPACING * this.game.ss;
