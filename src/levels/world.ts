@@ -256,6 +256,7 @@ function handleBoxInput(): boolean {
         shadeBox.size = Object.assign({}, this.size);
         shadeBox.dSize = Object.assign({}, this.dSize);
         this.addDables([shadeBox], 3);
+        energyBar.animateToLevel(1);
       }
       break;
   }
