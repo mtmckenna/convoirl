@@ -229,7 +229,6 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
-  this.game.pa("walk");
   if (box.ani) return true;
   let done = false;
 
@@ -272,6 +271,7 @@ function handleBoxInput(): boolean {
       break;
   }
 
+  this.game.pa("walk");
   return true;
 }
 
@@ -396,7 +396,7 @@ function createBuddies() {
 // I needed to de-dupe the switch statements to save space.
 function processInput(): boolean {
   const timeSinceInput = this.game.tstamp - inputBuffer.pressedAt;
-  if (timeSinceInput > 30) return false; // For input buffering
+  if (timeSinceInput > 200) return false; // For input buffering
   if (this.game.p.walking) return false;
 
   // Get the tile index that we'd be walking onto

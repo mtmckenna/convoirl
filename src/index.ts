@@ -1,9 +1,8 @@
 /*
 TODO
   - readme
-  - can't skip through boxes
-  - maybe can remove grass by reusing flowers?
   - make sure listen guy doesn't listen after you learn it
+  - fix herky jerky movement
 
 BACKBURNER
   - panning on convo
