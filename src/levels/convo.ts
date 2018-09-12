@@ -87,7 +87,23 @@ export default class Convo extends Level {
   }
 
   public handleTouch(touch) {
-    const touched = touchedTouchable.call(this, touch);
+    const fuzz = 20 * this.game.sf;
+
+    const touched = tables.find((touchable) => {
+      const size = Object.assign({}, touchable.dSize);
+      const pos = Object.assign({}, touchable.pos);
+      size.w *= this.game.sf;
+      size.h *= this.game.sf;
+      pos.x *= this.game.sf;
+      pos.y *= this.game.sf;
+
+      return touch.clientX + fuzz >= pos.x &&
+      touch.clientX - fuzz <= pos.x + size.w &&
+      touch.clientY + fuzz >= pos.y &&
+      touch.clientY - fuzz <= pos.y + size.h &&
+      touchable.visible;
+    });
+
     if (touched) touched.touched();
   }
   public levelWillStart() {
@@ -347,32 +363,6 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
   this.game.pa("walk", 5);
 }
 
-// function moveBuddies() {
-//   // Use cameraOffset to compsenate for the larger levelsize
-//   const boxPosX = this.game.boxPos().x / this.game.ss - buddy.size.w / 2 - cameraOffset / this.game.ss;
-//   const buddyX = boxPosX + box.dSize.w / this.game.ss - buddy.size.w / 2;
-//   const playerPos = { x: boxPosX + this.game.p.size.w / 2, y: this.boxPosY };
-//   this.game.p.move(playerPos);
-//   buddy.move({ x: buddyX, y: playerPos.y });
-
-// }
-
-// function updateBoxes() {
-//   const y = this.game.canvas.height - BS.h * this.game.ss - this.game.ss * 2;
-//   box.move({ x: this.game.boxPos().x, y });
-//   box.updateSize(BS);
-//   const barWidth =
-//   energyBar.dSize.w +
-//   convoBar.dSize.w +
-//   BAR_SPACING * this.game.ss;
-
-//   const energyX = (this.game.canvas.width - barWidth) / 2;
-//   energyBar.move({ x: energyX, y: energyBar.pos.y });
-
-//   const convoX = energyBar.pos.x + energyBar.dSize.w + BAR_SPACING * this.game.ss;
-//   convoBar.move({ x: convoX, y: convoBar.pos.y });
-// }
-
 function updateText() {
   const spacing = ARROW_SPACING * this.game.ss;
   const upX = box.pos.x +
@@ -430,24 +420,4 @@ function updateFloatyText() {
       this.uables.splice(i, 1);
     }
   }
-}
-
-function touchedTouchable(touch: Touch): ITouchable {
-  const fuzz = 20 * this.game.sf;
-
-  const touched = tables.find((touchable) => {
-    const size = Object.assign({}, touchable.dSize);
-    const pos = Object.assign({}, touchable.pos);
-    size.w *= this.game.sf;
-    size.h *= this.game.sf;
-    pos.x *= this.game.sf;
-    pos.y *= this.game.sf;
-
-    return touch.clientX + fuzz >= pos.x &&
-    touch.clientX - fuzz <= pos.x + size.w &&
-    touch.clientY + fuzz >= pos.y &&
-    touch.clientY - fuzz <= pos.y + size.h;
-  });
-
-  if (touched && touched.visible) return touched;
 }

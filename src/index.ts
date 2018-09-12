@@ -2,10 +2,9 @@
 TODO
   - sfx
   - readme
-  - consider trying your own tinymusic again
-  - rename interactable/walkable/etc on tile
   - can't skip through boxes
   - maybe can remove grass by reusing flowers?
+  - make sure listen guy doesn't listen after you learn it
 
 BACKBURNER
   - panning on convo
