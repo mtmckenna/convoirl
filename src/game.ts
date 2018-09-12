@@ -16,8 +16,15 @@ import Level from "./levels/level";
 import StartScreen from "./levels/start-screen";
 import World from "./levels/world";
 
+import TinyMusic from "tinymusic";
+
 const SQUARE_SIZE = 5;
 const SIDE_LENGTH = 16 * TS * SQUARE_SIZE;
+
+// @ts-ignore
+const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
+const ac = new NormalizedAudioContext();
+const tempo = 120;
 
 const transition: IAnimation = {
   duration: 1000,
@@ -62,7 +69,6 @@ export default class Game {
       world: new World(this),
     };
 
-    // this.transition = Object.assign({}, transition);
     this.c = new Camera(this);
   }
 
@@ -125,6 +131,28 @@ export default class Game {
 
     setSize.call(this);
     if (this.cl) this.cl.resize();
+  }
+
+  public pa(name, times = 1) {
+    // const notesTypes = {
+    //   bad: [["C2 e", "C1 q"], ["A3 e", "A2 q"]],
+    //   good: [["C1 e", "C2 q"], ["A2 e", "A3 q"]],
+    //   great: [["C2 e", "C3 e", "- e", "C3 e", "C4 q"], ["A2 e", "A3 e", "- e", "A3 e", "A4 q"]],
+    //   walk: [["C1 s"], ["A1 s"]],
+    // };
+
+    // const base = notesTypes[name];
+    // const notes = flatten(new Array(times).fill(base));
+    // console.log(base, notes);
+
+    // const notes = [];
+    // const sequences = notes.map((note) => new TinyMusic.Sequence(ac, tempo, note));
+
+    // sequences.forEach((sequence) => {
+    //   sequence.gain.gain.value = 0.10;
+    //   sequence.loop = false;
+    //   sequence.play();
+    // });
   }
 
   public qLevel(updatedLevel: Level, state?: string) {

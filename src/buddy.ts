@@ -146,7 +146,7 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
     this.walk(direction, true);
   }
 
-  public walk(direction: "up" | "down" | "left" | "right", justLook: boolean = false) {
+  public walk(direction: "up" | "down" | "left" | "right", justLook: boolean = false): boolean {
     let { x, y } = this.pos;
 
     switch (direction) {
@@ -172,7 +172,12 @@ export default class Buddy implements IDrawable, IUpdateable, IInteractable {
 
     const startPos = { x: this.pos.x, y: this.pos.y };
     const endPos = { x, y };
-    if (canMoveToPosition.call(this, endPos)) this.configureWalkingAnimation(startPos, endPos);
+    if (canMoveToPosition.call(this, endPos)) {
+      this.configureWalkingAnimation(startPos, endPos);
+      return true;
+    }
+
+    return false;
   }
 
   public configureWalkingAnimation(startPos, endPos) {
@@ -328,7 +333,7 @@ function canMoveToPosition(position: IPoint): boolean {
   x /= TS;
   y /= TS;
 
-  return inMap && level.tilesGrid[y][x].walkable;
+  return inMap && level.tilesGrid[y][x].wable;
 }
 
 function shouldDoAnimation(animation: IAnimation, timestamp: number): boolean {

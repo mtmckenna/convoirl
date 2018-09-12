@@ -16,11 +16,10 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
   public dSize = { w: TS, h: TS };
   public pos = { x: 0, y: 0 };
   public size = { w: TS, h: TS };
-  public walkable: boolean = true;
+  public wable: boolean = true;
   public visible: boolean = true;
   public game: Game;
   public tileIndex: IPoint;
-  public interactable: boolean = false;
   public name: string;
   public alpha = 1.0;
   public speed?: number;
@@ -38,9 +37,8 @@ export default class Tile implements IDrawable, IInteractable, IFadeable {
     this.cMatrix = TILES[name].cMatrix;
 
     // TODO: check if I can check for undefined instead of hasownprop
-    this.walkable = TILES[name].hasOwnProperty("walkable") ? TILES[name].walkable : this.walkable;
+    this.wable = TILES[name].hasOwnProperty("wable") ? TILES[name].wable : this.wable;
     this.visible = TILES[name].hasOwnProperty("visible") ? TILES[name].visible : this.visible;
-    this.interactable = TILES[name].hasOwnProperty("interactable") ? TILES[name].interactable : this.interactable;
     this.tileLength = TILES[name].hasOwnProperty("tileLength") ? TILES[name].tileLength : this.tileLength;
 
     this.dSize = {

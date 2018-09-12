@@ -7,8 +7,6 @@ import Buddy from "../buddy";
 import EnergyBar from "../energy-bar";
 import Game from "../game";
 
-import TinyMusic from "tinymusic";
-
 import {
   IDrawable,
   IFadeable,
@@ -38,7 +36,7 @@ const TEXT_FIRST_CONVO = [
 ];
 
 const TEXT_WIN = [
-  ["great job!", "you made a", "new friend!"],
+  ["well done!", "you made a", "new friend!"],
   ["maybe you", "will become", "best buds!"],
   ["be kind to", "your friends", "because"],
   ["every quest", "is better", "with friends!"],
@@ -214,20 +212,6 @@ export default class World extends Level {
         this.game.p.lastConvo = this.game.tstamp;
         break;
     }
-
-    // @ts-ignore
-    const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
-
-    const ac = new NormalizedAudioContext();
-    const tempo = 120;
-    const sequence = new TinyMusic.Sequence(ac, tempo, [
-      "G2 q",
-      "G3 q",
-      "G4 q",
-    ]);
-
-    sequence.loop = false;
-    // sequence.play();
   }
 }
 
@@ -237,7 +221,7 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
-  if (box.ani) return true;
+  // if (box.ani) return true;
   let done = false;
 
   switch (this.state) {
@@ -447,10 +431,12 @@ function processInput(): boolean {
   if (startConvo.call(this, tileIndex)) return;
 
   // Check if we're overlapping the door
-  if (this.tileAtIndex(tileIndex).interactable) sleep.call(this);
+  const onSleepTile = tileIndex.x === (SLEEP_POS.x / TS) && tileIndex.y === (SLEEP_POS.y / TS);
+  if (onSleepTile) sleep.call(this);
 
   // If we're not overlapping anything fun, just walk
-  this.game.p.walk(direction);
+  const walked = this.game.p.walk(direction);
+  // if (walked) this.game.pa("walk");
   return true;
 }
 

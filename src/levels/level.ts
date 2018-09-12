@@ -57,10 +57,6 @@ export default abstract class Level {
     this.clearTables();
   }
 
-  public tileAtIndex(tileIndex: IPoint) {
-    return this.tilesGrid[tileIndex.y][tileIndex.x];
-  }
-
   public configClouds(width, height, alpha) {
     this.clouds = [];
     for (let i = 0; i < 20; i++) {

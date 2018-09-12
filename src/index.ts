@@ -2,6 +2,9 @@
 TODO
   - sfx
   - readme
+  - consider trying your own tinymusic again
+  - rename interactable/walkable/etc on tile
+
 
 BACKBURNER
   - panning on convo

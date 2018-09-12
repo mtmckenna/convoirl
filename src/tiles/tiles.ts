@@ -97,12 +97,12 @@ export default {
       [E, E, 6, 6, 6, 6, E, E],
     ],
     canvas: null,
-    walkable: false,
+    wable: false,
   },
   unwalkable: {
     canvas: null,
     visible: false,
-    walkable: false,
+    wable: false,
   },
 };
 

@@ -205,10 +205,12 @@ function doneAnimating(drawables): boolean {
 }
 
 function moveSkillCursor(amountToMoveBy) {
+  if (waiting) return;
   const updatedIndex = currentSkillIndex + amountToMoveBy;
   const skill = skills[updatedIndex] || skills[currentSkillIndex];
   currentSkillIndex = skills.indexOf(skill);
   skills.forEach((s) => s.alpha = D_ALPHA);
+  // this.game.pa("walk");
 }
 
 function updateConvoLevel(increment: number) {
@@ -250,6 +252,7 @@ function react(skillIndex) {
   } else {
     if (skill === LT) {
       updateBars.call(this, -.1, .25);
+      // this.game.pa("good");
     } else if (lastBuddyTopic === skill) {
       greatReaction.call(this, -.15, .50);
     } else if (buddy.skills.includes(skill)) {
@@ -269,17 +272,20 @@ function greatReaction(energyIncrement, convoIncrement) {
   window.setTimeout(textFunc, 500);
   window.setTimeout(textFunc, 1000);
   updateBars.call(this, energyIncrement, convoIncrement);
+  // this.game.pa("great");
 }
 
 function goodReaction(energyIncrement, convoIncrement) {
   buddyFloatText.call(this, buddy, "cool!", colorMap[2]);
   updateBars.call(this, energyIncrement, convoIncrement);
+  // this.game.pa("good");
 }
 
 function badReaction(energyIncrement) {
   buddyFloatText.call(this, buddy, "oh...", colorMap[10]);
   updateBars.call(this, energyIncrement, 0);
   this.game.c.shakeScreen();
+  // this.game.pa("bad");
 }
 
 function updateBars(energyIncrement, convoIncrement) {
@@ -317,6 +323,8 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
     lastBuddyTopic = skill;
     if (!this.usedTopics.includes(skill)) this.usedTopics.push(skill);
   }
+
+    // this.game.pa("walk", 5);
 }
 
 function moveBuddies() {
