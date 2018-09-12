@@ -4,10 +4,7 @@ import Tile from "../tiles/tile";
 
 import {
   IDrawable,
-  IInteractable,
-  IPoint,
   ISize,
-  ITouchable,
   IUpdateable,
   TS,
  } from "../common";
@@ -20,11 +17,9 @@ export default abstract class Level {
   public dSize: ISize;
   public tiles: Tile[];
   public tilesGrid: Tile[][] = [];
-
   public dables: IDrawable[][];
   public odables: IDrawable[];
   public uables: IUpdateable[];
-  public iables: IInteractable[];
   public bgColor: string = colorMap[2];
   public state: string;
 
@@ -52,7 +47,6 @@ export default abstract class Level {
     this.clearDables();
     this.clearOdables();
     this.clearUables();
-    this.clearIables();
   }
 
   public configClouds(width, height, alpha) {
@@ -98,10 +92,6 @@ export default abstract class Level {
     this.uables.push(...updateables);
   }
 
-  protected addIables(interactables: IInteractable[]) {
-    this.iables.push(...interactables);
-  }
-
   protected clearDables() {
     this.dables = new Array(4).fill(null).map(() => new Array().fill(null));
   }
@@ -112,10 +102,6 @@ export default abstract class Level {
 
   protected clearUables() {
     this.uables = [];
-  }
-
-  protected clearIables() {
-    this.iables = [];
   }
 
   protected generateTileIndexes(sizeInTiles?: ISize) {

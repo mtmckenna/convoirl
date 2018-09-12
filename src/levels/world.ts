@@ -11,6 +11,7 @@ import {
   IDrawable,
   IFadeable,
   IInputBuffer,
+  IInteractable,
   IPoint,
   LT,
   TS,
@@ -69,6 +70,7 @@ let listenBuddy: Buddy;
 let specialBuddy: Buddy;
 let energyBar: EnergyBar;
 let gameOverStartTime: number = 0;
+let iables: IInteractable[] = [];
 
 export default class World extends Level {
   public currentBuddy: Buddy;
@@ -168,13 +170,14 @@ export default class World extends Level {
 
   public configViz() {
     super.configViz();
+    iables = [];
     this.addDables(this.tiles, 0);
     this.addDables(this.game.p.dusts, 1); // TODO: can combine onto one line
     this.addDables(walkingBuddy.dusts, 1);
     this.addDables([this.game.p], 2);
     this.addDables(buddies, 2);
     this.addOdables([energyBar, box]);
-    this.addIables(buddies);
+    iables.push(...buddies);
     this.addUables([
       ...this.game.p.dusts,
       this.game.p,
@@ -304,10 +307,10 @@ function updateBox() {
 
 function startConvo(tileIndex: IPoint): boolean {
   // Check if we're overlapping interactables like buddies
-  const overlappedInteractable = this.iables.find((interactable) => {
+  const overlappedInteractable = iables.find((interactable) => {
     return interactable.tileIndex.x === tileIndex.x &&
       interactable.tileIndex.y === tileIndex.y;
-  });
+  }) as Buddy;
 
   if (overlappedInteractable && (this.game.tstamp - overlappedInteractable.lastConvo) > 1000 && !box.visible) {
     this.currentBuddy = overlappedInteractable as Buddy;
