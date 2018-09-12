@@ -93,7 +93,19 @@ export default class Game {
     this.tstamp = timestamp;
     this.cl.update(timestamp);
 
-    if (this.inTr()) updateTransition.call(this, timestamp);
+    if (this.inTr()) {
+      const t = (timestamp - transition.startTime) / transition.duration;
+
+      transition.prevLevelScale = clerp(1, 5, 1, 5, t);
+      transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
+      transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
+      this.nextAlpha = transition.nextLevelAlpha;
+
+      if (t >= 1) {
+        transition.running = false;
+        imageOfPreviousLevel = null;
+      }
+    }
   }
 
   public draw(timestamp: number) {
@@ -107,7 +119,6 @@ export default class Game {
 
     drawDrawables.call(this, timestamp);
     drawOverlayDrawables.call(this, timestamp);
-    if (this.inTr()) updateTransition.call(this, timestamp);
   }
 
   public resize() {
@@ -151,7 +162,11 @@ export default class Game {
   public qLevel(updatedLevel: Level, state?: string) {
     nextLevel = updatedLevel;
     if (state) nextLevel.state = state;
-    startTransition.call(this);
+    transition.startTime = this.tstamp;
+    transition.running = true;
+    imageOfPreviousLevel = new Image();
+    imageOfPreviousLevel.src = this.canvas.toDataURL("png");
+    switchLevel.call(this, nextLevel);
   }
 
   public handleInput(event) {
@@ -166,28 +181,6 @@ export default class Game {
     const w = Math.ceil(this.canvas.width / this.ss / TS);
     const h = Math.ceil(this.canvas.height / this.ss / TS);
     return { w, h };
-  }
-}
-
-function startTransition() {
-  transition.startTime = this.tstamp;
-  transition.running = true;
-  imageOfPreviousLevel = new Image();
-  imageOfPreviousLevel.src = this.canvas.toDataURL("png");
-  switchLevel.call(this, nextLevel);
-}
-
-function updateTransition(timestamp) {
-  const t = (timestamp - transition.startTime) / transition.duration;
-
-  transition.prevLevelScale = clerp(1, 5, 1, 5, t);
-  transition.prevLevelAlpha = clerp(1, 0, 0, 1, t);
-  transition.nextLevelAlpha = clerp(0, 1, 0, 1, t);
-  this.nextAlpha = transition.nextLevelAlpha;
-
-  if (t >= 1) {
-    transition.running = false;
-    imageOfPreviousLevel = null;
   }
 }
 
