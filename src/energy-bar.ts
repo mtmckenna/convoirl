@@ -33,12 +33,13 @@ export default class EnergyBar implements IDrawable {
     this.size = Object.assign({}, this.energyText.size);
 
     this.dSize = {
-      h: (this.size.h + 1) * this.game.ss,
-      w: (this.size.w + 1) * this.game.ss,
+      h: (this.size.h + 2) * this.game.ss,
+      w: (this.size.w + 2) * this.game.ss,
     };
 
-    const boxSize = { h: this.size.h + 1, w: this.size.w + 1 };
-    this.box = new Box(game, pos, boxSize, colorMap[10]);
+    const boxSize = { h: this.size.h + 2, w: this.size.w + 2 };
+    // this.box = new Box(game, pos, boxSize, colorMap[10]);
+    this.box = new Box(game, pos, boxSize, null);
 
     const level: IAnimation = {
       duration: 1000,
@@ -64,15 +65,17 @@ export default class EnergyBar implements IDrawable {
 
     this.box.move(this.pos);
     this.energyText.move({
-      x: updatedPos.x + this.game.ss / 2 + .5,
-      y: updatedPos.y + this.game.ss / 2 + .5,
+      x: updatedPos.x + this.game.ss / 2 + 2.5,
+      y: updatedPos.y + this.game.ss / 2 + 2.5,
     });
   }
 
   public draw(context, timestamp) {
     updateLevel.call(this, timestamp);
 
-    this.box.draw(context, timestamp);
+    context.globalAlpha = this.game.inTr() ? this.game.nextAlpha : 1;
+    context.fillStyle = colorMap[10]; // red
+    context.fillRect(this.pos.x, this.pos.y, this.dSize.w, this.dSize.h);
     context.fillStyle = colorMap[7]; // green
     context.fillRect(
       Math.ceil(this.pos.x + 1),
@@ -80,6 +83,7 @@ export default class EnergyBar implements IDrawable {
       Math.floor(Math.max(this.dSize.w * this.percentFull - 2, 0)),
       Math.floor(this.dSize.h - 2),
     );
+    this.box.draw(context, timestamp);
     this.energyText.draw(context, timestamp);
   }
 

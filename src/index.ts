@@ -4,7 +4,7 @@ TODO
   - readme
   - consider trying your own tinymusic again
   - rename interactable/walkable/etc on tile
-
+  - can't skip through boxes
 
 BACKBURNER
   - panning on convo

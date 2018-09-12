@@ -56,7 +56,7 @@ export default class Box implements IFadeable {
     const alpha = this.game.inTr() ? Math.min(this.alpha, this.game.nextAlpha) : this.alpha;
     context.globalAlpha = alpha;
     context.fillStyle = this.color;
-    context.fillRect(this.pos.x, this.pos.y, this.dSize.w, this.dSize.h);
+    if (this.color) context.fillRect(this.pos.x, this.pos.y, this.dSize.w, this.dSize.h);
     context.strokeStyle = colorMap[1];
     context.fillStyle = colorMap[1];
     context.lineWidth = this.game.ss;
