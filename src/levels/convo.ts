@@ -45,6 +45,7 @@ let multiplier: number = 1;
 let lastBuddyTopic: number = null;
 let reactTimeout: number = null;
 let buddyTimeout: number = null;
+let tables: ITouchable[] = []; // touchables
 
 export default class Convo extends Level {
   public bgColor = colorMap[9];
@@ -126,7 +127,6 @@ export default class Convo extends Level {
     updateText.call(this);
     updateFloatyText.call(this);
 
-    // console.log(buddyTimeout, reactTimeout);
     waiting = floatiesInArray(this.odables).length > 0 ||
     this.game.inTr() ||
     !!buddyTimeout ||
@@ -148,6 +148,7 @@ export default class Convo extends Level {
 
   public configViz() {
     super.configViz();
+    tables = [];
 
     const sizeInTiles = this.game.sizeInTiles();
     cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2; // TODO: might be able to replace with this.size.w / 2
@@ -174,7 +175,7 @@ export default class Convo extends Level {
       convoBar,
       ...skills,
     ]);
-    this.addTables([upArrow, downArrow, ...skills]);
+    tables.push(upArrow, downArrow, ...skills);
     this.configClouds(this.size.w, this.game.p.pos.y - TS, .6);
     this.addDables(this.clouds, 0);
   }
@@ -415,7 +416,7 @@ function updateFloatyText() {
 function touchedTouchable(touch: Touch): ITouchable {
   const fuzz = 20 * this.game.sf;
 
-  const touched = this.tables.find((touchable) => {
+  const touched = tables.find((touchable) => {
     const size = Object.assign({}, touchable.dSize);
     const pos = Object.assign({}, touchable.pos);
     size.w *= this.game.sf;

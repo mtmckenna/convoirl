@@ -5,6 +5,7 @@ TODO
   - consider trying your own tinymusic again
   - rename interactable/walkable/etc on tile
   - can't skip through boxes
+  - maybe can remove grass by reusing flowers?
 
 BACKBURNER
   - panning on convo

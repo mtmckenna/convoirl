@@ -145,8 +145,8 @@ export default class Game {
     // const notes = flatten(new Array(times).fill(base));
     // console.log(base, notes);
 
-    // const notes = [];
-    // const sequences = notes.map((note) => new TinyMusic.Sequence(ac, tempo, note));
+    const notes = [];
+    const sequences = notes.map((note) => new TinyMusic.Sequence(ac, tempo, note));
 
     // sequences.forEach((sequence) => {
     //   sequence.gain.gain.value = 0.10;

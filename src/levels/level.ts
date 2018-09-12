@@ -25,7 +25,6 @@ export default abstract class Level {
   public odables: IDrawable[];
   public uables: IUpdateable[];
   public iables: IInteractable[];
-  public tables: ITouchable[];
   public bgColor: string = colorMap[2];
   public state: string;
 
@@ -54,7 +53,6 @@ export default abstract class Level {
     this.clearOdables();
     this.clearUables();
     this.clearIables();
-    this.clearTables();
   }
 
   public configClouds(width, height, alpha) {
@@ -100,10 +98,6 @@ export default abstract class Level {
     this.uables.push(...updateables);
   }
 
-  protected addTables(touchables: ITouchable[]) {
-    this.tables.push(...touchables);
-  }
-
   protected addIables(interactables: IInteractable[]) {
     this.iables.push(...interactables);
   }
@@ -122,10 +116,6 @@ export default abstract class Level {
 
   protected clearIables() {
     this.iables = [];
-  }
-
-  protected clearTables() {
-    this.tables = [];
   }
 
   protected generateTileIndexes(sizeInTiles?: ISize) {
