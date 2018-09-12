@@ -85,7 +85,7 @@ export default class Game {
   public update(timestamp) {
     if (!booted) {
       this.tstamp = timestamp;
-      switchLevel.call(this, this.levels.startScreen);
+      this.switchLevel(this.levels.startScreen);
       this.resize();
       booted = true;
     }
@@ -117,8 +117,57 @@ export default class Game {
     context.fillStyle = this.cl.bgColor;
     context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    drawDrawables.call(this, timestamp);
-    drawOverlayDrawables.call(this, timestamp);
+    // Draw drawables
+    const offset = this.c.offset;
+    this.cl.dables.forEach((drawablesAtZIndex) => {
+      drawablesAtZIndex.forEach((drawable) => {
+        // the !drawable is a hack to help reduce file size on levels with generated tiles
+        if (!drawable || !drawable.visible) return;
+        const x = drawable.pos.x * this.ss + offset.x;
+        const y = drawable.pos.y * this.ss + offset.y;
+
+        const isOffScreen =
+        x + drawable.dSize.w < 0 ||
+        x > this.canvas.width ||
+        y + drawable.dSize.h < 0 ||
+        y > this.canvas.height;
+
+        if (isOffScreen) return;
+
+        // Bitwise operator is supposedly the fastest way to land on whole pixels:
+        // https://www.html5rocks.com/en/tutorials/canvas/performance/
+        context.translate((x + .5) | 0, (y + .5) | 0);
+        context.globalAlpha = this.inTr() ? transition.nextLevelAlpha : 1;
+        drawable.draw(context, timestamp);
+        context.setTransform(1, 0, 0, 1, 0, 0);
+      });
+    });
+
+    context.globalAlpha = 1;
+
+    if (imageOfPreviousLevel) {
+      context.globalAlpha = transition.prevLevelAlpha;
+      const scaleFactor = transition.prevLevelScale;
+      const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
+      const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
+      context.drawImage(
+        imageOfPreviousLevel,
+        -x,
+        -y,
+        this.canvas.width * scaleFactor,
+        this.canvas.height * scaleFactor,
+      );
+      context.globalAlpha = 1;
+    }
+
+    // Overlay drawables
+    if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
+    this.cl.odables.forEach((drawable) => {
+      if (!drawable.visible) return;
+      drawable.draw(context, timestamp);
+    });
+
+    context.globalAlpha = 1;
   }
 
   public resize() {
@@ -166,7 +215,8 @@ export default class Game {
     transition.running = true;
     imageOfPreviousLevel = new Image();
     imageOfPreviousLevel.src = this.canvas.toDataURL("png");
-    switchLevel.call(this, nextLevel);
+    this.switchLevel(nextLevel);
+    // switchLevel.call(this, nextLevel);
   }
 
   public handleInput(event) {
@@ -182,65 +232,11 @@ export default class Game {
     const h = Math.ceil(this.canvas.height / this.ss / TS);
     return { w, h };
   }
-}
 
-function switchLevel(updatedLevel) {
-  this.cl = updatedLevel;
-  this.cl.levelWillStart();
-  this.cl.configViz();
-  this.cl.levelStarted();
-}
-
-function drawDrawables(timestamp: number) {
-  const offset = this.c.offset;
-  this.cl.dables.forEach((drawablesAtZIndex) => {
-    drawablesAtZIndex.forEach((drawable) => {
-      // the !drawable is a hack to help reduce file size on levels with generated tiles
-      if (!drawable || !drawable.visible) return;
-      const x = drawable.pos.x * this.ss + offset.x;
-      const y = drawable.pos.y * this.ss + offset.y;
-
-      const isOffScreen =
-      x + drawable.dSize.w < 0 ||
-      x > this.canvas.width ||
-      y + drawable.dSize.h < 0 ||
-      y > this.canvas.height;
-
-      if (isOffScreen) return;
-
-      // Bitwise operator is supposedly the fastest way to land on whole pixels:
-      // https://www.html5rocks.com/en/tutorials/canvas/performance/
-      context.translate((x + .5) | 0, (y + .5) | 0);
-      context.globalAlpha = this.inTr() ? transition.nextLevelAlpha : 1;
-      drawable.draw(context, timestamp);
-      context.setTransform(1, 0, 0, 1, 0, 0);
-    });
-  });
-
-  context.globalAlpha = 1;
-
-  if (imageOfPreviousLevel) {
-    context.globalAlpha = transition.prevLevelAlpha;
-    const scaleFactor = transition.prevLevelScale;
-    const x = (this.canvas.width * scaleFactor - this.canvas.width) / 2;
-    const y = (this.canvas.height * scaleFactor - this.canvas.height) / 2;
-    context.drawImage(
-      imageOfPreviousLevel,
-      -x,
-      -y,
-      this.canvas.width * scaleFactor,
-      this.canvas.height * scaleFactor,
-    );
-    context.globalAlpha = 1;
+  private switchLevel(updatedLevel) {
+    this.cl = updatedLevel;
+    this.cl.levelWillStart();
+    this.cl.configViz();
+    this.cl.levelStarted();
   }
-}
-
-function drawOverlayDrawables(timestamp: number) {
-  if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
-  this.cl.odables.forEach((drawable) => {
-    if (!drawable.visible) return;
-    drawable.draw(context, timestamp);
-  });
-
-  context.globalAlpha = 1;
 }
