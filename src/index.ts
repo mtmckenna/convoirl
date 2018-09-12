@@ -42,6 +42,7 @@ const gameLoop = gameLoopFunction(MS, game.update, game);
 
 let currentTouch: Touch = null;
 let touchDown: boolean = false;
+let touched: boolean = false;
 
 function animate(timestamp: number): void {
   if (currentTouch && touchDown) game.handleTouch(currentTouch);
@@ -51,6 +52,10 @@ function animate(timestamp: number): void {
 }
 
 function handleTouchDown(event) {
+  if (!touched) {
+    game.pa("a", 1); // need this for iOS to work
+    touched = true;
+  }
   handleTouchMove(event);
   touchDown = true;
 }

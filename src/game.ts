@@ -7,7 +7,7 @@ import {
   TS,
 } from "./common";
 
-import { clerp } from "./helpers";
+import { clerp, flatten } from "./helpers";
 
 import Buddy from "./buddy";
 import Camera from "./camera";
@@ -22,7 +22,8 @@ const SQUARE_SIZE = 5;
 const SIDE_LENGTH = 16 * TS * SQUARE_SIZE;
 
 // @ts-ignore
-const NormalizedAudioContext = window.AudioContext || webkitAudioContext;
+const NormalizedAudioContext = window.AudioContext || window.webkitAudioContext;
+
 const ac = new NormalizedAudioContext();
 const tempo = 120;
 
@@ -58,7 +59,6 @@ export default class Game {
     this.p.skills.push("WEATHER");
 
     this.canvas = canvas;
-    setSize.call(this);
     context = canvas.getContext("2d", { alpha: false });
     context.mozImageSmoothingEnabled = false;
     context.webkitImageSmoothingEnabled = false;
@@ -108,7 +108,11 @@ export default class Game {
     if (!context || !this.c) return;
     this.c.updateShake(timestamp);
 
-    clearCanvasContext.call(this);
+    // Clear canvas
+    if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
+    context.fillStyle = this.cl.bgColor;
+    context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
     drawDrawables.call(this, timestamp);
     drawOverlayDrawables.call(this, timestamp);
     if (this.inTr()) updateTransition.call(this, timestamp);
@@ -128,31 +132,28 @@ export default class Game {
     this.canvas.width = width;
     this.canvas.height = height;
     this.c.size = { w: this.canvas.width, h: this.canvas.height };
+    this.sf = window.innerWidth / this.canvas.width;
 
-    setSize.call(this);
     if (this.cl) this.cl.resize();
   }
 
   public pa(name, times = 1) {
-    // const notesTypes = {
-    //   bad: [["C2 e", "C1 q"], ["A3 e", "A2 q"]],
-    //   good: [["C1 e", "C2 q"], ["A2 e", "A3 q"]],
-    //   great: [["C2 e", "C3 e", "- e", "C3 e", "C4 q"], ["A2 e", "A3 e", "- e", "A3 e", "A4 q"]],
-    //   walk: [["C1 s"], ["A1 s"]],
-    // };
+    const notesTypes = {
+      a: [["- e"]],
+      bad: [["C2 e", "C1 q"], ["A3 e", "A2 q"]],
+      good: [["C1 e", "C2 q"], ["A2 e", "A3 q"]],
+      great: [["C2 e", "C3 e", "- e", "C3 e", "C4 q"], ["A2 e", "A3 e", "- e", "A3 e", "A4 q"]],
+      walk: [["C1 s"], ["A1 s"]],
+    };
 
-    // const base = notesTypes[name];
-    // const notes = flatten(new Array(times).fill(base));
-    // console.log(base, notes);
-
-    const notes = [];
+    const notes = flatten(new Array(times).fill(notesTypes[name]));
     const sequences = notes.map((note) => new TinyMusic.Sequence(ac, tempo, note));
 
-    // sequences.forEach((sequence) => {
-    //   sequence.gain.gain.value = 0.10;
-    //   sequence.loop = false;
-    //   sequence.play();
-    // });
+    sequences.forEach((sequence) => {
+      sequence.gain.gain.value = 0.01;
+      sequence.loop = false;
+      sequence.play();
+    });
   }
 
   public qLevel(updatedLevel: Level, state?: string) {
@@ -161,7 +162,6 @@ export default class Game {
     startTransition.call(this);
   }
 
-  // TODO: what's the best typescripty way of setting this event?
   public handleInput(event) {
     this.cl.handleInput(event.key);
   }
@@ -183,10 +183,6 @@ function startTransition() {
   imageOfPreviousLevel = new Image();
   imageOfPreviousLevel.src = this.canvas.toDataURL("png");
   switchLevel.call(this, nextLevel);
-}
-
-function setSize() {
-  this.sf = window.innerWidth / this.canvas.width;
 }
 
 function updateTransition(timestamp) {
@@ -219,7 +215,13 @@ function drawDrawables(timestamp: number) {
       const x = drawable.pos.x * this.ss + offset.x;
       const y = drawable.pos.y * this.ss + offset.y;
 
-      if (isOffScreen.call(this, x, y, drawable.dSize)) return;
+      const isOffScreen =
+      x + drawable.dSize.w < 0 ||
+      x > this.canvas.width ||
+      y + drawable.dSize.h < 0 ||
+      y > this.canvas.height;
+
+      if (isOffScreen) return;
 
       // Bitwise operator is supposedly the fastest way to land on whole pixels:
       // https://www.html5rocks.com/en/tutorials/canvas/performance/
@@ -248,13 +250,6 @@ function drawDrawables(timestamp: number) {
   }
 }
 
-function isOffScreen(x: number, y: number, dSize: ISize) {
-  return x + dSize.w < 0 ||
-    x > this.canvas.width ||
-    y + dSize.h < 0 ||
-    y > this.canvas.height;
-}
-
 function drawOverlayDrawables(timestamp: number) {
   if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
   this.cl.odables.forEach((drawable) => {
@@ -263,10 +258,4 @@ function drawOverlayDrawables(timestamp: number) {
   });
 
   context.globalAlpha = 1;
-}
-
-function clearCanvasContext(): void {
-  if (this.inTr()) context.globalAlpha = transition.nextLevelAlpha;
-  context.fillStyle = this.cl.bgColor;
-  context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }

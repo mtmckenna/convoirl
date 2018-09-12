@@ -430,7 +430,7 @@ function processInput(): boolean {
 
   // If we're not overlapping anything fun, just walk
   const walked = this.game.p.walk(direction);
-  // if (walked) this.game.pa("walk");
+  if (walked) this.game.pa("walk");
   return true;
 }
 
