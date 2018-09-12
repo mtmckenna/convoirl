@@ -1,6 +1,5 @@
 /*
 TODO
-  - sfx
   - readme
   - can't skip through boxes
   - maybe can remove grass by reusing flowers?

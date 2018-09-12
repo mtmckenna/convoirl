@@ -48,7 +48,6 @@ export default class StartScreen extends Level {
   public handleInput() {
     if (this.game.inTr() || this.box.ani) return;
     this.game.qLevel(this.game.levels.world);
-    this.game.pa("great", 3);
   }
 
   public handleTouch() {

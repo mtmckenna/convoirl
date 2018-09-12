@@ -191,14 +191,17 @@ export default class Game {
 
   public pa(name, times = 1) {
     const notesTypes = {
-      a: [["- e"]],
+      a: [["- e"], []],
       bad: [["C2 e", "C1 q"], ["A3 e", "A2 q"]],
-      good: [["C1 e", "C2 q"], ["A2 e", "A3 q"]],
-      great: [["C2 e", "C3 e", "- e", "C3 e", "C4 q"], ["A2 e", "A3 e", "- e", "A3 e", "A4 q"]],
-      walk: [["C1 s"], ["A1 s"]],
+      good: [["C2 e", "- s", "C2 e", "C3 q"], ["A3 e", "- s", "A3 e", "A4 q"]],
+      walk: [["C1 s"], ["- e"]],
     };
 
-    const notes = flatten(new Array(times).fill(notesTypes[name]));
+    const notes = [
+      flatten(new Array(times).fill(notesTypes[name][0])),
+      flatten(new Array(times).fill(notesTypes[name][1])),
+    ];
+
     const sequences = notes.map((note) => new TinyMusic.Sequence(ac, tempo, note));
 
     sequences.forEach((sequence) => {
@@ -216,7 +219,6 @@ export default class Game {
     imageOfPreviousLevel = new Image();
     imageOfPreviousLevel.src = this.canvas.toDataURL("png");
     this.switchLevel(nextLevel);
-    // switchLevel.call(this, nextLevel);
   }
 
   public handleInput(event) {

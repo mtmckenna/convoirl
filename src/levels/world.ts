@@ -201,6 +201,7 @@ export default class World extends Level {
     switch (this.state) {
       case "intro":
         showNextIntroBox();
+        this.game.pa("good");
         break;
       case "nap":
         this.game.p.move(SLEEP_POS);
@@ -208,10 +209,12 @@ export default class World extends Level {
         break;
       case "win":
         this.game.p.energy = 1;
+        this.game.pa("good");
         showWinBox();
         break;
       case "post-listen":
       case "post-convo":
+        this.game.pa("good");
         learnFromConvo.call(this);
         this.game.p.lastConvo = this.game.tstamp;
         break;
@@ -225,6 +228,7 @@ function hideBox() {
 
 function handleBoxInput(): boolean {
   if (this.state === "play") return false;
+  this.game.pa("walk");
   // if (box.ani) return true;
   let done = false;
 
@@ -233,6 +237,7 @@ function handleBoxInput(): boolean {
       hideBox.call(this);
       this.state = "play";
       this.handleInput("ArrowDown");
+      this.game.pa("good");
       break;
     case "post-convo":
       hideBox.call(this);
@@ -260,6 +265,7 @@ function handleBoxInput(): boolean {
         shadeBox.size = Object.assign({}, this.size);
         shadeBox.dSize = Object.assign({}, this.dSize);
         this.addDables([shadeBox], 3);
+        this.game.pa("good");
         energyBar.animateToLevel(1);
       }
       break;

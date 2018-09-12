@@ -308,7 +308,7 @@ function greatReaction(energyIncrement, convoIncrement) {
   window.setTimeout(textFunc, 500);
   window.setTimeout(textFunc, 1000);
   updateBars.call(this, energyIncrement, convoIncrement);
-  this.game.pa("great");
+  this.game.pa("good", 3);
 }
 
 function goodReaction(energyIncrement, convoIncrement) {
@@ -360,7 +360,7 @@ function buddyExecuteSkillIndex(skillBuddy, skillIndex) {
     if (!this.usedTopics.includes(skill)) this.usedTopics.push(skill);
   }
 
-  this.game.pa("walk", 5);
+  if (skill !== LT) this.game.pa("walk", 5);
 }
 
 function updateText() {
