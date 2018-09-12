@@ -334,13 +334,11 @@ function sleep() {
 }
 
 function movePlayerVertically(touchDistance: number) {
-  if (touchDistance < 0) this.handleInput("ArrowUp");
-  if (touchDistance > 0) this.handleInput("ArrowDown");
+  (touchDistance < 0) ? this.handleInput("ArrowUp") : this.handleInput("ArrowDown");
 }
 
 function movePlayerHorizontally(touchDistance: number) {
-  if (touchDistance > 0) this.handleInput("ArrowRight");
-  if (touchDistance < 0) this.handleInput("ArrowLeft");
+  (touchDistance > 0) ? this.handleInput("ArrowRight") : this.handleInput("ArrowLeft");
 }
 
 function getSecondaryTopic(primaryTopic: string): string {
