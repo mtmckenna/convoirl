@@ -145,9 +145,9 @@ export default class World extends Level {
     if (absHorizontalDistance < minMoveTheshold && absVerticalDistance < minMoveTheshold) return;
 
     if (absHorizontalDistance > absVerticalDistance) {
-      movePlayerHorizontally.call(this, horizontalDistance);
+      (horizontalDistance > 0) ? this.handleInput("ArrowRight") : this.handleInput("ArrowLeft");
     } else {
-      movePlayerVertically.call(this, verticalDistance);
+      (verticalDistance < 0) ? this.handleInput("ArrowUp") : this.handleInput("ArrowDown");
     }
   }
 
@@ -331,14 +331,6 @@ function sleep() {
   box.aniText(this.game.tstamp);
   box.visible = true;
   this.state = "sleeping";
-}
-
-function movePlayerVertically(touchDistance: number) {
-  (touchDistance < 0) ? this.handleInput("ArrowUp") : this.handleInput("ArrowDown");
-}
-
-function movePlayerHorizontally(touchDistance: number) {
-  (touchDistance > 0) ? this.handleInput("ArrowRight") : this.handleInput("ArrowLeft");
 }
 
 function getSecondaryTopic(primaryTopic: string): string {
