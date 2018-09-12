@@ -2,6 +2,9 @@ import Box from "../box";
 import Game from "../game";
 import Level from "./level";
 
+import { ISize } from "../common";
+import { randomIndex } from "../helpers";
+
 let panDirection = 1;
 
 export default class StartScreen extends Level {
@@ -28,11 +31,7 @@ export default class StartScreen extends Level {
   public configViz() {
     super.configViz();
 
-    const sizeInTiles = this.game.sizeInTiles();
-    sizeInTiles.w *= 2;
-    sizeInTiles.h *= 2;
-
-    this.generateTileIndexes(sizeInTiles);
+    this.tileIndexes = generateTileIndexes(this.game.sizeInTiles(), this.tileTypeMap);
     this.generateTiles();
     this.box.move(this.game.boxPos());
     this.box.updateSize(this.game.boxSize());
@@ -55,4 +54,10 @@ export default class StartScreen extends Level {
   public handleTouch() {
     this.handleInput();
   }
+}
+
+function generateTileIndexes(sizeInTiles: ISize, tileTypeMap: string[]) {
+  return new Array(sizeInTiles.h * 2)
+    .fill(null).map(() => new Array(sizeInTiles.w * 2)
+      .fill(null).map(() => randomIndex(tileTypeMap)));
 }

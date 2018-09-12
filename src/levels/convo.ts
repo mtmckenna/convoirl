@@ -152,8 +152,8 @@ export default class Convo extends Level {
 
     const sizeInTiles = this.game.sizeInTiles();
     cameraOffset = -sizeInTiles.w * TS * this.game.ss / 2; // TODO: might be able to replace with this.size.w / 2
-    sizeInTiles.w *= 2;
-    sizeInTiles.h *= 2;
+    // sizeInTiles.w *= 2;
+    // sizeInTiles.h *= 2;
 
     // Move the box to the bottom
     // Align the buddies to be on top of the box
@@ -163,7 +163,7 @@ export default class Convo extends Level {
     moveBuddies.call(this);
     moveSkillCursor.call(this, 0);
 
-    this.generateTileIndexes(sizeInTiles);
+    this.tileIndexes = generateTileIndexes(this.game);
     this.generateTiles();
     this.addDables(this.tiles, 0);
     this.addDables(buddies, 1);
@@ -179,26 +179,26 @@ export default class Convo extends Level {
     this.configClouds(this.size.w, this.game.p.pos.y - TS, .6);
     this.addDables(this.clouds, 0);
   }
+}
 
-  protected generateTileIndexes(sizeInTiles) {
-    const playerTileIndexY = Math.min(this.game.p.tileIndex.y + 1, sizeInTiles.h);
+function generateTileIndexes(game: Game) {
+  const playerTileIndexY = Math.min(game.p.tileIndex.y + 1, game.sizeInTiles().h);
+  const sizeInTiles = game.sizeInTiles();
 
-    // Ground tiles
-    this.tileIndexes = new Array(sizeInTiles.h)
-      .fill(null).map(() => new Array(sizeInTiles.w)
-        .fill(null).map(() => randomIndex([0, 1]))); // Don't include the sky/tree tile
+  // Ground tiles
+  const tileIndexes = new Array(sizeInTiles.h * 2)
+    .fill(null).map(() => new Array(sizeInTiles.w * 2)
+      .fill(null).map(() => randomIndex([0, 1]))); // Don't include the sky/tree tile
 
-    // Sky tiles
-    for (let i = 0; i < playerTileIndexY; i++) {
-      this.tileIndexes[i] = this.tileIndexes[i].map(() => 2);
-    }
-
-    // Tree trees
-    const treeRow = this.tileIndexes[playerTileIndexY - 1];
-    if (treeRow) {
-      this.tileIndexes[playerTileIndexY - 1] = treeRow.map(() => 3);
-    }
+  // Sky tiles
+  for (let i = 0; i < playerTileIndexY; i++) {
+    tileIndexes[i] = tileIndexes[i].map(() => 2);
   }
+
+  // Tree trees
+  const treeRow = tileIndexes[playerTileIndexY - 1];
+  if (treeRow) tileIndexes[playerTileIndexY - 1] = treeRow.map(() => 3);
+  return tileIndexes;
 }
 
 function doneAnimating(drawables): boolean {

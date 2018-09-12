@@ -92,15 +92,6 @@ export default abstract class Level {
   protected addUables(updateables: IUpdateable[]) {
     this.uables.push(...updateables);
   }
-
-  protected generateTileIndexes(sizeInTiles?: ISize) {
-    // The tiles should fit the screen size since we don't scroll in convo
-    sizeInTiles = sizeInTiles || this.game.sizeInTiles();
-
-    this.tileIndexes = new Array(sizeInTiles.h)
-      .fill(null).map(() => new Array(sizeInTiles.w)
-        .fill(null).map(() => randomIndex(this.tileTypeMap)));
-  }
 }
 
 function randomNumBetween(min, max): number {
