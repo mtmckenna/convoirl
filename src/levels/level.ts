@@ -60,6 +60,7 @@ export default abstract class Level {
   }
 
   protected generateTiles() {
+    this.tiles = [];
     const w = this.tileIndexes[0].length * TS;
     const h = this.tileIndexes.length * TS;
 
