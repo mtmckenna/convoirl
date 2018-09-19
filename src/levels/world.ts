@@ -215,7 +215,6 @@ export default class World extends Level {
         break;
       case "post-listen":
       case "post-convo":
-        this.game.pa("good");
         learnFromConvo.call(this);
         this.game.p.lastConvo = this.game.tstamp;
         break;
@@ -237,7 +236,6 @@ function handleBoxInput(): boolean {
       hideBox.call(this);
       this.state = "play";
       this.handleInput("ArrowDown");
-      this.game.pa("good");
       break;
     case "post-convo":
       hideBox.call(this);
